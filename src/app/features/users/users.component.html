@@ -1,0 +1,59 @@
+<div>
+  <form [formGroup]="usersFilterForm">
+    <div class="flex flex-row gap-3 items-center">
+      <div class="search-field flex-9">
+        <input
+          type="text"
+          placeholder="Search by name or email…"
+          class="field ="
+          formControlName="searchTerm"
+        />
+      </div>
+
+      <button type="button" class="btn btn-secondary mb-3 flex-1">
+        <i class="pi pi-download"></i> Export CVS
+      </button>
+    </div>
+
+    <div class="card flex flex-row gap-3">
+        <div class="flex flex-col gap-3">
+          <label for="projects" class="label">Projects</label>
+          <p-multiselect
+            [options]="projects"
+            formControlName="projects"
+            optionLabel="name"
+            placeholder="Select Projects"
+            [maxSelectedLabels]="3"
+          />
+        </div>
+        <div class="flex flex-col gap-3">
+          <label for="workItemStatus" class="label">Work Item Status</label>
+          <div>
+            <p-checkBox formControlName="workItemStatus" [binary]="true" label="Active" />
+            <label for="workItemStatus" class="label"> Active</label>
+          </div>
+          <div>
+            <p-checkBox formControlName="workItemStatus" [binary]="true" label="Resolved" />
+            <label for="workItemStatus" class="label"> Resolved</label>
+          </div>
+          <div>
+            <p-checkBox formControlName="workItemStatus" [binary]="true" label="Closed" />
+            <label for="workItemStatus" class="label"> Closed</label>
+          </div>
+        </div>
+          <div class="flex flex-col gap-3">
+            <label for="hoursRange" class="label">Hours Range</label>
+            <input
+              type="text"
+              placeholder="e.g. 0-10, 10-20"
+              class="field"
+              formControlName="hoursRange"
+            />
+          </div>
+          <div class="flex flex-col gap-3">
+            <label for="zeroHoursUsers" class="label">Zero Hours Users</label>
+            <p-toggleSwitch formControlName="zeroHoursUsers" />
+          </div>
+    </div>
+  </form>
+</div>

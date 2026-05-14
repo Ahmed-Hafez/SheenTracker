@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  padding: 24px 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 260;
+}
+
+.layout-motion {
+  transition: all 0.3s ease;
+}
+
+.layout-sidebar-motion {
+  transition:
+    width 0.3s ease,
+    transform 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout-motion,
+  .layout-sidebar-motion {
+    transition: none;
+  }
+}

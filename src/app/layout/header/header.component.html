@@ -1,0 +1,41 @@
+<div class="flex w-full items-center justify-between gap-4">
+  <div class="flex min-w-0 items-center gap-3">
+    <button
+      type="button"
+      class="btn-sm cursor-pointer rounded-md transition hover:bg-orange-200"
+      (click)="toggleCollapse.emit()"
+      [attr.aria-label]="isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+    >
+      <img src="svgs/sidebar-toggle.svg" class="h-5 w-5" alt="" aria-hidden="true" />
+    </button>
+
+    <span class="h-7 w-px shrink-0 bg-(--charcoal-800)" aria-hidden="true"></span>
+
+    <div class="min-w-0">
+      <h3 class="">
+        {{ title() || 'Sheen Pulse' }}
+      </h3>
+      @if (subtitle()) {
+        <span class="mono-small">
+          {{ subtitle() }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <p-datepicker
+      [(ngModel)]="rangeDates"
+      selectionMode="range"
+      [readonlyInput]="true"
+      [numberOfMonths]="2"
+      [pt]="datePickerPT"
+      [variant]="'filled'"
+      [showIcon]="true"
+      [dateFormat]="'dd M yy'"
+      inputId="icondisplay"
+      [iconDisplay]="'input'"
+    />
+    <button type="button" class="btn btn-secondary"><i class="pi pi-refresh"></i> Refresh</button>
+  </div>
+</div>
