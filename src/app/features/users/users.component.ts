@@ -3,11 +3,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from "primeng/checkbox";
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { SliderModule } from 'primeng/slider';
+
 
 
 @Component({
   selector: 'app-users',
-  imports: [FormsModule, ReactiveFormsModule, MultiSelectModule, Checkbox, ToggleSwitchModule],
+  imports: [FormsModule, ReactiveFormsModule, MultiSelectModule, Checkbox, ToggleSwitchModule, SliderModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })

@@ -25,7 +25,7 @@ export class HeaderComponent implements OnInit {
 
   datePickerPT = {
     pcInputText: {
-      root: 'bg-white border border-gray-300 rounded-md py-2 px-3 text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+      root: ' p-inputtext p-component',
     },
   }
 

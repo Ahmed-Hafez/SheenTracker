@@ -15,19 +15,21 @@
       </button>
     </div>
 
-    <div class="card flex flex-row gap-3">
-        <div class="flex flex-col gap-3">
-          <label for="projects" class="label">Projects</label>
-          <p-multiselect
-            [options]="projects"
-            formControlName="projects"
-            optionLabel="name"
-            placeholder="Select Projects"
-            [maxSelectedLabels]="3"
-          />
-        </div>
-        <div class="flex flex-col gap-3">
-          <label for="workItemStatus" class="label">Work Item Status</label>
+    <div class="card grid w-full grid-cols-1 gap-8 items-center md:grid-cols-2 lg:grid-cols-4">
+      <div class="flex-1 flex-col gap-3">
+        <label for="projects" class="label">Projects</label>
+        <p-multiselect
+          [options]="projects"
+          formControlName="projects"
+          optionLabel="name"
+          placeholder="Select Projects"
+          [maxSelectedLabels]="3"
+          class="w-full"
+        />
+      </div>
+      <div class="flex-1 flex-col gap-5">
+        <label for="workItemStatus" class="label">Work Item Status</label>
+        <div class="flex gap-4 justify-start">
           <div>
             <p-checkBox formControlName="workItemStatus" [binary]="true" label="Active" />
             <label for="workItemStatus" class="label"> Active</label>
@@ -41,19 +43,18 @@
             <label for="workItemStatus" class="label"> Closed</label>
           </div>
         </div>
-          <div class="flex flex-col gap-3">
-            <label for="hoursRange" class="label">Hours Range</label>
-            <input
-              type="text"
-              placeholder="e.g. 0-10, 10-20"
-              class="field"
-              formControlName="hoursRange"
-            />
-          </div>
-          <div class="flex flex-col gap-3">
-            <label for="zeroHoursUsers" class="label">Zero Hours Users</label>
-            <p-toggleSwitch formControlName="zeroHoursUsers" />
-          </div>
+      </div>
+      <div class="flex-1 flex-col gap-5">
+        <label for="hoursRange" class="label"
+          >Hours Range ({{ usersFilterForm.get('hoursRange')?.value || 0 }}h-200h)</label
+        >
+        <div class="flex justify-center h-4"></div>
+        <p-slider formControlName="hoursRange" [max]="200" />
+      </div>
+      <div class="flex flex-col gap-3">
+        <label for="zeroHoursUsers" class="label">Zero Hours Users</label>
+        <p-toggleSwitch formControlName="zeroHoursUsers" />
+      </div>
     </div>
   </form>
 </div>
