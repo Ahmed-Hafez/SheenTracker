@@ -4,12 +4,15 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from "primeng/checkbox";
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SliderModule } from 'primeng/slider';
+import { KpiCardComponent } from "../../shared/kpi-card/kpi-card.component";
+import { HoursBadgeComponent } from "../../shared/hours-badge/hours-badge.component";
+import { StatusBadgeComponent } from "../../shared/status-badge/status-badge.component";
 
 
 
 @Component({
   selector: 'app-users',
-  imports: [FormsModule, ReactiveFormsModule, MultiSelectModule, Checkbox, ToggleSwitchModule, SliderModule],
+  imports: [FormsModule, ReactiveFormsModule, MultiSelectModule, Checkbox, ToggleSwitchModule, SliderModule, KpiCardComponent, HoursBadgeComponent, StatusBadgeComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
@@ -35,7 +38,9 @@ export class UsersComponent implements OnInit {
     this.usersFilterForm = this.fb.group({
       searchTerm: [''],
       projects: [''],
-      workItemStatus: [''],
+      activeWorkItems: [true],
+      resolvedWorkItems: [true],
+      closedWorkItems: [true],
       hoursRange: [''],
       zeroHoursUsers: [false],
     });

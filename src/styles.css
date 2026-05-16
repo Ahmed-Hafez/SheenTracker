@@ -457,6 +457,7 @@ body, p {
    KPI CARDS
    ============================================ */
 .kpi-card {
+  display: block;
   background: var(--white);
   border: 1px solid var(--charcoal-100);
   border-radius: var(--radius-lg);
