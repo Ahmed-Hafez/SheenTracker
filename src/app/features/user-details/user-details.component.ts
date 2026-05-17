@@ -1,0 +1,128 @@
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { UserCardComponent } from './components/user-card/user-card.component';
+import { UserSummaryComponent } from './components/user-summary/user-summary.component';
+import {
+  WorkItemsTableComponent,
+  ProjectGroup,
+} from './components/work-items-table/work-items-table.component';
+
+@Component({
+  selector: 'app-user-details',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [UserCardComponent, UserSummaryComponent, WorkItemsTableComponent],
+  templateUrl: './user-details.component.html',
+  styles: ``,
+})
+export class UserDetailsComponent {
+  user = signal({
+    name: 'Fatima Labib',
+    initials: 'FL',
+    email1: 'fatima.labib@sheen.tech',
+    email2: 'fatima.labib@sheentech.onmicrosoft.com',
+    totalHours: 121.4,
+  });
+
+  summary = signal({
+    projects: 2,
+    workItems: 17,
+    dateRange: { days: 30, start: '2026-04-18', end: '2026-05-17' },
+  });
+
+  workItems = signal<ProjectGroup[]>([
+    {
+      projectName: 'Atlas Platform',
+      totalWorkItems: 11,
+      totalHours: '69.6',
+      items: [
+        {
+          id: '#82349',
+          title: 'Implement role-based access',
+          type: 'Bug',
+          status: 'Resolved',
+          deltaHours: '+7.0h',
+          before: '25.0h',
+          atEnd: '32.0h',
+          snapshot: '2026-05-16',
+          isPositiveDelta: true,
+        },
+        {
+          id: '#41800',
+          title: 'Resolve flaky e2e suite',
+          type: 'Task',
+          status: 'Resolved',
+          deltaHours: '+11.4h',
+          before: '6.0h',
+          atEnd: '17.4h',
+          snapshot: '2026-05-12',
+          isPositiveDelta: true,
+        },
+        {
+          id: '#65253',
+          title: 'Refactor auth middleware',
+          type: 'User Story',
+          status: 'Resolved',
+          deltaHours: '+8.2h',
+          before: '13.0h',
+          atEnd: '21.2h',
+          snapshot: '2026-04-23',
+          isPositiveDelta: true,
+        },
+        {
+          id: '#53047',
+          title: 'Wire up audit logging',
+          type: 'Bug',
+          status: 'Active',
+          deltaHours: '+2.2h',
+          before: '15.0h',
+          atEnd: '17.2h',
+          snapshot: '2026-04-29',
+          isPositiveDelta: true,
+        },
+        {
+          id: '#20065',
+          title: 'Improve onboarding tour',
+          type: 'Feature',
+          status: 'Resolved',
+          deltaHours: '+6.3h',
+          before: '5.0h',
+          atEnd: '11.3h',
+          snapshot: '2026-05-03',
+          isPositiveDelta: true,
+        },
+        {
+          id: '#23702',
+          title: 'Refactor auth middleware',
+          type: 'Task',
+          status: 'Resolved',
+          deltaHours: '+3.5h',
+          before: '24.0h',
+          atEnd: '27.5h',
+          snapshot: '2026-04-19',
+          isPositiveDelta: true,
+        },
+        {
+          id: '#96857',
+          title: 'Build settings panel',
+          type: 'Bug',
+          status: 'Resolved',
+          deltaHours: '+5.5h',
+          before: '18.0h',
+          atEnd: '23.5h',
+          snapshot: '2026-05-13',
+          isPositiveDelta: true,
+        },
+        {
+          id: '#21711',
+          title: 'Fix pagination overflow',
+          type: 'Task',
+          status: 'Closed',
+          deltaHours: '+7.0h',
+          before: '1.0h',
+          atEnd: '8.0h',
+          snapshot: '2026-05-14',
+          isPositiveDelta: true,
+        },
+      ],
+    },
+  ]);
+}
