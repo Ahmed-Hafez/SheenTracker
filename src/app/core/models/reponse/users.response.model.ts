@@ -7,7 +7,7 @@ export interface UsersResponse {
   users: User[];
 }
 
-interface User {
+export interface User {
   userKey: string;
   displayName: string;
   email: string;
