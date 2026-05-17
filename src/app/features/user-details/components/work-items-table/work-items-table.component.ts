@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
+import { StatusBadgeComponent } from '../../../../shared/status-badge/status-badge.component';
 
 export interface WorkItem {
   id: string;
@@ -26,7 +27,7 @@ export interface ProjectGroup {
 @Component({
   selector: 'app-work-items-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, TableModule, AccordionModule],
+  imports: [CommonModule, FormsModule, TableModule, AccordionModule, StatusBadgeComponent],
   templateUrl: './work-items-table.component.html',
   styles: ``,
 })
