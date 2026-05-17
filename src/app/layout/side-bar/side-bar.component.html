@@ -1,0 +1,73 @@
+<div class="flex h-full flex-col justify-start transition-all duration-300">
+  <div class="flex-1 overflow-y-auto">
+    <a class="sidebar-logo" [class.justify-center]="isCollapsed()" routerLink="/dashboard">
+      <span class="sidebar-icon" aria-hidden="true">
+        <i class="pi pi-bolt"></i>
+      </span>
+      @if (!isCollapsed()) {
+        <div class="flex min-w-0 flex-col">
+          <h2 class="m-0 text-md font-semibold truncate">
+            Sheen<span class="font-bold text-(--orange-500)">Pulse</span>
+          </h2>
+          <span class="truncate text-xs text-gray-500">SHEEN IT</span>
+        </div>
+      }
+    </a>
+
+    <hr class="m-0 border-(--charcoal-800)" />
+
+   
+
+    @if (!isCollapsed()) {
+      <p class="sidebar-section-label">Main</p>
+    }
+
+    <ul class="m-0 list-none px-0 py-2">
+      @for (item of menuItems; track $index) {
+        <li>
+          <a
+            pRipple
+            #rla="routerLinkActive"
+            [routerLink]="item.route"
+            (click)="onLinkClick()"
+            class="sidebar-link"
+            [class.justify-center]="isCollapsed()"
+            routerLinkActive="active"
+          >
+            <i class="sidebar-link-icon shrink-0 {{ item.icon }}"></i>
+            @if (!isCollapsed()) {
+              <span class="truncate min-w-0">{{ item.label }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="px-0 py-2">
+    @if (!isCollapsed()) {
+      <p class="sidebar-section-label">Settings</p>
+    }
+
+    <ul class="m-0 list-none px-0 py-0">
+      @for (item of bottomMenuItems; track $index) {
+        <li>
+          <a
+            pRipple
+            #rla="routerLinkActive"
+            [routerLink]="item.route"
+            (click)="onLinkClick(item.action)"
+            class="sidebar-link"
+            [class.justify-center]="isCollapsed()"
+            routerLinkActive="active"
+          >
+            <i class="sidebar-link-icon shrink-0 {{ item.icon }}"></i>
+            @if (!isCollapsed()) {
+              <span class="truncate min-w-0">{{ item.label }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

@@ -1,3 +1,4 @@
+
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { UserSummaryComponent } from './components/user-summary/user-summary.component';
