@@ -1,24 +1,28 @@
 <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-8">
   <div class="flex justify-between items-center mb-4 gap-4">
-    <div class="relative w-full max-w-lg">
+    <div class="relative flex-1">
       <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
       <input
         type="text"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
         placeholder="Search by ID or title..."
         class="w-full bg-gray-50 border border-gray-200 rounded-md py-2 pl-10 pr-3 outline-none focus:border-[#E8821A]"
       />
     </div>
     <select
+      [ngModel]="statusFilter()"
+      (ngModelChange)="statusFilter.set($event)"
       class="w-48 bg-gray-50 border border-gray-200 rounded-md py-2 px-3 outline-none focus:border-[#E8821A]"
     >
-      <option>All statuses</option>
-      <option>Active</option>
-      <option>Resolved</option>
-      <option>Closed</option>
+      <option value="All statuses">All statuses</option>
+      <option value="Active">Active</option>
+      <option value="Resolved">Resolved</option>
+      <option value="Closed">Closed</option>
     </select>
   </div>
   <p-accordion [multiple]="true" class="w-full">
-    @for (group of groupedItems(); track group.projectName) {
+    @for (group of filteredGroups(); track group.projectName) {
       <p-accordion-panel [value]="group.projectName">
         <p-accordion-header>
           <div class="flex items-center gap-3 w-full text-sm">

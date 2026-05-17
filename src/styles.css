@@ -599,7 +599,7 @@ p {
 }
 
 .content-inner {
-  max-width: var(--content-max-w);
+  width: 100%;
   margin: 0 auto;
   padding: var(--space-xl);
 }
@@ -639,6 +639,10 @@ p {
   padding: 0 var(--space-md);
 }
 
-
-@import "tailwindcss";
-p-accordion-panel, .p-accordionpanel { border-bottom: none !important; border: none !important; margin-bottom: 0 !important; }
+@import 'tailwindcss';
+p-accordion-panel,
+.p-accordionpanel {
+  border-bottom: none !important;
+  border: none !important;
+  margin-bottom: 0 !important;
+}
