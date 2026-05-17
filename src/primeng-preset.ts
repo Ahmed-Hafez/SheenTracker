@@ -2,197 +2,77 @@ import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 
 export const PrimeNG_Preset = definePreset(Aura, {
-  components: {
-    accordion: {
-      root: {
-        transitionDuration: '0.2s',
-      },
-      panel: {
-        borderWidth: '0',
-        borderColor: 'transparent',
-      },
-      header: {
-        color: '#1E3A8A',
-        hoverColor: '#1E3A8A',
-        activeColor: '#1E3A8A',
-        background: '#fff',
-        hoverBackground: '#EFF6FF',
-        activeBackground: '#EFF6FF',
-        activeHoverBackground: '#EFF6FF',
-        borderRadius: '8px',
-        padding: '1rem 1rem',
-        fontWeight: '600',
-      },
-      content: {
-        padding: '1rem 1.25rem 1.5rem 1.25rem',
-      },
+  semantic: {
+    primary: {
+      50: 'var(--orange-50)',
+      100: 'var(--orange-50)',
+      200: 'var(--orange-300)',
+      300: 'var(--orange-300)',
+      400: 'var(--orange-500)',
+      500: 'var(--orange-500)',
+      600: 'var(--orange-700)',
+      700: 'var(--orange-700)',
+      800: 'var(--orange-900)',
+      900: 'var(--orange-900)',
+      950: 'var(--orange-900)',
     },
-    textarea: {
-      colorScheme: {
-        light: {
-          root: {
-            background: 'transparent',
-            borderColor: '#F3F4F5',
-            hoverBorderColor: '#6B7280',
-            focusBorderColor: '#3B82F6',
-            color: '#1A1A1A',
-            
-          },
+    colorScheme: {
+      light: {
+        surface: {
+          0: 'var(--white)',
+          50: 'var(--charcoal-50)',
+          100: 'var(--charcoal-100)',
+          200: 'var(--charcoal-100)',
+          300: 'var(--charcoal-400)',
+          400: 'var(--charcoal-400)',
+          500: 'var(--charcoal-600)',
+          600: 'var(--charcoal-600)',
+          700: 'var(--charcoal-800)',
+          800: 'var(--charcoal-800)',
+          900: 'var(--charcoal-900)',
+          950: 'var(--charcoal-900)',
         },
-      },
-      root: {
-        borderRadius: '8px',
-        paddingX: '0.875rem',
-        paddingY: '0.625rem',
-      },
-    },
-    inputtext: {
-      colorScheme: {
-        light: {
-          root: {
-            background: 'transparent',
-            borderColor: '#F3F4F5',
-            hoverBorderColor: '#6B7280',
-            focusBorderColor: '#3B82F6',
-          },
+        primary: {
+          color: 'var(--orange-500)',
+          contrastColor: 'var(--white)',
+          hoverColor: 'var(--orange-700)',
+          activeColor: 'var(--orange-900)',
         },
-      },
-      root: {
-        borderRadius: '8px',
-        paddingX: '0.875rem',
-        paddingY: '0.625rem',
-      },
-    },
-    button: {
-      colorScheme: {
-        light: {
-          root: {
-            primary: {
-              background: '#2563EB',
-              hoverBackground: '#1D4ED8',
-              activeBackground: '#1E40AF',
-              borderColor: '#2563EB',
-              hoverBorderColor: '#1D4ED8',
-              color: '#ffffff',
-            },
-            secondary: {
-              background: '#ffffff',
-              hoverBackground: '#EFF6FF',
-              activeBackground: '#DBEAFE',
-              borderColor: '#2563EB',
-              hoverBorderColor: '#1D4ED8',
-              color: '#2563EB',
-            },
-          },
-        },
-      },
-      root: {
-        borderRadius: '8px',
-        paddingX: '1.25rem',
-        paddingY: '0.625rem',
-      },
-    },
-    breadcrumb: {
-      colorScheme: {
-        light: {
-          root: {
-            background: '#FAFAFA',
-          },
-        },
-      },
-    },
-    avatar: {
-      colorScheme: {
-        light: {
-          root: {
-            color: '#94A3B8',
-            width: '2.5rem',
-            height: '2.5rem',
-          },
-        },
-      },
-    },
-    progressspinner: {
-      colorScheme: {
-        light: {
-          root: {
-            colorOne: '#2563EB',
-            colorTwo: '#2563EB',
-            colorThree: '#2563EB',
-            colorFour: '#2563EB',
-          },
-        },
-      },
-    },
-
-    select: {
-      colorScheme: {
-        light: {
-          root: {
-            background: 'white',
-            borderColor: 'transparent',
-            hoverBorderColor: '#6B7280',
-            focusBorderColor: '#3B82F6',
-          },
-        },
-      },
-      root: {
-        borderRadius: '8px',
-        paddingX: '0.875rem',
-        paddingY: '0.625rem',
-      },
-    },
-
-    tooltip: {
-      colorScheme: {
-        light: {
-          root: {
-            background: '#ffffff',
-            color: '#1E3A8A',
-          },
+        highlight: {
+          background: 'var(--orange-50)',
+          focusBackground: 'var(--orange-300)',
+          color: 'var(--orange-700)',
+          focusColor: 'var(--orange-900)',
         },
       },
     },
   },
-
-  semantic: {
-    colorScheme: {
-      light: {
-        primary: {
-          color: '#3B82F6',
-          inverseColor: '#ffffff',
-          hoverColor: '#2563EB',
-          activeColor: '#1D4ED8',
+  components: {
+    toggleswitch: {
+      colorScheme: {
+        light: {
+          root: {
+            borderColor: 'var(--orange-500)',
+            hoverBackground: 'var(--orange-700)',
+            checkedBackground: 'var(--orange-500)',
+            checkedHoverBackground: 'var(--orange-700)',
+          },
+          handle: {
+            background: 'var(--charcoal-600)',
+            color: 'var(--charcoal-600)',
+          },
         },
-        surface: {
-          0: '#ffffff',
-          50: '{zinc.50}',
-          100: '{zinc.100}',
-          200: '{zinc.200}',
-          300: '{zinc.300}',
-          400: '{zinc.400}',
-          500: '{zinc.500}',
-          600: '{zinc.600}',
-          700: '{zinc.700}',
-          800: '{zinc.800}',
-          900: '{zinc.900}',
-          950: '{zinc.950}',
-        },
-        highlight: {
-          background: '{zinc.950}',
-          focusBackground: '{zinc.700}',
-          color: '#ffffff',
-          focusColor: '#ffffff',
-        },
-        formField: {
-          hoverBorderColor: '{primary.color}',
-        },
-        root: {
-          background: '{surface.0}',
-          color: '{surface.700}',
-        },
-        subtitle: {
-          color: '{surface.500}',
+      },
+    },
+    datepicker: {
+      colorScheme: {
+        light: {
+          date: {
+            selectedBackground: 'var(--orange-500)',
+            rangeSelectedBackground: 'var(--orange-50)',
+            rangeSelectedColor: 'var(--charcoal-900)',
+            hoverBackground: 'var(--orange-300)',
+          },
         },
       },
     },

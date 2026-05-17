@@ -1,0 +1,78 @@
+<div>
+  <form [formGroup]="usersFilterForm">
+    <div class="flex flex-row gap-3 items-center">
+      <div class="search-field flex-9">
+        <input
+          type="text"
+          placeholder="Search by name or email…"
+          class="field"
+          formControlName="searchTerm"
+        />
+      </div>
+
+      <button type="button" class="btn btn-secondary mb-3 flex-1">
+        <i class="pi pi-download"></i> Export CVS
+      </button>
+    </div>
+
+    <div
+      class="card h-max-content grid w-full grid-cols-1 gap-8 items-start md:grid-cols-2 lg:grid-cols-4"
+    >
+      <div class="flex flex-col gap-3">
+        <label for="projects" class="input-label">Project</label>
+        <p-multiselect
+          [options]="projects"
+          formControlName="projects"
+          optionLabel="name"
+          placeholder="Select Projects"
+          [maxSelectedLabels]="3"
+          inputId="projects"
+          class="w-full"
+        />
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="input-label">Work item status</span>
+        <div class="flex flex-wrap items-center gap-4">
+          <div class="flex items-center gap-2">
+            <p-checkBox
+              formControlName="activeWorkItems"
+              [binary]="true"
+              inputId="activeWorkItems"
+            />
+            <label for="activeWorkItems" class="small text-(--charcoal-600)">Active</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-checkBox
+              formControlName="resolvedWorkItems"
+              [binary]="true"
+              inputId="resolvedWorkItems"
+            />
+            <label for="resolvedWorkItems" class="small text-(--charcoal-600)">Resolved</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-checkBox
+              formControlName="closedWorkItems"
+              [binary]="true"
+              inputId="closedWorkItems"
+            />
+            <label for="closedWorkItems" class="small text-(--charcoal-600)">Closed</label>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-1 flex-col gap-3">
+        <span class="input-label"
+          >Hours range: {{ usersFilterForm.get('hoursRange')?.value || 0 }}h - 200h</span
+        >
+        <p-slider formControlName="hoursRange" [max]="200" />
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="input-label">Zero-hour users</span>
+        <div class="flex items-center gap-3">
+          <p-toggleSwitch formControlName="zeroHoursUsers" inputId="zeroHoursUsers" />
+          <label for="zeroHoursUsers" class="small text-(--charcoal-600)">Include in results</label>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>

@@ -1,0 +1,54 @@
+<div class="layout-motion main-container min-h-screen bg-page">
+  <header
+    class="layout-motion topbar"
+    [style.left.px]="hideSidebar() ? 0 : mainOffsetPx()"
+    [style.width]="hideSidebar() ? '100%' : 'calc(100% - ' + mainOffsetPx() + 'px)'"
+  >
+    <app-header
+      class="w-full"
+      [sidebarOpen]="mobileOverlayOpen()"
+      [isCollapsed]="sidebarCollapsed()"
+      [title]="pageTitle()"
+      [subtitle]="pageSubtitle()"
+      (toggleCollapse)="onToggleCollapse()"
+      (toggleSidebar)="toggleSidebarMobile()"
+    ></app-header>
+  </header>
+
+  @if (isMobile() && mobileOverlayOpen()) {
+    <button
+      type="button"
+      class="fixed inset-0 z-[240] m-0 border-0 bg-slate-900/45 p-0"
+      (click)="closeSidebarMobile()"
+      aria-label="Close sidebar"
+    ></button>
+  }
+  @if (!hideSidebar()) {
+    <aside
+      id="app-sidebar"
+      class="sidebar"
+      [style.width.px]="sidebarWidthPx()"
+      [class.-translate-x-full]="isPhone() && !mobileOverlayOpen()"
+      [class.translate-x-0]="!isPhone() || mobileOverlayOpen()"
+      [class.pointer-events-none]="isPhone() && !mobileOverlayOpen()"
+      [class.pointer-events-auto]="!isPhone() || mobileOverlayOpen()"
+      aria-label="Sidebar navigation"
+    >
+      <app-side-bar (toggleCollapse)="onToggleCollapse()" (linkClicked)="closeSidebarMobile()">
+      </app-side-bar>
+    </aside>
+  }
+
+  <main
+    class="layout-motion content-wrapper"
+    [style.marginLeft.px]="hideSidebar() ? 0 : mainOffsetPx()"
+    [style.width]="hideSidebar() ? '100%' : 'calc(100% - ' + mainOffsetPx() + 'px)'"
+    [style.marginTop.px]="64"
+  >
+    <div class="content-inner">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- <app-footer></app-footer> -->
+</div>
