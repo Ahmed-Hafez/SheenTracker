@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 
 @Component({
   selector: 'app-user-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [],
+  imports: [HoursBadgeComponent],
   templateUrl: './user-card.component.html',
   styles: ``,
 })

@@ -1,5 +1,5 @@
-
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { UserSummaryComponent } from './components/user-summary/user-summary.component';
 import {
@@ -10,7 +10,7 @@ import {
 @Component({
   selector: 'app-user-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [UserCardComponent, UserSummaryComponent, WorkItemsTableComponent],
+  imports: [RouterLink, UserCardComponent, UserSummaryComponent, WorkItemsTableComponent],
   templateUrl: './user-details.component.html',
   styles: ``,
 })

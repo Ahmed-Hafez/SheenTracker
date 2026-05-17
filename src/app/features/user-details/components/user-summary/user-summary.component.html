@@ -1,50 +1,20 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-  <div class="shadow-sm border border-gray-100 rounded-lg bg-white p-5">
-    <div class="flex justify-between items-start">
-      <div class="flex flex-col">
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1"
-          >Projects</span
-        >
-        <span class="text-3xl font-bold text-gray-900">{{ summary().projects }}</span>
-      </div>
-      <div
-        class="bg-orange-50 p-2 rounded-md border border-[#E8821A] flex items-center justify-center"
-      >
-        <i class="pi pi-folder text-[#E8821A] text-xl"></i>
-      </div>
-    </div>
-  </div>
-  <div class="shadow-sm border border-gray-100 rounded-lg bg-white p-5">
-    <div class="flex justify-between items-start">
-      <div class="flex flex-col">
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1"
-          >Work Items</span
-        >
-        <span class="text-3xl font-bold text-gray-900">{{ summary().workItems }}</span>
-      </div>
-      <div
-        class="bg-orange-50 p-2 rounded-md border border-[#E8821A] flex items-center justify-center"
-      >
-        <i class="pi pi-check-square text-[#E8821A] text-xl"></i>
-      </div>
-    </div>
-  </div>
-  <div class="shadow-sm border border-gray-100 rounded-lg bg-white p-5">
-    <div class="flex justify-between items-start">
-      <div class="flex flex-col">
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1"
-          >Date Range</span
-        >
-        <span class="text-xl font-bold text-gray-900">{{ summary().dateRange.days }} days</span>
-        <span class="text-xs text-gray-400 font-medium"
-          >{{ summary().dateRange.start }} &rarr; {{ summary().dateRange.end }}</span
-        >
-      </div>
-      <div
-        class="bg-orange-50 p-2 rounded-md border border-[#E8821A] flex items-center justify-center"
-      >
-        <i class="pi pi-calendar text-[#E8821A] text-xl"></i>
-      </div>
-    </div>
-  </div>
+  <app-kpi-card
+    label="Projects"
+    [value]="summary().projects"
+    icon="pi pi-folder text-xl"
+  ></app-kpi-card>
+
+  <app-kpi-card
+    label="Work Items"
+    [value]="summary().workItems"
+    icon="pi pi-check-square text-xl"
+  ></app-kpi-card>
+
+  <app-kpi-card
+    label="Date Range"
+    [value]="summary().dateRange.days + ' days'"
+    [hint]="summary().dateRange.start + ' → ' + summary().dateRange.end"
+    icon="pi pi-calendar text-xl"
+  ></app-kpi-card>
 </div>

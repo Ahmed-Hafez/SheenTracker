@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { KpiCardComponent } from '../../../../shared/kpi-card/kpi-card.component';
 
 @Component({
   selector: 'app-user-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [],
+  imports: [KpiCardComponent],
   templateUrl: './user-summary.component.html',
   styles: ``,
 })
