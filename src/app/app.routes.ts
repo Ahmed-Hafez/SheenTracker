@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { UsersComponent } from './features/users/users.component';
-import { UserDetailsComponent } from './features/user-details/user-details.component';
 
 export const routes: Routes = [
   {
@@ -19,7 +18,6 @@ export const routes: Routes = [
       },
       {
         path: 'users',
-        component: UsersComponent,
         children: [
           {
             path: '',
@@ -27,15 +25,13 @@ export const routes: Routes = [
           },
           {
             path: ':userId',
-            component: UserDetailsComponent,
+            loadComponent: () =>
+              import('./features/user-details/user-details.component').then(
+                (m) => m.UserDetailsComponent,
+              ),
           },
-        ]
-      }
+        ],
+      },
     ],
-  },
-  {
-    path: 'users/:id',
-    loadComponent: () =>
-      import('./features/user-details/user-details.component').then((m) => m.UserDetailsComponent),
   },
 ];

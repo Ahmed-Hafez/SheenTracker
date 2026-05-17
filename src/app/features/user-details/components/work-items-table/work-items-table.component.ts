@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
+import { AccordionModule } from 'primeng/accordion';
 
 export interface WorkItem {
   id: string;
@@ -25,7 +26,7 @@ export interface ProjectGroup {
 @Component({
   selector: 'app-work-items-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, TableModule],
+  imports: [CommonModule, FormsModule, TableModule, AccordionModule],
   templateUrl: './work-items-table.component.html',
   styles: ``,
 })
