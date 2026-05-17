@@ -3,7 +3,7 @@
 /* ============================================
    ICONS IMPORTS
    ============================================ */
-   @import "primeicons/primeicons.css";
+@import 'primeicons/primeicons.css';
 
 /* ============================================
    FONT IMPORTS
@@ -15,61 +15,61 @@
    ============================================ */
 :root {
   /* Brand Colors - Orange */
-  --orange-50:            #FDF0E0;
-  --orange-300:           #F5A84A;
-  --orange-500:           #E8821A;
-  --orange-700:           #B5600E;
-  --orange-900:           #7A3E06;
+  --orange-50: #fdf0e0;
+  --orange-300: #f5a84a;
+  --orange-500: #e8821a;
+  --orange-700: #b5600e;
+  --orange-900: #7a3e06;
 
   /* Neutral Colors - Charcoal */
-  --charcoal-50:          #F5F4F0;
-  --charcoal-100:         #E8E7E3;
-  --charcoal-400:         #AEADA9;
-  --charcoal-600:         #5C5C59;
-  --charcoal-800:         #3A3A38;
-  --charcoal-900:         #1D1D1B;
+  --charcoal-50: #f5f4f0;
+  --charcoal-100: #e8e7e3;
+  --charcoal-400: #aeada9;
+  --charcoal-600: #5c5c59;
+  --charcoal-800: #3a3a38;
+  --charcoal-900: #1d1d1b;
 
   /* Semantic Status Colors */
-  --success:              #1D9E75;
-  --success-bg:           #E1F5EE;
-  --warning:              #BA7517;
-  --warning-bg:           #FAEEDA;
-  --danger:               #A32D2D;
-  --danger-bg:            #FCEBEB;
-  --info:                 #185FA5;
-  --info-bg:              #E6F1FB;
+  --success: #1d9e75;
+  --success-bg: #e1f5ee;
+  --warning: #ba7517;
+  --warning-bg: #faeeda;
+  --danger: #a32d2d;
+  --danger-bg: #fcebeb;
+  --info: #185fa5;
+  --info-bg: #e6f1fb;
 
   /* Base Surfaces */
-  --white:                #FFFFFF;
-  --page-bg:              #f4f2ef;
-  --card-bg:              #FFFFFF;
-  --sidebar-bg:           #1D1D1B;
-  --topbar-bg:            #F5F4F0;
+  --white: #ffffff;
+  --page-bg: #f4f2ef;
+  --card-bg: #ffffff;
+  --sidebar-bg: #1d1d1b;
+  --topbar-bg: #f5f4f0;
 
   /* Typography */
-  --font-sans:            'Plus Jakarta Sans', sans-serif;
-  --font-mono:            'DM Mono', monospace;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
 
   /* Spacing (4px base unit) */
-  --space-xs:             4px;
-  --space-sm:             8px;
-  --space-md:             12px;
-  --space-lg:             16px;
-  --space-xl:             24px;
-  --space-2xl:            32px;
-  --space-3xl:            48px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
 
   /* Border Radius */
-  --radius-sm:            4px;
-  --radius-md:            8px;
-  --radius-lg:            12px;
-  --radius-xl:            16px;
-  --radius-full:          9999px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
 
   /* Layout */
-  --sidebar-width:        200px;
-  --topbar-height:        64px;
-  --content-max-w:        1200px;
+  --sidebar-width: 200px;
+  --topbar-height: 64px;
+  --content-max-w: 1200px;
 }
 
 /* ============================================
@@ -81,7 +81,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 400;
@@ -121,7 +122,8 @@ h3 {
   line-height: 1.4;
 }
 
-body, p {
+body,
+p {
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0;
@@ -246,11 +248,11 @@ body, p {
 .btn-danger {
   background: var(--danger-bg);
   color: var(--danger);
-  border: 1.5px solid #F09595;
+  border: 1.5px solid #f09595;
 }
 
 .btn-danger:hover {
-  background: #F5DEDE;
+  background: #f5dede;
 }
 
 .btn-danger:focus {
@@ -339,14 +341,30 @@ body, p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--charcoal-900);
+  background: var(--orange-50);
   color: var(--orange-500);
+  border: 1px solid var(--orange-300);
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 4px 10px;
   border-radius: var(--radius-md);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
+}
+
+.hours-badge--sm {
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+.hours-badge--md {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.hours-badge--lg {
+  padding: 6px 14px;
+  font-size: 14px;
 }
 
 .hours-badge.high {
@@ -357,6 +375,7 @@ body, p {
 .hours-badge.zero {
   background: var(--charcoal-100);
   color: var(--charcoal-400);
+  border: 0;
   font-weight: 500;
 }
 
@@ -398,9 +417,10 @@ body, p {
   background: var(--page-bg);
   outline: none;
   width: 100%;
-  transition: border-color 0.15s, box-shadow 0.15s;
-    box-shadow: 0 0 0 1px var(--charcoal-100);
-
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+  box-shadow: 0 0 0 1px var(--charcoal-100);
 }
 
 .field:focus {
@@ -560,8 +580,6 @@ body, p {
   transition: width 0.3s ease;
 }
 
-
-
 /* ============================================
    LAYOUT WRAPPER
    ============================================ */
@@ -617,4 +635,4 @@ body, p {
   padding: 0 var(--space-md);
 }
 
-@import "tailwindcss";
+@import 'tailwindcss';

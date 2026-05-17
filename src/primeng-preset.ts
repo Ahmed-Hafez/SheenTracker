@@ -76,5 +76,43 @@ export const PrimeNG_Preset = definePreset(Aura, {
         },
       },
     },
+    datatable: {
+      colorScheme: {
+        light: {
+          root: {
+            borderColor: 'var(--charcoal-600)',
+          },
+          headerCell: {
+            background: 'var(--page-bg)',
+            color: 'var(--charcoal-900)',
+            padding: '0.5rem 1rem',
+            borderColor: 'var(--charcoal-100)',
+            hoverBackground: 'var(--page-bg)',
+          },
+          header: {
+            borderColor: 'var(--charcoal-600)',
+            borderWidth: '1px',
+            sm: {
+              padding: '0.5rem 1rem',
+            },
+          },
+          row: {
+            hoverBackground: 'var(--charcoal-50)',
+          },
+          bodyCell: {
+            padding: '0.75rem 1rem',
+            borderColor: 'var(--charcoal-100)',
+          },
+          sortIcon: {
+            color: 'var(--charcoal-400)',
+            hoverColor: 'var(--orange-500)',
+            size: '0.75rem',
+          },
+          columnTitle: {
+            fontWeight: '400',
+          }
+        },
+      },
+    },
   },
 });

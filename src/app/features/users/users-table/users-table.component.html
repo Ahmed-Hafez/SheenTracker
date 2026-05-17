@@ -1,0 +1,54 @@
+<p-table
+  [value]="users().users"
+  [paginator]="true"
+  [rows]="10"
+  [tableStyle]="{
+    'min-width': '50rem',
+    'border-radius': '8px 8px 0 0',
+    'border': '1px solid #ebe9e7',
+    'border-bottom': 'none',
+    'box-shadow': '0px 4px 4px rgba(0, 0, 0, 1)'
+  }"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [sortOrder]="-1"
+>
+  <ng-template #header>
+    <tr class="">
+      @for (col of columns; track col) {
+        @if (col.field === '') {
+          <th [style.width]="col.width">{{ col.header }}</th>
+        } @else {
+          <th pSortableColumn="{{ col.field }}" [style.width]="col.width">
+            <div class="flex items-center gap-1">
+              <span class="mono-small">{{ col.header }}</span>
+              <p-sortIcon field="{{ col.field }}" />
+            </div>
+          </th>
+        }
+      }
+    </tr>
+  </ng-template>
+  <ng-template #body let-user>
+    <tr>
+      <td pFrozenColumn>
+        <div class="flex items-center gap-3">
+          <img
+            [src]="user.avatarUrl || 'https://api.dicebear.com/9.x/personas/svg?seed=' + user.userKey"
+            alt="{{ user.displayName }}'s avatar"
+            class="h-8 w-8 rounded-full object-cover"
+          />
+          <span>{{ user.displayName }}</span>
+        </div>
+      </td>
+      <td>{{ user.email }}</td>
+      <td><app-hours-badge [hours]="user.totalHours" [size]="'sm'"></app-hours-badge></td>
+      <td>{{ user.projectsCount }}</td>
+      <td>{{ user.workItemsCount }}</td>
+      <td>
+        <button type="button" class="btn btn-ghost btn-sm" (click)="onDetails(user.userKey)">
+          Details
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
