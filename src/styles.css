@@ -1,5 +1,9 @@
 /* Sheen Pulse Design System v1.0 */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ============================================
    ICONS IMPORTS
    ============================================ */
@@ -635,4 +639,6 @@ p {
   padding: 0 var(--space-md);
 }
 
-@import 'tailwindcss';
+
+@import "tailwindcss";
+p-accordion-panel, .p-accordionpanel { border-bottom: none !important; border: none !important; margin-bottom: 0 !important; }
