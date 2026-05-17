@@ -622,3 +622,4 @@ body, p {
 }
 
 @import "tailwindcss";
+p-accordion-panel, .p-accordionpanel { border-bottom: none !important; border: none !important; margin-bottom: 0 !important; }
