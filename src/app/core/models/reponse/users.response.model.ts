@@ -1,10 +1,14 @@
-export interface UsersResponse {
+export interface UsersResponse { 
+  userKpis: UsersKpis;
+  users: User[];
+}
+
+export interface UsersKpis {
   fromDate: string;
   toDate: string;
   totalUsers: number;
   usersWithHours: number;
   totalHours: number;
-  users: User[];
 }
 
 export interface User {

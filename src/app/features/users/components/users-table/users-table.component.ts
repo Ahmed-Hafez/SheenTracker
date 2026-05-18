@@ -1,7 +1,7 @@
 import { Component, inject, input, OnInit } from '@angular/core';
-import { User } from '../../../core/models/reponse/users.response.model';
+import { User } from '../../../../core/models/reponse/users.response.model';
 import { TableModule } from 'primeng/table';
-import { HoursBadgeComponent } from '../../../shared/hours-badge/hours-badge.component';
+import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Router } from '@angular/router';
 
 interface Column {
