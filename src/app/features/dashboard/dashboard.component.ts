@@ -4,11 +4,10 @@ import { DashboardResponse } from '../../core/models/reponse/dashboard.response.
 import { KpiCardComponent } from '../../shared/kpi-card/kpi-card.component';
 import { EChartsOption } from 'echarts/types/dist/shared';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { DashboardSkeletonComponent } from "./components/dashboard-skeleton/dashboard-skeleton.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [KpiCardComponent, NgxEchartsDirective, DashboardSkeletonComponent],
+  imports: [KpiCardComponent, NgxEchartsDirective],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -40,7 +39,7 @@ export class DashboardComponent implements OnInit {
       type: 'category',
       data: this.dashboardData().topUsers.map((user) => user.displayName),
     }, // names on Y
-    series: [{ type: 'bar', data: this.dashboardData().topUsers.map((user) => user.totalHours)}],
+    series: [{ type: 'bar', data: this.dashboardData().topUsers.map((user) => user.totalHours) }],
   }));
 
   projectsWorkloadOptions = computed<EChartsOption>(() => ({
@@ -64,8 +63,9 @@ export class DashboardComponent implements OnInit {
       orient: 'vertical',
       bottom: '0',
       left: 'center',
-      align: 'left',
-      itemGap: 15,
+      align: 'auto',
+      itemGap: 10,
+
       formatter: (name: string) => {
         const project = this.dashboardData().projectsKpis.projects.find(
           (p) => p.projectName === name,
@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit {
         }),
         avoidLabelOverlap: true,
         center: ['50%', '40%'],
-        radius: ['40%', '70%'],
+        radius: [60, 110],
         label: { show: false },
         emphasis: {
           itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.2)' },
