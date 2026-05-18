@@ -1,12 +1,14 @@
 <div>
-  <div class="flex flex-col gap-6 w-full mx-auto">
-    <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
-      <a routerLink="/users" class="cursor-pointer hover:text-gray-800 hover:underline">Users</a>
-      <i class="pi pi-angle-right text-xs"></i>
-      <span class="text-gray-800">Fatima Labib</span>
+  @if (user() && summary()) {
+    <div class="flex flex-col gap-6 w-full mx-auto">
+      <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
+        <a routerLink="/users" class="cursor-pointer hover:text-gray-800 hover:underline">Users</a>
+        <i class="pi pi-angle-right text-xs"></i>
+        <span class="text-gray-800">{{ user()!.name }}</span>
+      </div>
+      <app-user-card [user]="user()!"></app-user-card>
+      <app-user-summary [summary]="summary()!"></app-user-summary>
+      <app-work-items-table [groupedItems]="workItems()"></app-work-items-table>
     </div>
-    <app-user-card [user]="user()"></app-user-card>
-    <app-user-summary [summary]="summary()"></app-user-summary>
-    <app-work-items-table [groupedItems]="workItems()"></app-work-items-table>
-  </div>
+  }
 </div>
