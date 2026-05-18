@@ -6,17 +6,16 @@
       (click)="toggleCollapse.emit()"
       [attr.aria-label]="isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
     >
-    <img
-      [src]="isCollapsed() ? 'svgs/sidebar-open.svg' : 'svgs/sidebar-close.svg'"
-      alt="Toggle sidebar"
-      class="h-5 w-5  shrink-0"
-      >
-
+      <img
+        [src]="isCollapsed() ? 'svgs/sidebar-open.svg' : 'svgs/sidebar-close.svg'"
+        alt="Toggle sidebar"
+        class="h-5 w-5 shrink-0"
+      />
     </button>
 
     <span class="h-7 w-px shrink-0 bg-(--charcoal-800)" aria-hidden="true"></span>
     <div class="w-5"></div>
-    <div class="min-w-0 ">
+    <div class="min-w-0">
       <h3 class="">
         {{ title() || 'Sheen Pulse' }}
       </h3>
@@ -30,7 +29,8 @@
 
   <div class="flex items-center gap-2">
     <p-datepicker
-      [(ngModel)]="rangeDates"
+      [ngModel]="rangeDates()"
+      (ngModelChange)="onRangeChange($event)"
       selectionMode="range"
       [readonlyInput]="true"
       [numberOfMonths]="2"

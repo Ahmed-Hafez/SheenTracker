@@ -2,17 +2,15 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 type HoursBadgeSize = 'sm' | 'md' | 'lg';
 
-const SIZE_CLASSES: Record<HoursBadgeSize, string> = {
-  sm: 'px-2 py-0.5 text-xs',
-  md: 'px-2.5 py-1 text-sm',
-  lg: 'px-4 py-1.5 text-lg',
-};
-
 @Component({
   selector: 'app-hours-badge',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class]': 'hostClasses()',
+    class: 'hours-badge tabular-nums',
+    '[class.hours-badge--sm]': 'size() === "sm"',
+    '[class.hours-badge--md]': 'size() === "md"',
+    '[class.hours-badge--lg]': 'size() === "lg"',
+    '[class.zero]': 'isZero()',
   },
   template: `
     {{ formattedHours() }}
@@ -25,13 +23,4 @@ export class HoursBadgeComponent {
 
   readonly isZero = computed(() => this.hours() === 0);
   readonly formattedHours = computed(() => this.hours().toFixed(1));
-  readonly hostClasses = computed(() => {
-    const classes = ['hours-badge', 'tabular-nums', SIZE_CLASSES[this.size()]];
-
-    if (this.isZero()) {
-      classes.push('zero');
-    }
-
-    return classes.join(' ');
-  });
 }

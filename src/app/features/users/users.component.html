@@ -1,4 +1,4 @@
-<div>
+<div class="flex flex-col gap-6">
   <form [formGroup]="usersFilterForm">
     <div class="flex flex-row gap-3 items-center">
       <div class="search-field flex-9">
@@ -21,9 +21,8 @@
       <div class="flex flex-col gap-3">
         <label for="projects" class="input-label">Project</label>
         <p-multiselect
-          [options]="projects"
+          [options]="projects$()"
           formControlName="projects"
-          optionLabel="name"
           placeholder="Select Projects"
           [maxSelectedLabels]="3"
           inputId="projects"
@@ -75,4 +74,5 @@
     </div>
   </form>
 
+  <app-users-table [users]="users$()"> </app-users-table>
 </div>

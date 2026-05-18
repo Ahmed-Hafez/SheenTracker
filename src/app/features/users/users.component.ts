@@ -1,37 +1,44 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { Checkbox } from "primeng/checkbox";
+import { Checkbox } from 'primeng/checkbox';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SliderModule } from 'primeng/slider';
-import { KpiCardComponent } from "../../shared/kpi-card/kpi-card.component";
-import { HoursBadgeComponent } from "../../shared/hours-badge/hours-badge.component";
-import { StatusBadgeComponent } from "../../shared/status-badge/status-badge.component";
-
-
+import { UsersTableComponent } from './users-table/users-table.component';
+import { UsersService } from '../../core/http/backend_service/users.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs';
 
 @Component({
   selector: 'app-users',
-  imports: [FormsModule, ReactiveFormsModule, MultiSelectModule, Checkbox, ToggleSwitchModule, SliderModule, KpiCardComponent, HoursBadgeComponent, StatusBadgeComponent],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MultiSelectModule,
+    Checkbox,
+    ToggleSwitchModule,
+    SliderModule,
+    UsersTableComponent,
+  ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
 export class UsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly usersService = inject(UsersService);
+  private readonly destroyRef = inject(DestroyRef);
+  users$ = this.usersService.users$;
+  projects$ = this.usersService.projects$;
 
   searchTerm = '';
   usersFilterForm!: FormGroup;
 
-  projects: { name: string; code: string }[] = [
-    { name: 'New York', code: 'NY' },
-    { name: 'Rome', code: 'RM' },
-    { name: 'London', code: 'LDN' },
-    { name: 'Istanbul', code: 'IST' },
-    { name: 'Paris', code: 'PRS' },
-  ];
-
   ngOnInit(): void {
     this.initializeFilters();
+
+    this.usersFilterForm.valueChanges
+      .pipe(startWith(this.usersFilterForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.onFilterChange());
   }
 
   initializeFilters(): void {
@@ -44,5 +51,11 @@ export class UsersComponent implements OnInit {
       hoursRange: [''],
       zeroHoursUsers: [false],
     });
+  }
+
+  onFilterChange(): void {
+    const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
+    console.log(searchTerm, projects, hoursRange, zeroHoursUsers);
+    this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
   }
 }

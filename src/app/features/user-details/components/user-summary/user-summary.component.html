@@ -1,0 +1,20 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+  <app-kpi-card
+    label="Projects"
+    [value]="summary().projects"
+    icon="pi pi-folder text-xl"
+  ></app-kpi-card>
+
+  <app-kpi-card
+    label="Work Items"
+    [value]="summary().workItems"
+    icon="pi pi-check-square text-xl"
+  ></app-kpi-card>
+
+  <app-kpi-card
+    label="Date Range"
+    [value]="summary().dateRange.days + ' days'"
+    [hint]="summary().dateRange.start + ' → ' + summary().dateRange.end"
+    icon="pi pi-calendar text-xl"
+  ></app-kpi-card>
+</div>
