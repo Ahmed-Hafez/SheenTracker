@@ -76,7 +76,7 @@ export class UsersService {
         (user) => user.totalHours >= minHours && user.totalHours <= maxHours,
       );
     }
-    if (zeroHoursUsers) {
+    if (!zeroHoursUsers) {
       filteredUsers = filteredUsers.filter((user) => user.totalHours > 0);
     }
 

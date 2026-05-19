@@ -1,70 +1,41 @@
 <div class="flex flex-col gap-6">
   <form [formGroup]="usersFilterForm">
-    <div class="flex flex-row gap-3 items-center">
-      <div class="search-field flex-9">
-        <input
-          type="text"
-          placeholder="Search by name or email…"
-          class="field"
-          formControlName="searchTerm"
-        />
-      </div>
-
-      <button type="button" class="btn btn-secondary mb-3 flex-1" (click)="exportToCSV()">
+    <div class="flex flex-row gap-3 items-center justify-end" >
+      <button type="button" class="btn btn-secondary mb-3" (click)="exportToCSV()">
         <i class="pi pi-download"></i> Export CVS
       </button>
     </div>
 
-    <div
-      class="card h-max-content grid w-full grid-cols-1 gap-8 items-start md:grid-cols-2 lg:grid-cols-4"
-    >
-      <div class="flex flex-col gap-3">
+    <div class="card grid w-full grid-cols-1 gap-8 items-start md:grid-cols-4 lg:grid-cols-5">
+      <div class="flex flex-col gap-3 w-full col-span-1 md:col-span-4 lg:col-span-2">
+        <label for="projects" class="input-label">Search</label>
+        <div class="search-field">
+          <input
+            type="text"
+            placeholder="Name or email…"
+            class="field"
+            formControlName="searchTerm"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col gap-3 col-span-1 md:col-span-2 lg:col-span-1">
         <label for="projects" class="input-label">Project</label>
         <p-multiselect
           [options]="projects$()"
           formControlName="projects"
-          placeholder="Select Projects"
+          placeholder="Filter by Projects"
           [maxSelectedLabels]="3"
           inputId="projects"
           class="w-full"
         />
       </div>
-      <div class="flex flex-col gap-3">
-        <span class="input-label">Work item status</span>
-        <div class="flex flex-wrap items-center gap-4">
-          <div class="flex items-center gap-2">
-            <p-checkBox
-              formControlName="activeWorkItems"
-              [binary]="true"
-              inputId="activeWorkItems"
-            />
-            <label for="activeWorkItems" class="small text-(--charcoal-600)">Active</label>
-          </div>
-          <div class="flex items-center gap-2">
-            <p-checkBox
-              formControlName="resolvedWorkItems"
-              [binary]="true"
-              inputId="resolvedWorkItems"
-            />
-            <label for="resolvedWorkItems" class="small text-(--charcoal-600)">Resolved</label>
-          </div>
-          <div class="flex items-center gap-2">
-            <p-checkBox
-              formControlName="closedWorkItems"
-              [binary]="true"
-              inputId="closedWorkItems"
-            />
-            <label for="closedWorkItems" class="small text-(--charcoal-600)">Closed</label>
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-1 flex-col gap-3">
+      <div class="flex flex-col gap-3 col-span-1 md:col-span-2 lg:col-span-1">
         <span class="input-label"
           >Hours range: {{ usersFilterForm.get('hoursRange')?.value || 0 }}h - 200h</span
         >
         <p-slider formControlName="hoursRange" [max]="200" />
       </div>
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3 col-span-1 md:col-span-4 lg:col-span-1">
         <span class="input-label">Zero-hour users</span>
         <div class="flex items-center gap-3">
           <p-toggleSwitch formControlName="zeroHoursUsers" inputId="zeroHoursUsers" />

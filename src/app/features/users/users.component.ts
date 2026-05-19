@@ -51,7 +51,7 @@ export class UsersComponent implements OnInit {
       resolvedWorkItems: [true],
       closedWorkItems: [true],
       hoursRange: [''],
-      zeroHoursUsers: [false],
+      zeroHoursUsers: [true],
     });
   }
 
