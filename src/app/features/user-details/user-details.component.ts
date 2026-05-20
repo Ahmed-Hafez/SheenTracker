@@ -1,5 +1,12 @@
-import { Component, ChangeDetectionStrategy, signal, inject, OnInit, computed } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  inject,
+  OnInit,
+  computed,
+} from '@angular/core';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { UserSummaryComponent } from './components/user-summary/user-summary.component';
 import {
@@ -7,6 +14,8 @@ import {
   ProjectGroup,
 } from './components/work-items-table/work-items-table.component';
 import { UserDetailsService } from '../../core/http/backend_service/user-detials-service.service';
+import { UserDetailsResponse } from '../../core/models/reponse/user-details.response.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-user-details',
@@ -17,15 +26,20 @@ import { UserDetailsService } from '../../core/http/backend_service/user-detials
 })
 export class UserDetailsComponent implements OnInit {
   private userDetailsService = inject(UserDetailsService);
+  private route = inject(ActivatedRoute);
 
-  userDetails = this.userDetailsService.userDetails$;
+  userDetails = signal<UserDetailsResponse | null>(null);
+  isLoading = signal(false);
 
   user = computed(() => {
     const details = this.userDetails();
     if (!details) return null;
     return {
       name: details.user.displayName,
-      initials: details.user.displayName.split(' ').map(n => n[0]).join(''),
+      initials: details.user.displayName
+        .split(' ')
+        .map((n) => n[0])
+        .join(''),
       email1: details.user.email,
       email2: details.user.principalName,
       totalHours: details.totalHours,
@@ -39,9 +53,12 @@ export class UserDetailsComponent implements OnInit {
       projects: details.projectsCount,
       workItems: details.workItemsCount,
       dateRange: {
-        days: Math.floor((new Date(details.toDate).getTime() - new Date(details.fromDate).getTime()) / (1000 * 3600 * 24)),
+        days: Math.floor(
+          (new Date(details.toDate).getTime() - new Date(details.fromDate).getTime()) /
+            (1000 * 3600 * 24),
+        ),
         start: details.fromDate,
-        end: details.toDate
+        end: details.toDate,
       },
     };
   });
@@ -49,11 +66,11 @@ export class UserDetailsComponent implements OnInit {
   workItems = computed<ProjectGroup[]>(() => {
     const details = this.userDetails();
     if (!details) return [];
-    return details.projects.map(p => ({
+    return details.projects.map((p) => ({
       projectName: p.projectName,
       totalWorkItems: p.workItems.length,
       totalHours: p.hours.toString(),
-      items: p.workItems.map(wi => ({
+      items: p.workItems.map((wi) => ({
         id: `#${wi.id}`,
         title: wi.title,
         type: 'Task',
@@ -63,11 +80,25 @@ export class UserDetailsComponent implements OnInit {
         atEnd: `${wi.currentCompletedWork}h`,
         snapshot: details.toDate,
         isPositiveDelta: wi.deltaHours > 0,
-      }))
+      })),
     }));
   });
 
   ngOnInit() {
-    this.userDetailsService.getUserDetails('fatima-labib');
+    const userId = this.route.snapshot.paramMap.get('userId');
+    if (userId) {
+      this.isLoading.set(true);
+      this.userDetailsService
+        .getUserDetails(userId)
+        .pipe(finalize(() => this.isLoading.set(false)))
+        .subscribe({
+          next: (response) => {
+            this.userDetails.set(response);
+          },
+          error: (error) => {
+            console.error('Error fetching user details:', error);
+          },
+        });
+    }
   }
 }
