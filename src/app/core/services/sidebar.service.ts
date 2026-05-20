@@ -12,8 +12,8 @@ export class SidebarService {
   private readonly router = inject(Router);
 
   private readonly collapsedWidth = 80;
-  private readonly desktopExpandedWidth = 220;
-  private readonly overlayExpandedWidth = 250;
+  private readonly desktopExpandedWidth = 256;
+  private readonly overlayExpandedWidth = 288;
 
   isCollapsed = signal(false);
   isMobileOverlayOpen = signal(false);

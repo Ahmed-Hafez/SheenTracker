@@ -4,10 +4,11 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from 'primeng/checkbox';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SliderModule } from 'primeng/slider';
-import { UsersTableComponent } from './users-table/users-table.component';
+import { UsersTableComponent } from './components/users-table/users-table.component';
 import { UsersService } from '../../core/http/backend_service/users.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
+import { UsersSkeletonComponent } from './components/users-skeleton/users-skeleton.component';
 
 @Component({
   selector: 'app-users',
@@ -18,7 +19,7 @@ import { startWith } from 'rxjs';
     Checkbox,
     ToggleSwitchModule,
     SliderModule,
-    UsersTableComponent,
+    UsersSkeletonComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
@@ -57,5 +58,9 @@ export class UsersComponent implements OnInit {
     const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
     console.log(searchTerm, projects, hoursRange, zeroHoursUsers);
     this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
+  }
+
+  exportToCSV(): void {
+    this.usersService.exportUsersToCSV(this.users$());
   }
 }

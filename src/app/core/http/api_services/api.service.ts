@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { DateService } from '../../services/date.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +17,17 @@ export class ApiService {
   });
 
   private readonly httpClient = inject(HttpClient);
+  private readonly dateService = inject(DateService);
+
+  private selectedDateRange = this.dateService.selectedDateRange();
+  private selectedDateQueryParam = this.selectedDateRange ?
+    `?startDate=${this.selectedDateRange.start.toISOString()}
+    &endDate=${this.selectedDateRange.end.toISOString()}`
+    : '';
+
 
   get<T>(url: string, headers?: HttpHeaders): Observable<T> {
-    return this.httpClient.get<T>(this.apiUrl + url, {
+    return this.httpClient.get<T>(this.apiUrl + url + this.selectedDateQueryParam, {
       headers: headers ? headers : this.headers,
     });
   }

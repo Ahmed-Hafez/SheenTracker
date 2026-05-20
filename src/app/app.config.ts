@@ -9,10 +9,35 @@ import { routes } from './app.routes';
 import { PrimeNG_Preset } from '../primeng-preset';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 
+// Custom build — only import what you need (Angular 19+)
+import * as echarts from 'echarts/core';
+import { provideEchartsCore } from 'ngx-echarts';
+import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+} from 'echarts/components';
+import { CanvasRenderer, SVGRenderer } from 'echarts/renderers';
+
+echarts.use([
+  BarChart,
+  PieChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  SVGRenderer,
+  CanvasRenderer,
+]);
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([errorInterceptor])),
+    provideEchartsCore({ echarts }),
+
     MessageService,
     providePrimeNG({
       theme: {
