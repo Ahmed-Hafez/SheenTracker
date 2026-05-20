@@ -1,9 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { usersMock } from '../../mock/users.mock';
-import { User } from '../../models/reponse/users.response.model';
+import { User, UsersResponse } from '../../models/reponse/users.response.model';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
-import { of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { ApiService } from '../api_services/api.service';
+import { UsersKpis } from '../../models/reponse/dashboard.response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,21 +11,30 @@ import { ApiService } from '../api_services/api.service';
 export class UsersService {
   private readonly apiService = inject(ApiService);
 
-  private readonly allUsers = signal<User[]>(usersMock.users);
-  private readonly filteredUsers = signal<User[]>(usersMock.users);
+  private usersResponse = signal<UsersResponse>({} as UsersResponse);
+  private readonly allUsers = signal<User[]>([]);
+  private readonly filteredUsers = signal<User[]>([]);
 
-  private usersEndpoint = '/users';
+  private usersEndpoint = 'AzureDevOps/users';
 
   users$ = this.filteredUsers.asReadonly();
   projects$ = computed(() => this.getUsersProjects(this.allUsers()));
+  usersResponse$ = this.usersResponse.asReadonly();
 
-  getUsersKpis() {
-    return of(usersMock.userKpis);
+  getUsers(): Observable<UsersResponse> { 
+    return this.apiService.get<UsersResponse>(this.usersEndpoint).pipe(
+      map((response) => {
+        this.usersResponse.set(response);
+        this.allUsers.set(response.users);
+        this.filteredUsers.set(response.users);
+        return response;
+      }),
+    );
   }
 
-  getUsers() {
+  getUsersData() : User[] {
     // Implement API call to fetch users data
-    return this.allUsers();
+    return this.usersResponse().users;
   }
 
   getUsersProjects(users = this.allUsers()): string[] {

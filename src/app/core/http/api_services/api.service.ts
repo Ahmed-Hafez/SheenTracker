@@ -13,16 +13,11 @@ export class ApiService {
   private readonly httpClient = inject(HttpClient);
   private readonly dateService = inject(DateService);
 
-  private selectedDateRange = this.dateService.selectedDateRange();
-  private selectedDateQueryParam = this.selectedDateRange ?
-    `?fromDate=${this.selectedDateRange.start.toISOString().split('T')[0].trim()}
-    &toDate=${this.selectedDateRange.end.toISOString().split('T')[0].trim()}`
-    : '';
-
-
   get<T>(url: string, headers?: HttpHeaders): Observable<T> {
-    return this.httpClient.get<T>(this.apiUrl + url + this.selectedDateQueryParam, {
-      headers: headers 
+    const queryParams = this.getDateRangeQueryParams();
+    const fullUrl = this.apiUrl + url + queryParams;
+    return this.httpClient.get<T>(fullUrl, {
+      headers: headers,
     });
   }
 
@@ -57,6 +52,16 @@ export class ApiService {
     return this.httpClient.delete<T>(this.apiUrl + url, {
       headers: headers,
     });
+  }
+
+  private getDateRangeQueryParams(): string {
+    const selectedDateRange = this.dateService.selectedDateRange();
+    if (selectedDateRange && selectedDateRange.start && selectedDateRange.end) {
+      const fromDate = selectedDateRange.start.toISOString().split('T')[0].trim();
+      const toDate = selectedDateRange.end.toISOString().split('T')[0].trim();
+      return `?fromDate=${fromDate}&toDate=${toDate}`;
+    }
+    return '';
   }
 
   private downloadFile(data: Blob, fileName: string) {

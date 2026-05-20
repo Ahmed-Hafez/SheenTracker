@@ -4,11 +4,11 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from 'primeng/checkbox';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SliderModule } from 'primeng/slider';
-import { UsersTableComponent } from './components/users-table/users-table.component';
 import { UsersService } from '../../core/http/backend_service/users.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { UsersSkeletonComponent } from './components/users-skeleton/users-skeleton.component';
+import { UsersTableComponent } from "./components/users-table/users-table.component";
 
 @Component({
   selector: 'app-users',
@@ -16,11 +16,11 @@ import { UsersSkeletonComponent } from './components/users-skeleton/users-skelet
     FormsModule,
     ReactiveFormsModule,
     MultiSelectModule,
-    Checkbox,
     ToggleSwitchModule,
     SliderModule,
     UsersSkeletonComponent,
-  ],
+    UsersTableComponent
+],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
