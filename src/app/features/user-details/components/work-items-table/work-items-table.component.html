@@ -75,7 +75,16 @@
             <ng-template pTemplate="body" let-item>
               <tr class="hover:bg-gray-50/50">
                 <td class="text-[#E8821A] font-medium text-sm">
-                  {{ item.id }} <i class="pi pi-external-link text-[10px] ml-1"></i>
+                  <a
+                    href="https://dev.azure.com/tilde-technology/{{
+                      group.projectName
+                    }}/_workitems/edit/{{ item.id }}/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:underline inline-flex items-center"
+                  >
+                    {{ item.id }} <i class="pi pi-external-link text-[10px] ml-1"></i>
+                  </a>
                 </td>
                 <td class="text-sm font-medium text-gray-700">{{ item.title }}</td>
                 <td class="text-sm text-gray-500">{{ item.type }}</td>
