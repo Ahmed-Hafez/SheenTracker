@@ -48,8 +48,8 @@ export class UsersComponent implements OnInit {
       activeWorkItems: [true],
       resolvedWorkItems: [true],
       closedWorkItems: [true],
-      hoursRange: [''],
-      zeroHoursUsers: [false],
+      hoursRange: ['200'],
+      zeroHoursUsers: [true],
     });
   }
 

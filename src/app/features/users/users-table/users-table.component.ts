@@ -25,11 +25,11 @@ export class UsersTableComponent implements OnInit {
   ngOnInit(): void {
     this.columns = [
       { field: 'displayName', header: 'Name', width: '20%' },
-      { field: 'email', header: 'Email', width: '30%' },
+      { field: 'email', header: 'Email', width: '25%' },
       { field: 'totalHours', header: 'Total Hours', width: '15%' },
       { field: 'projectsCount', header: 'Projects', width: '15%' },
       { field: 'workItemsCount', header: 'Work Items', width: '15%' },
-      { field: '', header: '', width: '10%' },
+      { field: 'Actions', header: 'Actions', width: '15%' },
     ];
   }
 
