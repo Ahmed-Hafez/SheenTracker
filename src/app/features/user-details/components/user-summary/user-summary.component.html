@@ -13,8 +13,8 @@
 
   <app-kpi-card
     label="Date Range"
-    [value]="summary().dateRange.days + ' days'"
-    [hint]="summary().dateRange.start + ' → ' + summary().dateRange.end"
+    [value]="dateService.getSelectedDaysCount() + ' days'"
+    [hint]="(dateService.selectedDateRange()?.start | date:'yyyy-MM-dd') + ' → ' + (dateService.selectedDateRange()?.end | date:'yyyy-MM-dd')"
     icon="pi pi-calendar text-xl"
   ></app-kpi-card>
 </div>
