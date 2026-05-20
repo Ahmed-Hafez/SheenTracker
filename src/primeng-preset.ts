@@ -52,14 +52,17 @@ export const PrimeNG_Preset = definePreset(Aura, {
       colorScheme: {
         light: {
           root: {
-            borderColor: 'var(--orange-500)',
-            hoverBackground: 'var(--orange-700)',
+            background: '#e3e1de',
+            borderColor: 'transparent',
+            hoverBackground: '#e3e1de',
             checkedBackground: 'var(--orange-500)',
-            checkedHoverBackground: 'var(--orange-700)',
+            checkedHoverBackground: 'var(--orange-500)',
           },
           handle: {
-            background: 'var(--charcoal-600)',
-            color: 'var(--charcoal-600)',
+            background: 'var(--white)',
+            color: 'var(--white)',
+            hoverBackground: 'var(--white)',
+            hoverColor: 'var(--white)',
           },
         },
       },
@@ -83,10 +86,10 @@ export const PrimeNG_Preset = definePreset(Aura, {
             borderColor: 'var(--charcoal-600)',
           },
           headerCell: {
-            background: 'var(--page-bg)',
+            background: '#f9f8f7',
             color: 'var(--charcoal-900)',
             padding: '0.5rem 1rem',
-            borderColor: 'var(--charcoal-100)',
+            borderColor: '#eceae8',
             hoverBackground: 'var(--page-bg)',
           },
           header: {
@@ -110,7 +113,7 @@ export const PrimeNG_Preset = definePreset(Aura, {
           },
           columnTitle: {
             fontWeight: '400',
-          }
+          },
         },
       },
     },
