@@ -19,7 +19,6 @@ import { UsersSkeletonComponent } from './components/users-skeleton/users-skelet
     Checkbox,
     ToggleSwitchModule,
     SliderModule,
-    UsersTableComponent,
     UsersSkeletonComponent,
   ],
   templateUrl: './users.component.html',
@@ -50,7 +49,7 @@ export class UsersComponent implements OnInit {
       activeWorkItems: [true],
       resolvedWorkItems: [true],
       closedWorkItems: [true],
-      hoursRange: [''],
+      hoursRange: ['200'],
       zeroHoursUsers: [true],
     });
   }
