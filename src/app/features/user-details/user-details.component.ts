@@ -30,12 +30,13 @@ export class UserDetailsComponent implements OnInit {
 
   userDetails = signal<UserDetailsResponse | null>(null);
   isLoading = signal(false);
+  isError = signal(false);
 
   user = computed(() => {
     const details = this.userDetails();
     if (!details) return null;
     return {
-      name: details.user.displayName,
+      name: details.user.displayName.split(' ')[0],
       initials: details.user.displayName
         .split(' ')
         .map((n) => n[0])
@@ -94,9 +95,12 @@ export class UserDetailsComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.userDetails.set(response);
+            this.isError.set(false);
           },
           error: (error) => {
             console.error('Error fetching user details:', error);
+            this.userDetails.set(null);
+            this.isError.set(true);
           },
         });
     }

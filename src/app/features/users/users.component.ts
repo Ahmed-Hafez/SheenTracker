@@ -20,7 +20,8 @@ import { UsersSkeletonComponent } from './components/users-skeleton/users-skelet
     ToggleSwitchModule,
     SliderModule,
     UsersSkeletonComponent,
-  ],
+    UsersTableComponent
+],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })

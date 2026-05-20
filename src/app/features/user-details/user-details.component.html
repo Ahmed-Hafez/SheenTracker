@@ -3,7 +3,7 @@
     <div class="flex justify-center items-center py-20 min-h-[300px]">
       <i class="pi pi-spin pi-spinner text-4xl text-primary"></i>
     </div>
-  } @else if (user() && summary()) {
+  } @else if (isError()===false) {
     <div class="flex flex-col gap-6 w-full mx-auto">
       <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
         <a routerLink="/users" class="cursor-pointer hover:text-gray-800 hover:underline">Users</a>
