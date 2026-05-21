@@ -112,16 +112,17 @@ export class UsersService {
         'email',
         'principalName',
         'descriptor',
+        'avatarUrl',
+        'totalHours',
         'projectsCount',
         'workItemsCount',
-        'totalHours',
-        'projectNames',
+       
       ], // Custom column titles
     };
 
     optimizedUsers = users.map((user) => ({
       ...user,
-      projectNames: user.projectNames.join('|'),
+      // projectNames: user.projectNames.join('|'),
     }));
 
     // Instantiate to trigger immediate browser download
