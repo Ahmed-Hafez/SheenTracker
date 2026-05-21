@@ -36,12 +36,16 @@ export class UserDetailsComponent implements OnInit {
   user = computed(() => {
     const details = this.userDetails();
     if (!details) return null;
+
+    const displayName = details.user.displayName.replace(/@?tildetech\.ae/gi, '').trim();
+
     return {
-      name: details.user.displayName.split(' ')[0],
-      initials: details.user.displayName
+      name: displayName,
+      initials: displayName
         .split(' ')
         .map((n) => n[0])
         .join(''),
+        avatarUrl: details.user.avatarUrl,
       email1: details.user.email,
       email2: details.user.principalName,
       totalHours: details.totalHours,
