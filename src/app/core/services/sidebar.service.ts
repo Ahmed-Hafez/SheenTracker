@@ -51,7 +51,6 @@ export class SidebarService {
       )
       .subscribe((url) => {
         this.isSupplierRoute.set(url.includes('/suppliers'));
-        console.log('Initializing SidebarService', url, this.isSupplierRoute());
       });
 
     if (!isPlatformBrowser(this.platformId)) {

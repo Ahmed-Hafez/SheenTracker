@@ -5,6 +5,8 @@ import {
   inject,
   OnInit,
   computed,
+  Injector,
+  effect
 } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { UserCardComponent } from './components/user-card/user-card.component';
@@ -46,11 +48,6 @@ export class UserDetailsComponent implements OnInit {
         .split(' ')
         .map((n) => n[0])
         .join(''),
-      name: details.user.displayName,
-      initials: details.user.displayName
-        .split(' ')
-        .map((n) => n[0])
-        .join(''),
       email1: details.user.email,
       email2: details.user.principalName,
       totalHours: details.totalHours,
@@ -69,10 +66,9 @@ export class UserDetailsComponent implements OnInit {
           (new Date(details.toDate).getTime() - new Date(details.fromDate).getTime()) /
            
             (1000 * 3600 * 24),
-        ,
         ),
         start: details.fromDate,
-        end: details.toDate,,
+        end: details.toDate,
       },
     };
   });
@@ -80,13 +76,11 @@ export class UserDetailsComponent implements OnInit {
   workItems = computed<ProjectGroup[]>(() => {
     const details = this.userDetails();
     if (!details) return [];
-    return details.projects.map((p) => ({
-    return details.projects.map((p) => ({
+    return details.projects.map(p => ({
       projectName: p.projectName,
       totalWorkItems: p.workItems.length,
       totalHours: p.hours.toString(),
-      items: p.workItems.map((wi) => ({
-      items: p.workItems.map((wi) => ({
+      items: p.workItems.map(wi => ({
         id: `#${wi.id}`,
         title: wi.title,
         type: 'Task',
@@ -96,29 +90,38 @@ export class UserDetailsComponent implements OnInit {
         atEnd: `${wi.currentCompletedWork}h`,
         snapshot: details.toDate,
         isPositiveDelta: wi.deltaHours > 0,
-      })),
-      })),
+      }))
     }));
   });
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('userId');
     if (userId) {
-      this.isLoading.set(true);
-      this.userDetailsService
-        .getUserDetails(userId)
-        .pipe(finalize(() => this.isLoading.set(false)))
-        .subscribe({
-          next: (response) => {
-            this.userDetails.set(response);
-            this.isError.set(false);
-          },
-          error: (error) => {
-            console.error('Error fetching user details:', error);
-            this.userDetails.set(null);
-            this.isError.set(true);
-          },
-        });
+       effect(
+         () => {
+           this.refreshService.refreshTick();
+           this.loadUserDetails(userId);
+         },
+         { injector: this.injector },
+       );
     }
+  }
+
+  loadUserDetails(userId: string) { 
+    this.isLoading.set(true);
+    this.userDetailsService
+      .getUserDetails(userId)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.userDetails.set(response);
+          this.isError.set(false);
+        },
+        error: (error) => {
+          console.error('Error fetching user details:', error);
+          this.userDetails.set(null);
+          this.isError.set(true);
+        },
+      });
   }
 }

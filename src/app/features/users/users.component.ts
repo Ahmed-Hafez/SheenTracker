@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, Injector, OnInit } from '@angular/core';
+import { Component, DestroyRef, effect, inject, Injector, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from 'primeng/checkbox';
@@ -31,6 +31,7 @@ export class UsersComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly refreshService = inject(RefreshService);
   private readonly injector = inject(Injector);
+  readonly loading = signal(true);
   users$ = this.usersService.users$;
   projects$ = this.usersService.projects$;
 
@@ -57,9 +58,6 @@ export class UsersComponent implements OnInit {
     this.usersFilterForm = this.fb.group({
       searchTerm: [''],
       projects: [''],
-      activeWorkItems: [true],
-      resolvedWorkItems: [true],
-      closedWorkItems: [true],
       hoursRange: ['200'],
       zeroHoursUsers: [true],
     });
@@ -67,13 +65,19 @@ export class UsersComponent implements OnInit {
 
   onFilterChange(): void {
     const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
-    console.log(searchTerm, projects, hoursRange, zeroHoursUsers);
     this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
   }
 
   private loadUsers(): void {
+    this.loading.set(true);
     this.usersService.getUsers().subscribe({
-      next: () => this.onFilterChange(),
+      next: () => {
+        this.onFilterChange();
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      },
     });
   }
 

@@ -14,25 +14,27 @@ export class UsersService {
   private usersResponse = signal<UsersResponse>({} as UsersResponse);
   private readonly allUsers = signal<User[]>([]);
   private readonly filteredUsers = signal<User[]>([]);
+  private readonly usersProjects = signal<string[]>([]);
 
   private usersEndpoint = 'AzureDevOps/users';
 
   users$ = this.filteredUsers.asReadonly();
-  projects$ = computed(() => this.getUsersProjects(this.allUsers()));
+  projects$ = this.usersProjects.asReadonly();
   usersResponse$ = this.usersResponse.asReadonly();
 
-  getUsers(): Observable<UsersResponse> { 
+  getUsers(): Observable<UsersResponse> {
     return this.apiService.get<UsersResponse>(this.usersEndpoint).pipe(
       map((response) => {
         this.usersResponse.set(response);
         this.allUsers.set(response.users);
         this.filteredUsers.set(response.users);
+        this.getUsersProjects(); // Update projects list based on the fetched users
         return response;
       }),
     );
   }
 
-  getUsersData() : User[] {
+  getUsersData(): User[] {
     // Implement API call to fetch users data
     return this.usersResponse().users;
   }
@@ -49,6 +51,7 @@ export class UsersService {
         });
       }
     });
+    this.usersProjects.set(allProjects);
     return allProjects;
   }
 

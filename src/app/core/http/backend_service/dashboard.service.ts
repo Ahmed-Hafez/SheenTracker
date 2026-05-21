@@ -24,8 +24,6 @@ export class DashboardService {
   getDashboardData(): Observable<DashboardResponse> {
     return forkJoin([this.getDashboardUsers(), this.getProjectsKpis()]).pipe(
       map(([dashboardUsers, projectsKpis]) => {
-        console.log('Dashboard Users:', dashboardUsers);
-        console.log('Projects KPIs:', projectsKpis);
         return {
           projectsKpis,
           dashboardUsers,
@@ -48,7 +46,6 @@ export class DashboardService {
 
     return this.usersService.getUsers().pipe(
       map((response) => {
-        console.log('Users Response in DashboardService:', response); 
         topUsers = response.users
           .sort((a, b) => b.totalHours - a.totalHours)
           .slice(0, 10)

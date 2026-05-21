@@ -10,10 +10,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: DashboardComponent,
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
       },
       {
         path: 'dashboard',
+        title: 'Dashboard - SheenTrack 360°',
         component: DashboardComponent,
       },
       {
@@ -21,10 +23,12 @@ export const routes: Routes = [
         children: [
           {
             path: '',
+            title: 'Users - SheenTrack 360°',
             component: UsersComponent,
           },
           {
             path: ':userId',
+            title: 'User Details - SheenTrack 360°',
             loadComponent: () =>
               import('./features/user-details/user-details.component').then(
                 (m) => m.UserDetailsComponent,

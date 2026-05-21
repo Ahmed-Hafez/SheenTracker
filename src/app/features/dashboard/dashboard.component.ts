@@ -106,7 +106,7 @@ export class DashboardComponent implements OnInit {
 
         formatter: (name: string) => {
           const project = data.projectsKpis.find((p) => p.projectName === name);
-          return `{name|${name}}{value|${project?.totalHours ?? 0}h}`;
+          return `{name|${name}}{value|${project?.totalHours.toFixed(2) ?? 0}h}`;
         },
         textStyle: {
           rich: {
@@ -131,7 +131,7 @@ export class DashboardComponent implements OnInit {
           data: data.projectsKpis
             .filter((p) => p.totalHours > 0)
             .map((project) => {
-              return { name: project.projectName, value: project.totalHours };
+              return { name: project.projectName, value: Number(project.totalHours.toFixed(2)) };
             }),
           avoidLabelOverlap: true,
           center: ['50%', '40%'],
