@@ -44,7 +44,9 @@ export class UserDetailsComponent implements OnInit {
     const details = this.userDetails();
     if (!details) return null;
 
-    const displayName = details.user.displayName.replace(/@?tildetech\.ae/gi, '').trim();
+    const displayName = details.user.displayName
+      .replace(/@?(?:tildetech.ae|shuratech.com)/gi, '')
+      .trim();
 
     return {
       name: displayName,
