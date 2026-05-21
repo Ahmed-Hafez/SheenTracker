@@ -1,19 +1,15 @@
-import { Injectable, signal } from '@angular/core';
-import { userDetailsMock } from '../../mock/user-details.mock';
+import { Injectable, inject } from '@angular/core';
 import { UserDetailsResponse } from '../../models/reponse/user-details.response.model';
+import { ApiService } from '../api_services/api.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserDetailsService {
-  private readonly userDetailsState = signal<UserDetailsResponse | null>(null);
+  private readonly apiService = inject(ApiService);
 
-  userDetails$ = this.userDetailsState.asReadonly();
-
-  getUserDetails(userId: string) {
-    // Implement API call to fetch user details data based on userId
-    // Mock for now
-    this.userDetailsState.set(userDetailsMock);
-    return this.userDetails$();
+  getUserDetails(userId: string): Observable<UserDetailsResponse> {
+    return this.apiService.get<UserDetailsResponse>(`AzureDevOps/users/${userId}/work-items`);
   }
 }

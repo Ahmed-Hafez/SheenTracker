@@ -1,14 +1,12 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  computed,
-  effect,
-  inject,
-  Injector,
-  OnInit,
   signal,
+  inject,
+  OnInit,
+  computed,
 } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { UserSummaryComponent } from './components/user-summary/user-summary.component';
 import {
@@ -16,6 +14,8 @@ import {
   ProjectGroup,
 } from './components/work-items-table/work-items-table.component';
 import { UserDetailsService } from '../../core/http/backend_service/user-detials-service.service';
+import { UserDetailsResponse } from '../../core/models/reponse/user-details.response.model';
+import { finalize } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
 
 @Component({
@@ -33,12 +33,19 @@ export class UserDetailsComponent implements OnInit {
 
   readonly userId = signal<string | null>(null);
 
-  userDetails = this.userDetailsService.userDetails$;
+  userDetails = signal<UserDetailsResponse | null>(null);
+  isLoading = signal(false);
+  isError = signal(false);
 
   user = computed(() => {
     const details = this.userDetails();
     if (!details) return null;
     return {
+      name: details.user.displayName.split(' ')[0],
+      initials: details.user.displayName
+        .split(' ')
+        .map((n) => n[0])
+        .join(''),
       name: details.user.displayName,
       initials: details.user.displayName
         .split(' ')
@@ -58,11 +65,14 @@ export class UserDetailsComponent implements OnInit {
       workItems: details.workItemsCount,
       dateRange: {
         days: Math.floor(
+          
           (new Date(details.toDate).getTime() - new Date(details.fromDate).getTime()) /
+           
             (1000 * 3600 * 24),
+        ,
         ),
         start: details.fromDate,
-        end: details.toDate,
+        end: details.toDate,,
       },
     };
   });
@@ -71,9 +81,11 @@ export class UserDetailsComponent implements OnInit {
     const details = this.userDetails();
     if (!details) return [];
     return details.projects.map((p) => ({
+    return details.projects.map((p) => ({
       projectName: p.projectName,
       totalWorkItems: p.workItems.length,
       totalHours: p.hours.toString(),
+      items: p.workItems.map((wi) => ({
       items: p.workItems.map((wi) => ({
         id: `#${wi.id}`,
         title: wi.title,
@@ -85,27 +97,28 @@ export class UserDetailsComponent implements OnInit {
         snapshot: details.toDate,
         isPositiveDelta: wi.deltaHours > 0,
       })),
+      })),
     }));
   });
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('userId');
-    if (id) {
-      this.userId.set(id);
+  ngOnInit() {
+    const userId = this.route.snapshot.paramMap.get('userId');
+    if (userId) {
+      this.isLoading.set(true);
+      this.userDetailsService
+        .getUserDetails(userId)
+        .pipe(finalize(() => this.isLoading.set(false)))
+        .subscribe({
+          next: (response) => {
+            this.userDetails.set(response);
+            this.isError.set(false);
+          },
+          error: (error) => {
+            console.error('Error fetching user details:', error);
+            this.userDetails.set(null);
+            this.isError.set(true);
+          },
+        });
     }
-
-    effect(
-      () => {
-        this.refreshService.refreshTick();
-        this.loadUserDetails();
-      },
-      { injector: this.injector },
-    );
-  }
-
-  private loadUserDetails(): void {
-    const id = this.userId();
-    if (!id) return;
-    this.userDetailsService.getUserDetails(id);
   }
 }
