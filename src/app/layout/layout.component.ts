@@ -7,6 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { SidebarService } from '../core/services/sidebar.service';
 import { DateRange, DateService } from '../core/services/date.service';
+import { RefreshService } from '../core/services/refresh.service';
 
 @Component({
   selector: 'app-layout',
@@ -18,6 +19,7 @@ export class LayoutComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly sidebarService = inject(SidebarService);
   private readonly dateService = inject(DateService);
+  private readonly refreshService = inject(RefreshService);
   private readonly router = inject(Router);
 
   readonly hideSidebar = this.sidebarService.isSupplierRoute;
@@ -95,5 +97,9 @@ export class LayoutComponent implements OnInit {
 
   closeSidebarMobile(): void {
     this.sidebarService.closeSidebarMobile();
+  }
+
+  onRefresh(): void {
+    this.refreshService.trigger();
   }
 }

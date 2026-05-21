@@ -1,7 +1,7 @@
 @if (loading()) {
   <app-dashboard-skeleton />
 } @else {
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
     <app-kpi-card
       [label]="'Total Hours'"
       [icon]="'fa-solid fa-clock fa-sm'"
@@ -12,6 +12,12 @@
       [label]="'Users with Hours'"
       [icon]="'fa-solid fa-user-check fa-sm'"
       [value]="dashboardData()?.dashboardUsers?.userKpis?.usersWithHours ?? 0"
+    ></app-kpi-card>
+
+    <app-kpi-card
+      [label]="'Inactive Users'"
+      [icon]="'fa-solid fa-user-slash fa-sm'"
+      [value]="inactiveUsers()"
     ></app-kpi-card>
 
     <app-kpi-card

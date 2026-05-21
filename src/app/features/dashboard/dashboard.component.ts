@@ -1,10 +1,11 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, Injector, OnInit, signal } from '@angular/core';
 import { DashboardService } from '../../core/http/backend_service/dashboard.service';
 import { DashboardResponse } from '../../core/models/reponse/dashboard.response.model';
 import { KpiCardComponent } from '../../shared/kpi-card/kpi-card.component';
 import { EChartsOption } from 'echarts/types/dist/shared';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dashboard-skeleton.component';
+import { RefreshService } from '../../core/services/refresh.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,11 +16,24 @@ import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dash
 })
 export class DashboardComponent implements OnInit {
   private readonly dashboardService = inject(DashboardService);
+  private readonly refreshService = inject(RefreshService);
+  private readonly injector = inject(Injector);
   readonly dashboardData = signal<DashboardResponse | null>(null);
+  readonly inactiveUsers = computed(() => {
+    const data = this.dashboardData();
+    if (!data) return 0;
+    return data.dashboardUsers.userKpis.totalUsers - data.dashboardUsers.userKpis.usersWithHours;
+  });
   readonly loading = signal(true);
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    effect(
+      () => {
+        this.refreshService.refreshTick();
+        this.loadDashboardData();
+      },
+      { injector: this.injector },
+    );
   }
 
   private loadDashboardData(): void {
@@ -109,14 +123,16 @@ export class DashboardComponent implements OnInit {
             },
           },
         },
-        data: data.projectsKpis.map((p) => p.projectName),
+        data: data.projectsKpis.filter((p) => p.totalHours > 0).map((p) => p.projectName),
       },
       series: [
         {
           type: 'pie',
-          data: data.projectsKpis.map((project) => {
-            return { name: project.projectName, value: project.totalHours };
-          }),
+          data: data.projectsKpis
+            .filter((p) => p.totalHours > 0)
+            .map((project) => {
+              return { name: project.projectName, value: project.totalHours };
+            }),
           avoidLabelOverlap: true,
           center: ['50%', '40%'],
           radius: [60, 110],

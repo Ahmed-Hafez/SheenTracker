@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, effect, inject, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from 'primeng/checkbox';
@@ -8,7 +8,8 @@ import { UsersService } from '../../core/http/backend_service/users.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { UsersSkeletonComponent } from './components/users-skeleton/users-skeleton.component';
-import { UsersTableComponent } from "./components/users-table/users-table.component";
+import { UsersTableComponent } from './components/users-table/users-table.component';
+import { RefreshService } from '../../core/services/refresh.service';
 
 @Component({
   selector: 'app-users',
@@ -19,8 +20,8 @@ import { UsersTableComponent } from "./components/users-table/users-table.compon
     ToggleSwitchModule,
     SliderModule,
     UsersSkeletonComponent,
-    UsersTableComponent
-],
+    UsersTableComponent,
+  ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
@@ -28,6 +29,8 @@ export class UsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly usersService = inject(UsersService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly refreshService = inject(RefreshService);
+  private readonly injector = inject(Injector);
   users$ = this.usersService.users$;
   projects$ = this.usersService.projects$;
 
@@ -40,6 +43,14 @@ export class UsersComponent implements OnInit {
     this.usersFilterForm.valueChanges
       .pipe(startWith(this.usersFilterForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.onFilterChange());
+
+    effect(
+      () => {
+        this.refreshService.refreshTick();
+        this.loadUsers();
+      },
+      { injector: this.injector },
+    );
   }
 
   initializeFilters(): void {
@@ -58,6 +69,12 @@ export class UsersComponent implements OnInit {
     const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
     console.log(searchTerm, projects, hoursRange, zeroHoursUsers);
     this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
+  }
+
+  private loadUsers(): void {
+    this.usersService.getUsers().subscribe({
+      next: () => this.onFilterChange(),
+    });
   }
 
   exportToCSV(): void {
