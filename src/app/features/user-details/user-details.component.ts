@@ -7,6 +7,7 @@ import {
   computed,
 } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
+import { Skeleton } from 'primeng/skeleton';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { UserSummaryComponent } from './components/user-summary/user-summary.component';
 import {
@@ -20,7 +21,7 @@ import { finalize } from 'rxjs';
 @Component({
   selector: 'app-user-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, UserCardComponent, UserSummaryComponent, WorkItemsTableComponent],
+  imports: [RouterLink, UserCardComponent, UserSummaryComponent, WorkItemsTableComponent, Skeleton],
   templateUrl: './user-details.component.html',
   styles: ``,
 })
