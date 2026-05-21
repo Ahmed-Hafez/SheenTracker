@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, signal } from '@angular/core';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 
 @Component({
@@ -14,6 +14,9 @@ export class UserCardComponent {
     initials: string;
     email1: string;
     email2: string;
+    avatarUrl: string;
     totalHours: number;
   }>();
+
+  hasImageError = signal(false);
 }

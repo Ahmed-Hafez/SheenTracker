@@ -73,11 +73,16 @@ export class WorkItemsTableComponent {
           return acc + (isNaN(numericalPart) ? 0 : Math.abs(numericalPart));
         }, 0);
 
+        const mappedItems = filteredItems.map((item) => ({
+          ...item,
+          id: item.id.replace(/#/g, ''),
+        }));
+
         return {
           ...group,
-          items: filteredItems,
-          totalWorkItems: filteredItems.length,
-          totalHours: filteredItems.length > 0 ? filteredHours.toFixed(1) : '0.0',
+          items: mappedItems,
+          totalWorkItems: mappedItems.length,
+          totalHours: mappedItems.length > 0 ? filteredHours.toFixed(1) : '0.0',
         };
       })
       .filter((group) => group.items.length > 0);

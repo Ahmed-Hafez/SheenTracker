@@ -9,6 +9,7 @@ import {
   effect
 } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
+import { Skeleton } from 'primeng/skeleton';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { UserSummaryComponent } from './components/user-summary/user-summary.component';
 import {
@@ -23,7 +24,7 @@ import { RefreshService } from '../../core/services/refresh.service';
 @Component({
   selector: 'app-user-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, UserCardComponent, UserSummaryComponent, WorkItemsTableComponent],
+  imports: [RouterLink, UserCardComponent, UserSummaryComponent, WorkItemsTableComponent, Skeleton],
   templateUrl: './user-details.component.html',
   styles: ``,
 })
@@ -42,12 +43,16 @@ export class UserDetailsComponent implements OnInit {
   user = computed(() => {
     const details = this.userDetails();
     if (!details) return null;
+
+    const displayName = details.user.displayName.replace(/@?tildetech\.ae/gi, '').trim();
+
     return {
-      name: details.user.displayName.split(' ')[0],
-      initials: details.user.displayName
+      name: displayName,
+      initials: displayName
         .split(' ')
         .map((n) => n[0])
         .join(''),
+        avatarUrl: details.user.avatarUrl,
       email1: details.user.email,
       email2: details.user.principalName,
       totalHours: details.totalHours,
