@@ -7,7 +7,7 @@
         <button type="button" class="btn btn-secondary mb-3" (click)="exportToCSV()">
           <i class="pi pi-download"></i> Export CVS
         </button>
-        <button type="button" class="btn btn-primary mb-3">
+        <button type="button" class="btn btn-primary mb-3" (click)="showUserPopup()">
           <i class="pi pi-plus"></i> Add User
         </button>
       </div>
@@ -58,4 +58,9 @@
 
     <app-users-table [users]="users$()"> </app-users-table>
   </div>
+
+  <app-user-form-dialog
+    (outputVisibleSignal)="onDialogVisibleChange($event)"
+    [inputVisibleSignal]="userDialogVisible()"
+  ></app-user-form-dialog>
 }

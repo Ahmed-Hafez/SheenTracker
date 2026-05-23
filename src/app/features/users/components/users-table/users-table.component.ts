@@ -3,6 +3,8 @@ import { User } from '../../../../core/models/reponse/users.response.model';
 import { TableModule } from 'primeng/table';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Router } from '@angular/router';
+import { Popover, PopoverModule } from 'primeng/popover';
+
 
 interface Column {
   field: string;
@@ -12,7 +14,7 @@ interface Column {
 
 @Component({
   selector: 'app-users-table',
-  imports: [TableModule, HoursBadgeComponent],
+  imports: [TableModule, HoursBadgeComponent, PopoverModule],
   templateUrl: './users-table.component.html',
   styleUrl: './users-table.component.scss',
 })
@@ -31,6 +33,10 @@ export class UsersTableComponent implements OnInit {
       { field: 'workItemsCount', header: 'Work Items', width: '15%' },
       { field: 'Actions', header: 'Actions', width: '15%' },
     ];
+  }
+
+  fixDisplayName(name: string): string {
+    return name.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
   }
 
   onDetails(userkey: string): void {

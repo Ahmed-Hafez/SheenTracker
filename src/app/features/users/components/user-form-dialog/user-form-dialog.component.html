@@ -1,0 +1,83 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '30rem', backgroundColor: 'var(--page-bg)' }"
+  (onHide)="onClosePopup()"
+  (onShow)="onOpenPopup()"
+  [dismissableMask]="true"
+  [resizable]="false"
+  [draggable]="false"
+  [focusOnShow]="false"
+>
+  <ng-template pTemplate="header">
+    <div>
+      <h4 class="text-start text-2xl font-semibold m-0">Add New User</h4>
+      <p class="text-center text-sm text-(--charcoal-600) m-0 mx-auto">
+        Create a new user record in SheenTrack 360°.
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <div class="flex gap-4 flex-row">
+        <div class="flex-1">
+          <label class="input-label" for="firstName">First Name</label>
+          <input class="field" id="firstName" formControlName="firstName" placeholder="Layla" />
+         @if (getFieldErrorMessage('firstName')!== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('firstName') }}
+            </p-message>
+          }
+        </div>
+        <div class="flex-1">
+          <label class="input-label" for="lastName">Last Name</label>
+          <input class="field" id="lastName" formControlName="lastName" placeholder="Johnson" />
+          @if (getFieldErrorMessage('lastName')!== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('lastName') }}
+            </p-message>
+          }
+        </div>
+      </div>
+      <div>
+        <label class="input-label" for="email">Email</label>
+        <input
+          class="field"
+          id="email"
+          formControlName="email"
+          placeholder="layla.johnson@example.com"
+        />
+        @if (getFieldErrorMessage('email')!== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('email') }}
+            </p-message>
+          }
+      </div>
+      <div>
+        <label class="input-label" for="department">Department</label>
+        <p-select
+          [fluid]="true"
+          [options]="departments"
+          appendTo="body"
+          formControlName="department"
+          inputId="department"
+          placeholder="Select Department"
+          style="background-color: var(--page-bg);"
+          [invalid]="getFieldErrorMessage('department') !== null"
+        >
+        </p-select>
+        @if (getFieldErrorMessage('department')!== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('department') }}
+            </p-message>
+          }
+      </div>
+
+      <div class="flex justify-end gap-3 mt-4">
+        <button type="button" class="btn btn-secondary" (click)="onClosePopup()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create User</button>
+      </div>
+    </form>
+  </ng-template>
+</p-dialog>

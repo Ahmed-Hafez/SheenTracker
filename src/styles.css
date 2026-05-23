@@ -418,7 +418,7 @@ p {
   font-family: var(--font-sans);
   font-size: 13px;
   color: var(--charcoal-900);
-  background: var(--white);
+  background: var(--page-bg);
   outline: none;
   width: 100%;
   transition:
@@ -433,7 +433,7 @@ p {
 }
 
 .field::placeholder {
-  color: var(--charcoal-800);
+  color: var(--charcoal-600);
 }
 
 .field:disabled {

@@ -40,16 +40,26 @@
             class="h-8 w-8 rounded-full object-cover"
             (error)="onImageError($event, user.userKey)"
           />
-          <span>{{ user.displayName.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim() }}</span>
+          <span>{{ fixDisplayName(user.displayName) }}</span>
         </div>
       </td>
       <td>{{ user.email }}</td>
       <td><app-hours-badge [hours]="user.totalHours" [size]="'sm'"></app-hours-badge></td>
-      <td>{{ user.projectsCount }} <span class="mono-small text-gray-400" style="font-size: 12px;"> {{ user.projectsCount === 1 ? 'project' : 'projects' }}</span></td>
-      <td>{{ user.workItemsCount }} <span class="mono-small text-gray-400" style="font-size: 12px;"> {{ user.workItemsCount === 1 ? 'item' : 'items' }}</span></td>
       <td>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="onDetails(user.userKey)">
-          Details
+        {{ user.projectsCount }}
+        <span class="mono-small text-gray-400" style="font-size: 12px">
+          {{ user.projectsCount === 1 ? 'project' : 'projects' }}</span
+        >
+      </td>
+      <td>
+        {{ user.workItemsCount }}
+        <span class="mono-small text-gray-400" style="font-size: 12px">
+          {{ user.workItemsCount === 1 ? 'item' : 'items' }}</span
+        >
+      </td>
+      <td>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="op.toggle($event)">
+          <i class="pi pi-ellipsis-h"></i>
         </button>
       </td>
     </tr>
@@ -58,9 +68,25 @@
     <tr>
       <td [attr.colspan]="columns.length + 1">
         <div class="flex md:justify-center items-center p-10">
-          <p class="block mono-metric" style="font-weight: 400">No users match the current filters.</p>
+          <p class="block mono-metric" style="font-weight: 400">
+            No users match the current filters.
+          </p>
         </div>
       </td>
     </tr>
   </ng-template>
 </p-table>
+
+<p-popover #op>
+  <div class="flex flex-col">
+    <a class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer">
+      <i></i>
+    </a>
+    <a class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
+      ><i class="fa-solid fa-edit mr-2"></i> Edit Client</a
+    >
+    <a class="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
+      ><i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Client</a
+    >
+  </div>
+</p-popover>
