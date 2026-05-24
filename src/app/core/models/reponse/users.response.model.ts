@@ -21,3 +21,10 @@ export interface User {
   workItemsCount: number;
   projectNames: string[];
 }
+
+export interface AppUser {
+  userKey: string;
+  fullName: string;
+  email: string;
+  department: string;
+}

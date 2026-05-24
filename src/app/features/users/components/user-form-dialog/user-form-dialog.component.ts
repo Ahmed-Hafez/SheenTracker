@@ -1,8 +1,10 @@
-import { Component, effect, inject, input, OnInit, output } from '@angular/core';
+import { Component, effect, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { Select } from 'primeng/select';
+import { AppUsersService } from '../../../../core/http/backend_service/app-users.service';
+import { MessageService } from 'primeng/api';
 
 enum Department {
   Backend = 'Backend',
@@ -20,10 +22,15 @@ enum Department {
   templateUrl: './user-form-dialog.component.html',
 })
 export class UserFormDialogComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly messageService = inject(MessageService);
+  private readonly appUsersService = inject(AppUsersService);
+
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
-  private readonly fb = inject(FormBuilder);
-
+  isEditMode = input<boolean>(false);
+  userData = input<any>(null); // Replace 'any' with your actual user data type
+  actionLoading = signal(false);
   userForm!: FormGroup;
 
   visible = false;
@@ -39,16 +46,22 @@ export class UserFormDialogComponent implements OnInit {
   initializeForm() {
     // Initialize your form here using FormBuilder
     this.userForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern('^[A-Za-z]+$')]],
-      lastName: ['', [Validators.required, Validators.pattern('^[A-Za-z]+$')]],
+      firstName: [
+        this.isEditMode() ? this.userData()?.firstName : '',
+        [Validators.required, Validators.pattern('^[A-Za-z]+$')],
+      ],
+      lastName: [
+        this.isEditMode() ? this.userData()?.lastName : '',
+        [Validators.required, Validators.pattern('^[A-Za-z]+$')],
+      ],
       email: [
-        '',
+        this.isEditMode() ? this.userData()?.email : '',
         [
           Validators.required,
           Validators.pattern('^[A-Za-z0-9._%+-]+@(tildetech\\.ae|shuratech\\.com)$'),
         ],
       ],
-      department: ['', Validators.required],
+      department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
       // Add other form controls
     });
   }
@@ -106,9 +119,52 @@ export class UserFormDialogComponent implements OnInit {
     this.userForm.markAllAsTouched();
     this.userForm.markAsDirty();
     if (this.userForm.valid) {
-      // Handle form submission, e.g., send data to the server
-      console.log(this.userForm.value);
-      this.onClosePopup();
+      this.actionLoading.set(true);
+      const formData = this.userForm.value;
+      if (this.isEditMode()) {
+        this.appUsersService.updateAppUser(this.userData().userKey, formData).subscribe({
+          next: (response) => {
+             this.messageService.add({
+               severity: 'success',
+               summary: 'Success',
+               detail: 'User updated successfully.',
+             });
+            this.onClosePopup();
+            this.actionLoading.set(false);
+          },
+          error: (error) => {
+            console.error('Error updating user:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to update user.',
+            });
+            this.actionLoading.set(false);
+          },
+        });
+      } else {
+        this.appUsersService.addAppUser(formData).subscribe({
+          next: (response) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'User added successfully.',
+            });
+            this.onClosePopup();
+            this.actionLoading.set(false);
+          },
+
+          error: (error) => {
+            console.error('Error adding user:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to add user.',
+            });
+            this.actionLoading.set(false);
+          },
+        });
+      }
     }
   }
 

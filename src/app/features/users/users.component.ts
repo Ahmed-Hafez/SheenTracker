@@ -4,13 +4,13 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from 'primeng/checkbox';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SliderModule } from 'primeng/slider';
-import { UsersService } from '../../core/http/backend_service/users.service';
+import { UsersService } from '../../core/http/backend_service/azure-users.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { UsersSkeletonComponent } from './components/users-skeleton/users-skeleton.component';
 import { UsersTableComponent } from './components/users-table/users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
-import { UserFormDialogComponent } from "./components/user-form-dialog/user-form-dialog.component";
+import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -74,7 +74,7 @@ export class UsersComponent implements OnInit {
 
   private loadUsers(): void {
     this.loading.set(true);
-    this.usersService.getUsers().subscribe({
+    this.usersService.getAzureUsers().subscribe({
       next: () => {
         this.onFilterChange();
         this.loading.set(false);

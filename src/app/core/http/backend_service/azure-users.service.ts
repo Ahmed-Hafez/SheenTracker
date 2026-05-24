@@ -3,7 +3,6 @@ import { User, UsersResponse } from '../../models/reponse/users.response.model';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { map, Observable, of } from 'rxjs';
 import { ApiService } from '../api_services/api.service';
-import { UsersKpis } from '../../models/reponse/dashboard.response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,24 +21,24 @@ export class UsersService {
   projects$ = this.usersProjects.asReadonly();
   usersResponse$ = this.usersResponse.asReadonly();
 
-  getUsers(): Observable<UsersResponse> {
+  getAzureUsers(): Observable<UsersResponse> {
     return this.apiService.get<UsersResponse>(this.usersEndpoint).pipe(
       map((response) => {
         this.usersResponse.set(response);
         this.allUsers.set(response.users);
         this.filteredUsers.set(response.users);
-        this.getUsersProjects(); // Update projects list based on the fetched users
+        this.getAzureUsersProjects(); // Update projects list based on the fetched users
         return response;
       }),
     );
   }
 
-  getUsersData(): User[] {
+  getAzureUsersData(): User[] {
     // Implement API call to fetch users data
     return this.usersResponse().users;
   }
 
-  getUsersProjects(users = this.allUsers()): string[] {
+  getAzureUsersProjects(users = this.allUsers()): string[] {
     let allProjects: string[] = [];
     users.forEach((user) => {
       // skip if projectName is already in the list
@@ -116,7 +115,6 @@ export class UsersService {
         'totalHours',
         'projectsCount',
         'workItemsCount',
-       
       ], // Custom column titles
     };
 

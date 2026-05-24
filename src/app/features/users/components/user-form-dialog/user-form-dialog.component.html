@@ -11,9 +11,9 @@
 >
   <ng-template pTemplate="header">
     <div>
-      <h4 class="text-start text-2xl font-semibold m-0">Add New User</h4>
+      <h4 class="text-start text-2xl font-semibold m-0">{{ isEditMode() ? 'Update' : 'Add New' }} User</h4>
       <p class="text-center text-sm text-(--charcoal-600) m-0 mx-auto">
-        Create a new user record in SheenTrack 360°.
+        {{ isEditMode() ? 'Update' : 'Create a new' }} user record in SheenTrack 360°.
       </p>
     </div>
   </ng-template>
@@ -76,7 +76,11 @@
 
       <div class="flex justify-end gap-3 mt-4">
         <button type="button" class="btn btn-secondary" (click)="onClosePopup()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Create User</button>
+        <button type="submit" class="btn btn-primary" [disabled]="actionLoading()">
+         @if (actionLoading()) {
+          <i class="fa-solid fa-circle-notch fa-spin" style="color: #ffffff"></i>
+        }
+        {{isEditMode() ? 'Update User' : 'Create User'}}</button>
       </div>
     </form>
   </ng-template>

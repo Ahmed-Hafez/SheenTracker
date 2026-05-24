@@ -8,7 +8,7 @@ import {
   TopUser,
   UsersKpis,
 } from '../../models/reponse/dashboard.response.model';
-import { UsersService } from './users.service';
+import { UsersService } from './azure-users.service';
 import { ApiService } from '../api_services/api.service';
 
 @Injectable({
@@ -44,7 +44,7 @@ export class DashboardService {
     let usersKpis: UsersKpis = {} as UsersKpis;
     let dashboardUsers: DashboardUser = {} as DashboardUser;
 
-    return this.usersService.getUsers().pipe(
+    return this.usersService.getAzureUsers().pipe(
       map((response) => {
         topUsers = response.users
           .sort((a, b) => b.totalHours - a.totalHours)
@@ -57,7 +57,7 @@ export class DashboardService {
           totalHours: response.totalHours,
           totalUsers: response.totalUsers,
           usersWithHours: response.usersWithHours,
-        }
+        };
 
         dashboardUsers = {
           userKpis: usersKpis,

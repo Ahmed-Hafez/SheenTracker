@@ -117,5 +117,19 @@ export const PrimeNG_Preset = definePreset(Aura, {
         },
       },
     },
-  },
+
+    select: {
+      colorScheme: {
+        light: {
+          root: {
+            background: 'var(--page-bg)',
+            borderColor: 'var(--charcoal-400)',
+          },
+          overlay: {
+            background: 'var(--page-bg)',
+          }
+        },
+      }
+    }
+  }
 });
