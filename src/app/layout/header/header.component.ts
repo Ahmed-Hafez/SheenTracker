@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
   readonly subtitle = input('');
   readonly toggleSidebar = output<void>();
   readonly toggleCollapse = output<void>();
+  readonly refresh = output<void>();
 
   readonly rangeDates = signal<Date[] | null>(null);
 
@@ -33,15 +34,13 @@ export class HeaderComponent implements OnInit {
     this.dateService.setDateRange(defaultRange[0], defaultRange[1]);
   }
 
-  datePickerPT = {
-    pcInputText: {
-      root: ' p-inputtext p-component',
-    },
-  };
-
   onRangeChange(rangeDates: Date[] | null): void {
     this.rangeDates.set(rangeDates);
     this.dateService.setDateRangeFromArray(rangeDates);
+  }
+
+  onRefreshClick(): void {
+    this.refresh.emit();
   }
 
   getDateNDaysAgo(n: number): Date {

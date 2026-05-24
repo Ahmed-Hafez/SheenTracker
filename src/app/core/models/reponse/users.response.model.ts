@@ -1,15 +1,13 @@
-export interface UsersResponse { 
-  userKpis: UsersKpis;
-  users: User[];
-}
+import { UsersKpis } from "./dashboard.response.model";
 
-export interface UsersKpis {
-  fromDate: string;
-  toDate: string;
+export interface UsersResponse {
   totalUsers: number;
   usersWithHours: number;
   totalHours: number;
+  users: User[];
 }
+
+
 
 export interface User {
   userKey: string;

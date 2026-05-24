@@ -1,5 +1,67 @@
 <div>
-  @if (user() && summary()) {
+  @if (isLoading()) {
+    <div class="flex flex-col gap-6 w-full mx-auto">
+      <div class="flex items-center gap-2">
+        <p-skeleton width="3rem" height="1rem"></p-skeleton>
+        <i class="pi pi-angle-right text-xs text-gray-400"></i>
+        <p-skeleton width="8rem" height="1rem"></p-skeleton>
+      </div>
+
+      <div class="mb-4 shadow-sm border border-gray-100 rounded-lg bg-white p-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <p-skeleton shape="circle" size="4rem"></p-skeleton>
+            <div class="flex flex-col gap-2">
+              <p-skeleton width="12rem" height="1.5rem"></p-skeleton>
+              <p-skeleton width="10rem" height="1rem"></p-skeleton>
+              <p-skeleton width="8rem" height="1rem"></p-skeleton>
+            </div>
+          </div>
+          <div class="flex flex-col items-end pt-2 pr-2 gap-2">
+            <p-skeleton width="5rem" height="1rem"></p-skeleton>
+            <p-skeleton width="3rem" height="2rem" borderRadius="1rem"></p-skeleton>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex items-center justify-between">
+          <div class="flex flex-col gap-2">
+            <p-skeleton width="5rem" height="1rem"></p-skeleton>
+            <p-skeleton width="3rem" height="1.5rem"></p-skeleton>
+          </div>
+          <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex items-center justify-between">
+          <div class="flex flex-col gap-2">
+            <p-skeleton width="6rem" height="1rem"></p-skeleton>
+            <p-skeleton width="4rem" height="1.5rem"></p-skeleton>
+          </div>
+          <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex items-center justify-between">
+          <div class="flex flex-col gap-2">
+            <p-skeleton width="6rem" height="1rem"></p-skeleton>
+            <p-skeleton width="4rem" height="1.5rem"></p-skeleton>
+            <p-skeleton width="8rem" height="0.8rem"></p-skeleton>
+          </div>
+          <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-8">
+        <div class="flex justify-between items-center mb-6 gap-4">
+          <p-skeleton width="100%" height="2.5rem"></p-skeleton>
+          <p-skeleton width="12rem" height="2.5rem"></p-skeleton>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p-skeleton width="100%" height="3rem"></p-skeleton>
+          <p-skeleton width="100%" height="3rem"></p-skeleton>
+          <p-skeleton width="100%" height="3rem"></p-skeleton>
+        </div>
+      </div>
+    </div>
+  } @else if (isError()===false) {
     <div class="flex flex-col gap-6 w-full mx-auto">
       <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
         <a routerLink="/users" class="cursor-pointer hover:text-gray-800 hover:underline">Users</a>
@@ -9,6 +71,10 @@
       <app-user-card [user]="user()!"></app-user-card>
       <app-user-summary [summary]="summary()!"></app-user-summary>
       <app-work-items-table [groupedItems]="workItems()"></app-work-items-table>
+    </div>
+  } @else{
+    <div class="flex justify-center items-center py-20 min-h-[300px]">
+      <span class="text-gray-500 text-lg">There seems to be an error.Try again later.</span>
     </div>
   }
 </div>

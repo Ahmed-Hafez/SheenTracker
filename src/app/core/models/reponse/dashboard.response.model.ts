@@ -1,12 +1,10 @@
-import { UsersKpis } from './users.response.model';
 
 export interface DashboardResponse {
-  usersKpis: UsersKpis;
-  projectsKpis: projectsKpis;
-  topUsers: TopUser[];
+  dashboardUsers: DashboardUser;
+  projectsKpis: project[];
 }
 
-interface projectsKpis {
+export interface projectsKpis {
   fromDate: string;
   toDate: string;
   projectsCount: number;
@@ -14,7 +12,18 @@ interface projectsKpis {
   projects: project[];
 }
 
-interface project {
+export interface DashboardUser { 
+  userKpis: UsersKpis;
+  topUsers: TopUser[];
+}
+
+export interface UsersKpis {
+  totalUsers: number;
+  usersWithHours: number;
+  totalHours: number;
+}
+
+export interface project {
   rank: number;
   projectName: string;
   totalHours: number;

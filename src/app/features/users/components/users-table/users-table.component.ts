@@ -36,4 +36,9 @@ export class UsersTableComponent implements OnInit {
   onDetails(userkey: string): void {
     this.router.navigate(['users', userkey]);
   }
+
+  onImageError(event: Event, userkey: string) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://api.dicebear.com/9.x/personas/svg?seed=' + userkey;
+  }
 }

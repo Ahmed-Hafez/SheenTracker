@@ -1,7 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { forkJoin, map, of } from 'rxjs';
-import { DashboardResponse } from '../../models/reponse/dashboard.response.model';
-import { DASHBOARD_PROJECTS_KPIS_RESPONSE } from '../../mock/dashboard.mock';
+import { forkJoin, map, Observable, of } from 'rxjs';
+import {
+  DashboardResponse,
+  DashboardUser,
+  project,
+  projectsKpis,
+  TopUser,
+  UsersKpis,
+} from '../../models/reponse/dashboard.response.model';
 import { UsersService } from './users.service';
 import { ApiService } from '../api_services/api.service';
 
@@ -12,42 +18,54 @@ export class DashboardService {
   private readonly apiService = inject(ApiService);
   private readonly usersService = inject(UsersService);
 
-  private usersEndpoint = '/users';
-  private projectsKpisEndpoint = '/projects-hours';
+  private usersEndpoint = 'AzureDevOps/users';
+  private projectsKpisEndpoint = 'AzureDevOps/projects-hours';
 
-  getDashboardData() {
-    return forkJoin([this.getUsersKpis(), this.getProjectsKpis(), this.getTopUsers()]).pipe(
-      map(([usersKpis, projectsKpis, topUsers]) => {
+  getDashboardData(): Observable<DashboardResponse> {
+    return forkJoin([this.getDashboardUsers(), this.getProjectsKpis()]).pipe(
+      map(([dashboardUsers, projectsKpis]) => {
         return {
-          usersKpis,
           projectsKpis,
-          topUsers,
+          dashboardUsers,
         } as DashboardResponse;
       }),
     );
   }
 
-  private getUsersKpis() {
-    // return this.apiService.get('users-kpis');
-    return this.usersService.getUsersKpis();
-  }
-
-  private getProjectsKpis() {
+  private getProjectsKpis(): Observable<project[]> {
     // return this.apiService.get('projects-kpis');
-    return of(DASHBOARD_PROJECTS_KPIS_RESPONSE);
+    return this.apiService
+      .get<projectsKpis>(this.projectsKpisEndpoint)
+      .pipe(map((response) => response.projects));
   }
 
-  private getTopUsers() {
-    // return this.apiService.get('top-users');
-    return of(
-      this.usersService
-        .getUsers()
-        .sort((a, b) => b.totalHours - a.totalHours)
-        .slice(0, 10)
-        .map((user) => ({
-          displayName: user.displayName,
-          totalHours: user.totalHours,
-        })),
+  private getDashboardUsers(): Observable<DashboardUser> {
+    let topUsers: TopUser[] = [];
+    let usersKpis: UsersKpis = {} as UsersKpis;
+    let dashboardUsers: DashboardUser = {} as DashboardUser;
+
+    return this.usersService.getUsers().pipe(
+      map((response) => {
+        topUsers = response.users
+          .sort((a, b) => b.totalHours - a.totalHours)
+          .slice(0, 10)
+          .map((user) => ({
+            displayName: user.displayName,
+            totalHours: user.totalHours,
+          }));
+        usersKpis = {
+          totalHours: response.totalHours,
+          totalUsers: response.totalUsers,
+          usersWithHours: response.usersWithHours,
+        }
+
+        dashboardUsers = {
+          userKpis: usersKpis,
+          topUsers: topUsers,
+        };
+
+        return dashboardUsers;
+      }),
     );
   }
 }

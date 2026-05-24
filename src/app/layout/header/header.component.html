@@ -34,13 +34,14 @@
       selectionMode="range"
       [readonlyInput]="true"
       [numberOfMonths]="2"
-      [pt]="datePickerPT"
       [variant]="'filled'"
       [showIcon]="true"
       [dateFormat]="'dd M yy'"
       inputId="icondisplay"
       [iconDisplay]="'input'"
     />
-    <button type="button" class="btn btn-secondary"><i class="pi pi-refresh"></i> Refresh</button>
+    <button type="button" class="btn btn-secondary" (click)="onRefreshClick()">
+      <i class="pi pi-refresh"></i> Refresh
+    </button>
   </div>
 </div>

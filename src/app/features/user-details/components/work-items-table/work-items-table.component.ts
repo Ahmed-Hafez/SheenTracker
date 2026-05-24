@@ -37,16 +37,32 @@ export class WorkItemsTableComponent {
   searchQuery = signal('');
   statusFilter = signal('All statuses');
 
+  availableStatuses = computed(() => {
+    const statuses = new Set<string>();
+    for (const group of this.groupedItems()) {
+      for (const item of group.items) {
+        if (item.status) {
+          statuses.add(item.status);
+        }
+      }
+    }
+    return Array.from(statuses).sort();
+  });
+
   filteredGroups = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    const status = this.statusFilter();
+    const selectedStatus = this.statusFilter();
 
     return this.groupedItems()
       .map((group) => {
         const filteredItems = group.items.filter((item) => {
+
           const matchesSearch =
             item.id.toLowerCase().includes(query) || item.title.toLowerCase().includes(query);
-          const matchesStatus = status === 'All statuses' || item.status === status;
+           var matchesStatus: Boolean = item.status === selectedStatus;
+          if(selectedStatus === 'All statuses') {
+            matchesStatus = true;
+          }
           return matchesSearch && matchesStatus;
         });
 
@@ -57,11 +73,16 @@ export class WorkItemsTableComponent {
           return acc + (isNaN(numericalPart) ? 0 : Math.abs(numericalPart));
         }, 0);
 
+        const mappedItems = filteredItems.map((item) => ({
+          ...item,
+          id: item.id.replace(/#/g, ''),
+        }));
+
         return {
           ...group,
-          items: filteredItems,
-          totalWorkItems: filteredItems.length,
-          totalHours: filteredItems.length > 0 ? filteredHours.toFixed(1) : '0.0',
+          items: mappedItems,
+          totalWorkItems: mappedItems.length,
+          totalHours: mappedItems.length > 0 ? filteredHours.toFixed(1) : '0.0',
         };
       })
       .filter((group) => group.items.length > 0);
