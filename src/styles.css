@@ -38,8 +38,8 @@
   --success-bg: #e1f5ee;
   --warning: #ba7517;
   --warning-bg: #faeeda;
-  --danger: #a32d2d;
-  --danger-bg: #fcebeb;
+  --danger-hover: #a94845;
+  --danger-bg: #ac312c;
   --info: #185fa5;
   --info-bg: #e6f1fb;
 
@@ -191,10 +191,6 @@ p {
   background: var(--orange-700);
 }
 
-.btn-primary:focus {
-  box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.2);
-}
-
 .btn-primary:active {
   transform: scale(0.98);
 }
@@ -251,16 +247,13 @@ p {
 
 .btn-danger {
   background: var(--danger-bg);
-  color: var(--danger);
-  border: 1.5px solid #f09595;
+  color: var(--white);
 }
 
 .btn-danger:hover {
-  background: #f5dede;
-}
+  background: var(--danger-hover);
+    transform: scale(0.98);
 
-.btn-danger:focus {
-  box-shadow: 0 0 0 3px rgba(163, 45, 45, 0.2);
 }
 
 .btn-danger:active {
@@ -418,7 +411,7 @@ p {
   font-family: var(--font-sans);
   font-size: 13px;
   color: var(--charcoal-900);
-  background: var(--white);
+  background: var(--page-bg);
   outline: none;
   width: 100%;
   transition:
@@ -433,7 +426,7 @@ p {
 }
 
 .field::placeholder {
-  color: var(--charcoal-800);
+  color: var(--charcoal-600);
 }
 
 .field:disabled {
