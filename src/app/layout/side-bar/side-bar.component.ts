@@ -23,7 +23,8 @@ export class SideBarComponent {
 
   menuItems: MenuItem[] = [
     { icon: 'pi pi-objects-column', label: 'Dashboard', route: '/dashboard' },
-    { icon: 'fa-solid fa-users', label: 'Users', route: '/users' },
+    { icon: 'fa-solid fa-users', label: 'Azure Users', route: '/azure-users' },
+    { icon: 'fa-solid fa-users', label: 'System Users', route: '/system-users' },
     { icon: 'pi pi-chart-line', label: 'Reports', route: '/reports' },
   ];
   bottomMenuItems: MenuItem[] = [

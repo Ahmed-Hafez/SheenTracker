@@ -1,5 +1,5 @@
 @if (loading()) {
-  <app-users-skeleton></app-users-skeleton>
+  <app-system-users-skeleton></app-system-users-skeleton>
 } @else {
   <div class="flex flex-col px-6 gap-6">
     <form [formGroup]="usersFilterForm">
@@ -56,11 +56,13 @@
       </div>
     </form>
 
-    <app-users-table [users]="users$()"> </app-users-table>
+    <app-system-users-table [users]="users$()"> </app-system-users-table>
   </div>
 
-  <app-user-form-dialog
-    (outputVisibleSignal)="onDialogVisibleChange($event)"
-    [inputVisibleSignal]="userDialogVisible()"
-  ></app-user-form-dialog>
+  @if (userDialogVisible()) {
+    <app-user-form-dialog
+      (outputVisibleSignal)="onDialogVisibleChange($event)"
+      [inputVisibleSignal]="userDialogVisible()"
+    ></app-user-form-dialog>
+  }
 }

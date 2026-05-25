@@ -52,6 +52,14 @@ export class DeletePopupComponent {
           this.outputVisibleSignal.emit(false);
           this.outputDeleteSignal.emit(true);
         },
+        error: (err) => {
+          this.isDeleteLoading.set(false);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error Deleting ' + this.title(),
+            detail: 'An error occurred while deleting the ' + this.title() + '. Please try again.',
+          });
+        }
       });
   }
   onOpenPopup() {

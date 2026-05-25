@@ -1,13 +1,14 @@
 import { Component, inject, input, OnInit, output, signal, viewChild } from '@angular/core';
-import { User } from '../../../../core/models/reponse/users.response.model';
-import { TableModule } from 'primeng/table';
-import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
+
+import { TableModule } from 'primeng/table';
 import { Popover, PopoverModule } from 'primeng/popover';
+
 import { UserFormDialogComponent } from "../user-form-dialog/user-form-dialog.component";
 import { DeletePopupComponent } from "../../../../shared/delete-popup/delete-popup.component";
-import { Observable, of } from 'rxjs';
-import { AppUsersService } from '../../../../core/http/backend_service/app-users.service';
+import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
+import { SystemUsers } from '../../../../core/models/reponse/system-users.response.model';
 
 
 interface Column {
@@ -17,29 +18,27 @@ interface Column {
 }
 
 @Component({
-  selector: 'app-users-table',
+  selector: 'app-system-users-table',
   imports: [
     TableModule,
-    HoursBadgeComponent,
     PopoverModule,
     UserFormDialogComponent,
     DeletePopupComponent,
   ],
-  templateUrl: './users-table.component.html',
-  styleUrl: './users-table.component.scss',
+  templateUrl: './system-users-table.component.html',
 })
-export class UsersTableComponent implements OnInit {
+export class SystemUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
-  private readonly appUsersService = inject(AppUsersService);
+  private readonly appUsersService = inject(SystemUsersService);
 
-  users = input.required<User[]>();
+  users = input.required<SystemUsers[]>();
   userDialogVisible = signal(false);
   deleteRequestVisible = signal(false);
   actionTaken = output<void>();
 
   popupMenu = viewChild<Popover>('op');
 
-  selectedUser = signal<User | null>(null);
+  selectedUser = signal<SystemUsers | null>(null);
 
   columns!: Column[];
 
@@ -47,9 +46,7 @@ export class UsersTableComponent implements OnInit {
     this.columns = [
       { field: 'displayName', header: 'Name', width: '25%' },
       { field: 'email', header: 'Email', width: '25%' },
-      { field: 'totalHours', header: 'Total Hours', width: '15%' },
-      { field: 'projectsCount', header: 'Projects', width: '15%' },
-      { field: 'workItemsCount', header: 'Work Items', width: '15%' },
+      { field: 'department', header: 'Department', width: '25%' },
       { field: 'Actions', header: 'Actions', width: '10%' },
     ];
   }
@@ -58,7 +55,8 @@ export class UsersTableComponent implements OnInit {
     return name.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
   }
 
-  openMenuPopup(event: Event, user: User) {
+  openMenuPopup(event: Event, user: SystemUsers) {
+    console.log('Selected User:', user);
     this.popupMenu()?.toggle(event);
     this.selectedUser.set(user);
   }
@@ -100,6 +98,8 @@ export class UsersTableComponent implements OnInit {
   }
 
   showEditUserPopup() {
+        console.log('Selected User:', this.selectedUser());
+
     this.userDialogVisible.set(true);
   }
 

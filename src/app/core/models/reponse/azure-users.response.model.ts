@@ -22,9 +22,3 @@ export interface User {
   projectNames: string[];
 }
 
-export interface AppUser {
-  userKey: string;
-  fullName: string;
-  email: string;
-  department: string;
-}

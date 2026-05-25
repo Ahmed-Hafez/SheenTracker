@@ -1,0 +1,58 @@
+@if (loading()) {
+  <app-azure-users-skeleton></app-azure-users-skeleton>
+} @else {
+  <div class="flex flex-col px-6 gap-6">
+    <form [formGroup]="usersFilterForm">
+      <div class="flex flex-row gap-3 items-center justify-end">
+        <button type="button" class="btn btn-secondary mb-3" (click)="exportToCSV()">
+          <i class="pi pi-download"></i> Export CVS
+        </button>
+      </div>
+
+      <div
+        class="card grid w-full grid-cols-1 gap-8 items-start md:grid-cols-4 lg:grid-cols-5"
+        style="padding: 30px 24px"
+      >
+        <div class="flex flex-col gap-3 w-full col-span-1 md:col-span-4 lg:col-span-2">
+          <label for="projects" class="input-label">Search</label>
+          <div class="search-field">
+            <input
+              type="text"
+              placeholder="Name or email…"
+              class="field"
+              formControlName="searchTerm"
+            />
+          </div>
+        </div>
+        <div class="flex flex-col gap-3 col-span-1 md:col-span-2 lg:col-span-1">
+          <label for="projects" class="input-label">Project</label>
+          <p-multiselect
+            [options]="projects$()"
+            formControlName="projects"
+            placeholder="Filter by Projects"
+            [maxSelectedLabels]="3"
+            inputId="projects"
+            class="w-full"
+          />
+        </div>
+        <div class="flex flex-col gap-3 col-span-1 md:col-span-2 lg:col-span-1">
+          <span class="input-label"
+            >Hours range: 0h - {{ usersFilterForm.get('hoursRange')?.value || 0 }}h</span
+          >
+          <p-slider formControlName="hoursRange" [max]="200" />
+        </div>
+        <div class="flex flex-col gap-3 col-span-1 md:col-span-4 lg:col-span-1">
+          <span class="input-label">Zero-hour users</span>
+          <div class="flex items-center gap-3">
+            <p-toggleSwitch formControlName="zeroHoursUsers" inputId="zeroHoursUsers" />
+            <label for="zeroHoursUsers" class="small text-(--charcoal-600)">
+              Include in results
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <app-azure-users-table [users]="users$()"> </app-azure-users-table>
+  </div>
+}

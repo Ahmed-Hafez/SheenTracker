@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { Select } from 'primeng/select';
-import { AppUsersService } from '../../../../core/http/backend_service/app-users.service';
+import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
 import { MessageService } from 'primeng/api';
+import { SystemUsers } from '../../../../core/models/reponse/system-users.response.model';
 
 enum Department {
   Backend = 'Backend',
@@ -24,12 +25,12 @@ enum Department {
 export class UserFormDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
-  private readonly appUsersService = inject(AppUsersService);
+  private readonly appUsersService = inject(SystemUsersService);
 
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
   isEditMode = input<boolean>(false);
-  userData = input<any>(null); // Replace 'any' with your actual user data type
+  userData = input<SystemUsers | null>(null); // Replace 'any' with your actual user data type
   actionLoading = signal(false);
   userForm!: FormGroup;
 
@@ -47,11 +48,11 @@ export class UserFormDialogComponent implements OnInit {
     // Initialize your form here using FormBuilder
     this.userForm = this.fb.group({
       firstName: [
-        this.isEditMode() ? this.userData()?.firstName : '',
+        this.isEditMode() ? this.userData()?.fullName.split(' ')[0] : '',
         [Validators.required, Validators.pattern('^[A-Za-z]+$')],
       ],
       lastName: [
-        this.isEditMode() ? this.userData()?.lastName : '',
+        this.isEditMode() ? this.userData()?.fullName.split(' ')[1] : '',
         [Validators.required, Validators.pattern('^[A-Za-z]+$')],
       ],
       email: [
@@ -68,6 +69,7 @@ export class UserFormDialogComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+    console.log('User Data in Dialog:', this.userData());
   }
 
   getFieldErrorMessage(fieldName: string): string | null {
@@ -121,8 +123,15 @@ export class UserFormDialogComponent implements OnInit {
     if (this.userForm.valid) {
       this.actionLoading.set(true);
       const formData = this.userForm.value;
+
+      let systemUserData: SystemUsers = {
+        fullName: formData.firstName + ' ' + formData.lastName,
+        email: formData.email,
+        department: formData.department,
+        userKey: this.userData()?.userKey || null,
+      }
       if (this.isEditMode()) {
-        this.appUsersService.updateAppUser(this.userData().userKey, formData).subscribe({
+        this.appUsersService.updateAppUser(this.userData()?.userKey || '', systemUserData).subscribe({
           next: (response) => {
              this.messageService.add({
                severity: 'success',
@@ -143,7 +152,7 @@ export class UserFormDialogComponent implements OnInit {
           },
         });
       } else {
-        this.appUsersService.addAppUser(formData).subscribe({
+        this.appUsersService.addAppUser(systemUserData).subscribe({
           next: (response) => {
             this.messageService.add({
               severity: 'success',

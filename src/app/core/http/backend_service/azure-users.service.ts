@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { User, UsersResponse } from '../../models/reponse/users.response.model';
+import { User, UsersResponse } from '../../models/reponse/azure-users.response.model';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { map, Observable, of } from 'rxjs';
 import { ApiService } from '../api_services/api.service';

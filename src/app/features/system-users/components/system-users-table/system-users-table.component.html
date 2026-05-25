@@ -1,0 +1,116 @@
+<p-table
+  [value]="users()"
+  [paginator]="true"
+  [rows]="10"
+  [tableStyle]="{
+    'min-width': '50rem',
+    'border-radius': '8px 8px 0 0',
+    border: '1px solid #ebe9e7',
+    'border-bottom': 'none',
+    'box-shadow': '0px 4px 4px rgba(0, 0, 0, 1)',
+  }"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [sortOrder]="-1"
+>
+  <ng-template #header>
+    <tr class="">
+      @for (col of columns; track col) {
+        @if (col.field === 'Actions') {
+          <th [style.width]="col.width">{{ col.header }}</th>
+        } @else {
+          <th pSortableColumn="{{ col.field }}" [style.width]="col.width">
+            <div class="flex items-center gap-1">
+              <span class="mono-small">{{ col.header }}</span>
+              <p-sortIcon field="{{ col.field }}" />
+            </div>
+          </th>
+        }
+      }
+    </tr>
+  </ng-template>
+  <ng-template #body let-user let-rowIndex="rowIndex">
+    <tr>
+      <td pFrozenColumn>
+        <div class="flex items-center gap-3">
+          <img
+            [src]="
+              user.avatarUrl || 'https://api.dicebear.com/9.x/personas/svg?seed=' + user.userKey
+            "
+            alt="{{ user.displayName }}'s avatar"
+            class="h-8 w-8 rounded-full object-cover"
+            (error)="onImageError($event, user.userKey)"
+          />
+          <span>{{ fixDisplayName(user.fullName) }}</span>
+        </div>
+      </td>
+      <td>{{ user.email }}</td>
+      <td>
+        {{ user.department || '—' }}
+      </td>
+      <td style="text-align: start">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="openMenuPopup($event, user)"
+        >
+          <i class="pi pi-ellipsis-h"></i>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td [attr.colspan]="columns.length + 1">
+        <div class="flex md:justify-center items-center p-10">
+          <p class="block mono-metric" style="font-weight: 400">
+            No users match the current filters.
+          </p>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-popover #op>
+  <div class="flex flex-col gap-4">
+    <ul class="list-none p-0 m-0 flex flex-col">
+      <li
+        class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
+        (click)="callActions(selectedUser()?.userKey || '', 0)"
+      >
+        <i class="fa-solid fa-info-circle mr-2"></i> View Details
+      </li>
+      <li
+        class="px-4 py-2 text-sm text-amber-600 hover:bg-gray-100 rounded cursor-pointer"
+        (click)="callActions(selectedUser()?.userKey || '', 1)"
+      >
+        <i class="fa-solid fa-edit mr-2"></i> Edit Client
+      </li>
+      <li
+        class="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
+        (click)="callActions(selectedUser()?.userKey || '', 2)"
+      >
+        <i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Client
+      </li>
+    </ul>
+  </div>
+</p-popover>
+
+@if (userDialogVisible()) {
+  <app-user-form-dialog
+    (outputVisibleSignal)="onDialogVisibleChange($event)"
+    [inputVisibleSignal]="userDialogVisible()"
+    [isEditMode]="true"
+    [userData]="selectedUser()"
+  ></app-user-form-dialog>
+}
+
+<app-delete-popup
+  [title]="fixDisplayName(selectedUser()?.fullName || 'User') || 'User'"
+  [description]="'Are you sure you want to delete this user?'"
+  [action]="deleteUser(selectedUser()?.userKey || '')"
+  [inputVisibleSignal]="deleteRequestVisible()"
+  (outputVisibleSignal)="closeDeletePopup($event)"
+  (outputDeleteSignal)="actionTaken.emit()"
+>
+</app-delete-popup>

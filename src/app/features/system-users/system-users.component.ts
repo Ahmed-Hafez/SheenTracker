@@ -1,43 +1,42 @@
 import { Component, DestroyRef, effect, inject, Injector, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { Checkbox } from 'primeng/checkbox';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SliderModule } from 'primeng/slider';
 import { UsersService } from '../../core/http/backend_service/azure-users.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
-import { UsersSkeletonComponent } from './components/users-skeleton/users-skeleton.component';
-import { UsersTableComponent } from './components/users-table/users-table.component';
+import { SystemUsersSkeletonComponent } from './components/system-users-skeleton/system-users-skeleton.component';
+import { SystemUsersTableComponent } from './components/system-users-table/system-users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
 import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
+import { SystemUsersService } from '../../core/http/backend_service/system-users.service';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-system-users',
   imports: [
     FormsModule,
     ReactiveFormsModule,
     MultiSelectModule,
     ToggleSwitchModule,
     SliderModule,
-    UsersSkeletonComponent,
-    UsersTableComponent,
     UserFormDialogComponent,
-  ],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.scss',
+    SystemUsersTableComponent,
+    SystemUsersSkeletonComponent
+],
+  templateUrl: './system-users.component.html',
 })
-export class UsersComponent implements OnInit {
+export class SystemUsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly usersService = inject(UsersService);
+  private readonly systemUsers = inject(SystemUsersService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refreshService = inject(RefreshService);
   private readonly injector = inject(Injector);
   userDialogVisible = signal(false);
 
   readonly loading = signal(true);
-  users$ = this.usersService.users$;
-  projects$ = this.usersService.projects$;
+  users$ = this.systemUsers.users$;
+  projects$ = this.systemUsers.projects$;
 
   searchTerm = '';
   usersFilterForm!: FormGroup;
@@ -45,9 +44,9 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.initializeFilters();
 
-    this.usersFilterForm.valueChanges
-      .pipe(startWith(this.usersFilterForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.onFilterChange());
+    // this.usersFilterForm.valueChanges
+    //   .pipe(startWith(this.usersFilterForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
+    //   .subscribe(() => this.onFilterChange());
 
     effect(
       () => {
@@ -67,16 +66,16 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  onFilterChange(): void {
-    const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
-    this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
-  }
+  // onFilterChange(): void {
+  //   const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
+  //   this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
+  // }
 
   private loadUsers(): void {
     this.loading.set(true);
-    this.usersService.getAzureUsers().subscribe({
+    this.systemUsers.getAppUsers().subscribe({
       next: () => {
-        this.onFilterChange();
+        // this.onFilterChange();
         this.loading.set(false);
       },
       error: () => {
@@ -86,7 +85,7 @@ export class UsersComponent implements OnInit {
   }
 
   exportToCSV(): void {
-    this.usersService.exportUsersToCSV(this.users$());
+    // this.systemUsers.exportUsersToCSV(this.users$());
   }
 
   showUserPopup() {
