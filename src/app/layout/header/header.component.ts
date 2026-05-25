@@ -21,7 +21,21 @@ export class HeaderComponent implements OnInit {
 
   readonly rangeDates = signal<Date[] | null>(null);
 
+  minDate: Date | undefined;
+
+  maxDate: Date | undefined;
+
   ngOnInit(): void {
+    let today = new Date();
+    let month = today.getMonth();
+    let prevQuarter = month - 3;
+    
+    this.minDate = new Date();
+    this.maxDate = new Date();
+
+    this.minDate.setMonth(prevQuarter);
+    this.maxDate.setDate(today.getDate());
+
     const existingRange = this.dateService.selectedDateRange();
 
     if (existingRange) {
