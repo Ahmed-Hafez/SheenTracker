@@ -1,0 +1,41 @@
+<li>
+  <a
+    pRipple
+    #rla="routerLinkActive"
+    [routerLink]="menuItem().routerLink"
+    (click)="menuItem().items ? toggleSubmenu() : menuItem().action?.()"
+    class="sidebar-link"
+    [class.justify-center]="isSidebarCollapsed()"
+    [class.active]="markAsActive()"
+    routerLinkActive="active"
+  >
+    <i class="sidebar-link-icon shrink-0 {{ menuItem().icon }}"></i>
+    @if (!isSidebarCollapsed()) {
+      <span class="truncate min-w-0">{{ menuItem().label }}</span>
+    }
+    @if (menuItem().items && !isSidebarCollapsed()) {
+      <i
+        class="pi pi-chevron-down ml-auto transition-transform duration-200"
+        [class.rotate-180]="rla.isActive || isSubmenuOpen()"
+      ></i>
+    }
+  </a>
+  @if (menuItem().items && !isSidebarCollapsed() && isSubmenuOpen()) {
+    <ul class="ml-10 list-none px-0 py-0 border-l border-(--charcoal-800)">
+      @for (subItem of menuItem().items; track $index) {
+        <li>
+          <a
+            pRipple
+            #subRla="routerLinkActive"
+            [routerLink]="subItem.routerLink"
+            class="sidebar-sublink"
+            routerLinkActive="active"
+          >
+            <i class="sidebar-sublink-icon shrink-0 {{ subItem.icon }}"></i>
+            <span class="truncate min-w-0">{{ subItem.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</li>

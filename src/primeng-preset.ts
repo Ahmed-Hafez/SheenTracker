@@ -67,6 +67,28 @@ export const PrimeNG_Preset = definePreset(Aura, {
         },
       },
     },
+    panelmenu: {
+      colorScheme: {
+        light: {
+          panel: {
+            background: 'var(--sidebar-bg)',
+            borderColor: 'transparent',
+          },
+          item: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            focusBackground: 'rgba(255, 255, 255, 0.1)',
+            focusColor: 'var(--white)',
+          },
+          submenu: {
+            indent: '1.5rem',
+          },
+          submenuIcon: {
+            color: 'rgba(255, 255, 255, 0.5)',
+            
+          },
+        },
+      },
+    },
     datepicker: {
       colorScheme: {
         light: {
@@ -127,9 +149,9 @@ export const PrimeNG_Preset = definePreset(Aura, {
           },
           overlay: {
             background: 'var(--page-bg)',
-          }
+          },
         },
-      }
-    }
-  }
+      },
+    },
+  },
 });

@@ -23,23 +23,19 @@
     }
 
     <ul class="m-0 list-none px-0 py-2">
-      @for (item of menuItems; track $index) {
-        <li>
-          <a
-            pRipple
-            #rla="routerLinkActive"
-            [routerLink]="item.route"
-            (click)="onLinkClick()"
-            class="sidebar-link"
-            [class.justify-center]="isCollapsed()"
-            routerLinkActive="active"
-          >
-            <i class="sidebar-link-icon shrink-0 {{ item.icon }}"></i>
-            @if (!isCollapsed()) {
-              <span class="truncate min-w-0">{{ item.label }}</span>
-            }
-          </a>
-        </li>
+      @for (item of mainMenuItems; track $index) {
+        @if(item.items){
+          <app-menu-item
+            [menuItem]="item"
+            [isSidebarCollapsed]="isCollapsed()"
+            [markAsActive]="true"
+          ></app-menu-item>
+        }@else {
+        <app-menu-item
+          [menuItem]="item"
+          [isSidebarCollapsed]="isCollapsed()"
+        ></app-menu-item>
+        }
       }
     </ul>
   </div>
@@ -55,8 +51,7 @@
           <a
             pRipple
             #rla="routerLinkActive"
-            [routerLink]="item.route"
-            (click)="onLinkClick(item.action)"
+            [routerLink]="item.routerLink"
             class="sidebar-link"
             [class.justify-center]="isCollapsed()"
             routerLinkActive="active"

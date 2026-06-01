@@ -20,28 +20,15 @@ export const routes: Routes = [
         component: DashboardComponent,
       },
       {
-        path: 'azure-users',
+        path: 'users',
         children: [
           {
-            path: '',
+            path: 'azure',
             title: 'Azure Users - SheenTrack 360°',
             component: AzureUsersComponent,
           },
           {
-            path: ':userId',
-            title: 'User Details - SheenTrack 360°',
-            loadComponent: () =>
-              import('./features/user-details/user-details.component').then(
-                (m) => m.UserDetailsComponent,
-              ),
-          },
-        ],
-      },
-      {
-        path: 'system-users',
-        children: [
-          {
-            path: '',
+            path: 'system',
             title: 'System Users - SheenTrack 360°',
             component: SystemUsersComponent,
           },
