@@ -6,25 +6,23 @@ import {
   OnInit,
   computed,
   Injector,
-  effect
+  effect,
 } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Skeleton } from 'primeng/skeleton';
 import { UserCardComponent } from './components/user-card/user-card.component';
-import { UserSummaryComponent } from './components/user-summary/user-summary.component';
-import {
-  WorkItemsTableComponent,
-  ProjectGroup,
-} from './components/work-items-table/work-items-table.component';
+import { TabbarComponent } from './components/tabbar/tabbar.component';
+import { ProjectGroup } from './components/work-items-table/work-items-table.component';
 import { UserDetailsService } from '../../core/http/backend_service/user-detials-service.service';
 import { UserDetailsResponse } from '../../core/models/reponse/user-details.response.model';
 import { finalize } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
+import { ACHIEVEMENTS_MOCK } from '../../core/mock/achievements.mock';
 
 @Component({
   selector: 'app-user-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, UserCardComponent, UserSummaryComponent, WorkItemsTableComponent, Skeleton],
+  imports: [RouterLink, UserCardComponent, TabbarComponent, Skeleton],
   templateUrl: './user-details.component.html',
   styles: ``,
 })
@@ -54,7 +52,7 @@ export class UserDetailsComponent implements OnInit {
         .split(' ')
         .map((n) => n[0])
         .join(''),
-        avatarUrl: details.user.avatarUrl,
+      avatarUrl: details.user.avatarUrl,
       email1: details.user.email,
       email2: details.user.principalName,
       totalHours: details.totalHours,
@@ -69,9 +67,7 @@ export class UserDetailsComponent implements OnInit {
       workItems: details.workItemsCount,
       dateRange: {
         days: Math.floor(
-          
           (new Date(details.toDate).getTime() - new Date(details.fromDate).getTime()) /
-           
             (1000 * 3600 * 24),
         ),
         start: details.fromDate,
@@ -83,11 +79,11 @@ export class UserDetailsComponent implements OnInit {
   workItems = computed<ProjectGroup[]>(() => {
     const details = this.userDetails();
     if (!details) return [];
-    return details.projects.map(p => ({
+    return details.projects.map((p) => ({
       projectName: p.projectName,
       totalWorkItems: p.workItems.length,
       totalHours: p.hours.toString(),
-      items: p.workItems.map(wi => ({
+      items: p.workItems.map((wi) => ({
         id: `#${wi.id}`,
         title: wi.title,
         type: 'Task',
@@ -97,24 +93,26 @@ export class UserDetailsComponent implements OnInit {
         atEnd: `${wi.currentCompletedWork}h`,
         snapshot: details.toDate,
         isPositiveDelta: wi.deltaHours > 0,
-      }))
+      })),
     }));
   });
+
+  achievements = signal(ACHIEVEMENTS_MOCK);
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('userId');
     if (userId) {
-       effect(
-         () => {
-           this.refreshService.refreshTick();
-           this.loadUserDetails(userId);
-         },
-         { injector: this.injector },
-       );
+      effect(
+        () => {
+          this.refreshService.refreshTick();
+          this.loadUserDetails(userId);
+        },
+        { injector: this.injector },
+      );
     }
   }
 
-  loadUserDetails(userId: string) { 
+  loadUserDetails(userId: string) {
     this.isLoading.set(true);
     this.userDetailsService
       .getUserDetails(userId)
