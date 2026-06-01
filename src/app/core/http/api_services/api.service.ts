@@ -57,11 +57,18 @@ export class ApiService {
   private getDateRangeQueryParams(): string {
     const selectedDateRange = this.dateService.selectedDateRange();
     if (selectedDateRange && selectedDateRange.start && selectedDateRange.end) {
-      const fromDate = selectedDateRange.start.toISOString().split('T')[0].trim();
-      const toDate = selectedDateRange.end.toISOString().split('T')[0].trim();
+      const fromDate = this.formatLocalDate(selectedDateRange.start);
+      const toDate = this.formatLocalDate(selectedDateRange.end);
       return `?fromDate=${fromDate}&toDate=${toDate}`;
     }
     return '';
+  }
+
+  private formatLocalDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private downloadFile(data: Blob, fileName: string) {
