@@ -6,7 +6,8 @@
     (click)="menuItem().items ? toggleSubmenu() : menuItem().action?.()"
     class="sidebar-link"
     [class.justify-center]="isSidebarCollapsed()"
-    [class.active]="markAsActive()"
+    [class.active]="(menuItem().items && isSubmenuOpen())"
+
     routerLinkActive="active"
   >
     <i class="sidebar-link-icon shrink-0 {{ menuItem().icon }}"></i>

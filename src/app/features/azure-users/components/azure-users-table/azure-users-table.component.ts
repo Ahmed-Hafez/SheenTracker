@@ -58,7 +58,7 @@ export class AzureUsersTableComponent implements OnInit {
   }
 
   showDetails(userKey : string) { 
-    this.router.navigate(['/azure-users', userKey]);
+    this.router.navigate(['/users', userKey]);
   }
 
   onImageError(event: Event, userkey: string) {

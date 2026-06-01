@@ -16,25 +16,19 @@
 
     <hr class="m-0 border-(--charcoal-800)" />
 
-   
-
     @if (!isCollapsed()) {
       <p class="sidebar-section-label">Main</p>
     }
 
     <ul class="m-0 list-none px-0 py-2">
       @for (item of mainMenuItems; track $index) {
-        @if(item.items){
+        @if (item.items) {
           <app-menu-item
             [menuItem]="item"
             [isSidebarCollapsed]="isCollapsed()"
-            [markAsActive]="true"
           ></app-menu-item>
-        }@else {
-        <app-menu-item
-          [menuItem]="item"
-          [isSidebarCollapsed]="isCollapsed()"
-        ></app-menu-item>
+        } @else {
+          <app-menu-item [menuItem]="item" [isSidebarCollapsed]="isCollapsed()"></app-menu-item>
         }
       }
     </ul>

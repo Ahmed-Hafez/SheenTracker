@@ -1,63 +1,49 @@
 @if (loading()) {
   <app-system-users-skeleton></app-system-users-skeleton>
 } @else {
-  <div class="flex flex-col px-6 gap-6">
-    <form [formGroup]="usersFilterForm">
-      <div class="flex flex-row gap-3 items-center justify-end">
-        <button type="button" class="btn btn-secondary mb-3" (click)="exportToCSV()">
-          <i class="pi pi-download"></i> Export CVS
-        </button>
-        <button type="button" class="btn btn-primary mb-3" (click)="showUserPopup()">
-          <i class="pi pi-plus"></i> Add User
-        </button>
-      </div>
-
-      <div
-        class="card grid w-full grid-cols-1 gap-8 items-start md:grid-cols-4 lg:grid-cols-5"
-        style="padding: 30px 24px"
-      >
-        <div class="flex flex-col gap-3 w-full col-span-1 md:col-span-4 lg:col-span-2">
-          <label for="projects" class="input-label">Search</label>
-          <div class="search-field">
-            <input
-              type="text"
-              placeholder="Name or email…"
-              class="field"
-              formControlName="searchTerm"
-            />
-          </div>
-        </div>
-        <div class="flex flex-col gap-3 col-span-1 md:col-span-2 lg:col-span-1">
-          <label for="projects" class="input-label">Project</label>
-          <p-multiselect
-            [options]="projects$()"
-            formControlName="projects"
-            placeholder="Filter by Projects"
-            [maxSelectedLabels]="3"
-            inputId="projects"
-            class="w-full"
+  <div class="card w-full m-0 mb-6">
+    <form [formGroup]="usersFilterForm" class="w-full">
+      <div class="flex flex-col md:flex-row gap-4 items-center w-full">
+        <!-- Search Field (50% space on md and up) -->
+        <div class="search-field w-full md:w-3/5">
+          <input
+            type="text"
+            placeholder="Name or email…"
+            class="field"
+            formControlName="searchTerm"
           />
         </div>
-        <div class="flex flex-col gap-3 col-span-1 md:col-span-2 lg:col-span-1">
-          <span class="input-label"
-            >Hours range: 0h - {{ usersFilterForm.get('hoursRange')?.value || 0 }}h</span
-          >
-          <p-slider formControlName="hoursRange" [max]="200" />
-        </div>
-        <div class="flex flex-col gap-3 col-span-1 md:col-span-4 lg:col-span-1">
-          <span class="input-label">Zero-hour users</span>
-          <div class="flex items-center gap-3">
-            <p-toggleSwitch formControlName="zeroHoursUsers" inputId="zeroHoursUsers" />
-            <label for="zeroHoursUsers" class="small text-(--charcoal-600)">
-              Include in results
-            </label>
+
+        <!-- Actions Group (50% space on md and up) -->
+        <div class="flex items-center gap-3 w-full md:w-2/5">
+          <div class="flex-1">
+            <p-select
+              [fluid]="true"
+              [options]="departments"
+              formControlName="department"
+              [checkmark]="true"
+              [showClear]="true"
+              placeholder="All Departments"
+            />
           </div>
+          <button type="button" class="btn btn-primary whitespace-nowrap shrink-0" (click)="showUserPopup()">
+            <i class="pi pi-plus"></i> Add User
+          </button>
+          <button
+            type="button"
+            label="Toggle"
+            (click)="menu.toggle($event)"
+            class="btn btn-secondary shrink-0"
+            style="min-width: 2rem; padding: 0.75rem 0.5rem"
+          >
+            <i class="pi pi-ellipsis-v"></i>
+          </button>
+          <p-tieredmenu #menu [model]="items" [popup]="true" />
         </div>
       </div>
     </form>
-
-    <app-system-users-table [users]="users$()"> </app-system-users-table>
   </div>
+  <app-system-users-table [users]="users$()"> </app-system-users-table>
 
   @if (userDialogVisible()) {
     <app-user-form-dialog

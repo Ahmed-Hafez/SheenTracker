@@ -25,7 +25,6 @@ export class MenuItemComponent implements OnInit {
 
   menuItem = input.required<MenuItem>();
   isSidebarCollapsed = input.required<boolean>();
-  markAsActive = input<boolean>(false);
 
   toggleSubmenu(): void {
     this.isSubmenuOpen.update((open) => !open);

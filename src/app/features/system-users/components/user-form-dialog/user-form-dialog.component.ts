@@ -7,7 +7,7 @@ import { SystemUsersService } from '../../../../core/http/backend_service/system
 import { MessageService } from 'primeng/api';
 import { SystemUsers } from '../../../../core/models/reponse/system-users.response.model';
 
-enum Department {
+export enum Department {
   Backend = 'Backend',
   Frontend = 'Frontend',
   QualityAssurance = 'Quality Assurance',
