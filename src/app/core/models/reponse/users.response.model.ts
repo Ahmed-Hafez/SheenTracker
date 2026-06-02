@@ -1,4 +1,3 @@
-import { UsersKpis } from "./dashboard.response.model";
 
 export interface UsersResponse {
   totalUsers: number;
