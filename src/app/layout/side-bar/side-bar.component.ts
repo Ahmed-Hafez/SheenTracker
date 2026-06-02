@@ -16,9 +16,6 @@ import { MenuItem, MenuItemComponent } from "./menu-item/menu-item.component";
   imports: [RippleModule, RouterLink, RouterLinkActive, PanelMenuModule, MenuItemComponent],
 })
 export class SideBarComponent implements OnInit {
-isUsersRoute(): boolean {
-throw new Error('Method not implemented.');
-}
   private readonly sidebarService = inject(SidebarService);
   private readonly router = inject(Router);
   readonly isCollapsed = this.sidebarService.isCollapsed;

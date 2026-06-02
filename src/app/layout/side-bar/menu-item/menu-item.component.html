@@ -3,12 +3,11 @@
     pRipple
     #rla="routerLinkActive"
     [routerLink]="menuItem().routerLink"
-    (click)="menuItem().items ? toggleSubmenu() : menuItem().action?.()"
+    (click)="menuItem().items ? toggleSubmenu() : onLinkClick(menuItem().action)"
     class="sidebar-link"
     [class.justify-center]="isSidebarCollapsed()"
-    [class.active]="(menuItem().items && isSubmenuOpen())"
-
-    routerLinkActive="active"
+    [class.active]="menuItem().items && isChildRouteActive()"
+    [routerLinkActive]="menuItem().items ? '' : 'active'"
   >
     <i class="sidebar-link-icon shrink-0 {{ menuItem().icon }}"></i>
     @if (!isSidebarCollapsed()) {
@@ -21,13 +20,14 @@
       ></i>
     }
   </a>
-  @if (menuItem().items && !isSidebarCollapsed() && isSubmenuOpen()) {
+  @if (menuItem().items && isSubmenuOpen() && !isSidebarCollapsed()) {
     <ul class="ml-10 list-none px-0 py-0 border-l border-(--charcoal-800)">
       @for (subItem of menuItem().items; track $index) {
         <li>
           <a
             pRipple
             #subRla="routerLinkActive"
+            (click)="onLinkClick(subItem.action)"
             [routerLink]="subItem.routerLink"
             class="sidebar-sublink"
             routerLinkActive="active"
