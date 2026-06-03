@@ -54,6 +54,10 @@ export class MenuItemComponent implements OnInit {
       this.isSubmenuOpen.set(true);
     }
 
+    this.subscribeToRouteChanges();
+  }
+
+  subscribeToRouteChanges(): void { 
     this.router.events
       .pipe(
         filter((e): e is NavigationEnd => e instanceof NavigationEnd),

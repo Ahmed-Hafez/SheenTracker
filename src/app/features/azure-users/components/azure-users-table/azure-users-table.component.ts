@@ -4,9 +4,8 @@ import { TableModule } from 'primeng/table';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Router } from '@angular/router';
 import { Popover, PopoverModule } from 'primeng/popover';
-import { DeletePopupComponent } from "../../../../shared/delete-popup/delete-popup.component";
+import { DeletePopupComponent } from '../../../../shared/delete-popup/delete-popup.component';
 import { Observable, of } from 'rxjs';
-
 
 interface Column {
   field: string;
@@ -16,11 +15,7 @@ interface Column {
 
 @Component({
   selector: 'app-azure-users-table',
-  imports: [
-    TableModule,
-    HoursBadgeComponent,
-    PopoverModule,
-  ],
+  imports: [TableModule, HoursBadgeComponent, PopoverModule],
   templateUrl: './azure-users-table.component.html',
 })
 export class AzureUsersTableComponent implements OnInit {
@@ -38,6 +33,10 @@ export class AzureUsersTableComponent implements OnInit {
   columns!: Column[];
 
   ngOnInit(): void {
+    this.initializeTableColumns();
+  }
+
+  initializeTableColumns() {
     this.columns = [
       { field: 'displayName', header: 'Name', width: '20%' },
       { field: 'email', header: 'Email', width: '25%' },
@@ -57,7 +56,7 @@ export class AzureUsersTableComponent implements OnInit {
     this.selectedUser.set(user);
   }
 
-  showDetails(userKey : string) { 
+  showDetails(userKey: string) {
     this.router.navigate(['/users', userKey]);
   }
 
@@ -65,5 +64,4 @@ export class AzureUsersTableComponent implements OnInit {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'https://api.dicebear.com/9.x/personas/svg?seed=' + userkey;
   }
-
 }

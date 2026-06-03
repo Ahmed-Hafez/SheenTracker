@@ -5,11 +5,10 @@ import { of } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { Popover, PopoverModule } from 'primeng/popover';
 
-import { UserFormDialogComponent } from "../user-form-dialog/user-form-dialog.component";
-import { DeletePopupComponent } from "../../../../shared/delete-popup/delete-popup.component";
+import { UserFormDialogComponent } from '../user-form-dialog/user-form-dialog.component';
+import { DeletePopupComponent } from '../../../../shared/delete-popup/delete-popup.component';
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
 import { SystemUsers } from '../../../../core/models/reponse/system-users.response.model';
-
 
 interface Column {
   field: string;
@@ -19,12 +18,7 @@ interface Column {
 
 @Component({
   selector: 'app-system-users-table',
-  imports: [
-    TableModule,
-    PopoverModule,
-    UserFormDialogComponent,
-    DeletePopupComponent,
-  ],
+  imports: [TableModule, PopoverModule, UserFormDialogComponent, DeletePopupComponent],
   templateUrl: './system-users-table.component.html',
 })
 export class SystemUsersTableComponent implements OnInit {
@@ -43,8 +37,12 @@ export class SystemUsersTableComponent implements OnInit {
   columns!: Column[];
 
   ngOnInit(): void {
+    this.initializeTableColumns();
+  }
+
+  initializeTableColumns() {
     this.columns = [
-      { field: 'displayName', header: 'Name', width: '25%' },
+      { field: 'fullName', header: 'Name', width: '25%' },
       { field: 'email', header: 'Email', width: '25%' },
       { field: 'department', header: 'Department', width: '25%' },
       { field: 'Actions', header: 'Actions', width: '10%' },
@@ -94,11 +92,11 @@ export class SystemUsersTableComponent implements OnInit {
       return of(null);
     }
     // Implement the actual API call to delete the user
-    return this.appUsersService.deleteAppUser(userKey)
+    return this.appUsersService.deleteAppUser(userKey);
   }
 
   showEditUserPopup() {
-        console.log('Selected User:', this.selectedUser());
+    console.log('Selected User:', this.selectedUser());
 
     this.userDialogVisible.set(true);
   }
