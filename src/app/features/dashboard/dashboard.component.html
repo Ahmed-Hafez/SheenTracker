@@ -5,31 +5,31 @@
     <app-kpi-card
       [label]="'Total Hours'"
       [icon]="'fa-solid fa-clock fa-sm'"
-      [value]="dashboardData()?.dashboardUsers?.userKpis?.totalHours ?? 0"
+      [value]="projectsHours()?.totalHours ?? 0"
     ></app-kpi-card>
 
     <app-kpi-card
       [label]="'Users with Hours'"
       [icon]="'fa-solid fa-user-check fa-sm'"
-      [value]="dashboardData()?.dashboardUsers?.userKpis?.usersWithHours ?? 0"
+      [value]=" 0"
     ></app-kpi-card>
 
     <app-kpi-card
       [label]="'Inactive Users'"
       [icon]="'fa-solid fa-user-slash fa-sm'"
-      [value]="inactiveUsers()"
+      [value]="0"
     ></app-kpi-card>
 
     <app-kpi-card
       [label]="'Total Users'"
       [icon]="'fa-solid fa-users fa-sm'"
-      [value]="dashboardData()?.dashboardUsers?.userKpis?.totalUsers ?? 0"
+      [value]="0"
     ></app-kpi-card>
 
     <app-kpi-card
       [label]="'Projects Scanned'"
       [icon]="'fa-solid fa-check-circle fa-sm'"
-      [value]="dashboardData()?.projectsKpis?.length ?? 0"
+      [value]="projectsHours()?.projectsCount ?? 0"
     ></app-kpi-card>
   </div>
 

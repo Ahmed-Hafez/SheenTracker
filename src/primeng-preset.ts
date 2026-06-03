@@ -150,8 +150,21 @@ export const PrimeNG_Preset = definePreset(Aura, {
           overlay: {
             background: 'var(--page-bg)',
           },
-        },
-      },
+        }
     },
-  },
+    tabs: {
+      colorScheme: {
+        light: {
+          tablist:{
+            background: 'var(--page-bg)',
+          }
+          ,
+          tabpanel:{
+            background: 'var(--page-bg)',
+            padding: '2rem 0',
+          }
+        },
+      }
+    }
+  }
 });
