@@ -151,6 +151,7 @@ export const PrimeNG_Preset = definePreset(Aura, {
             background: 'var(--page-bg)',
           },
         }
+      },
     },
     tabs: {
       colorScheme: {
