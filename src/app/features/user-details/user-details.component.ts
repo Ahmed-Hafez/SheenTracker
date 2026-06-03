@@ -100,6 +100,9 @@ export class UserDetailsComponent implements OnInit {
   achievements = signal(ACHIEVEMENTS_MOCK);
 
   ngOnInit() {
+    this.refreshAndLoadDetails();
+  }
+  private refreshAndLoadDetails() {
     const userId = this.route.snapshot.paramMap.get('userId');
     if (userId) {
       effect(
