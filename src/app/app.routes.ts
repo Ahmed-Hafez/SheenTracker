@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { UsersComponent } from './features/users/users.component';
+import { AzureUsersComponent } from './features/azure-users/azure-users.component';
+import { SystemUsersComponent } from './features/system-users/system-users.component';
 
 export const routes: Routes = [
   {
@@ -22,9 +23,14 @@ export const routes: Routes = [
         path: 'users',
         children: [
           {
-            path: '',
-            title: 'Users - SheenTrack 360°',
-            component: UsersComponent,
+            path: 'azure',
+            title: 'Azure Users - SheenTrack 360°',
+            component: AzureUsersComponent,
+          },
+          {
+            path: 'system',
+            title: 'System Users - SheenTrack 360°',
+            component: SystemUsersComponent,
           },
           {
             path: ':userId',

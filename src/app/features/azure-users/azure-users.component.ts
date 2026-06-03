@@ -7,27 +7,24 @@ import { SliderModule } from 'primeng/slider';
 import { UsersService } from '../../core/http/backend_service/azure-users.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
-import { UsersSkeletonComponent } from './components/users-skeleton/users-skeleton.component';
-import { UsersTableComponent } from './components/users-table/users-table.component';
+import { AzureUsersSkeletonComponent } from './components/azure-users-skeleton/azure-users-skeleton.component';
+import { AzureUsersTableComponent } from './components/azure-users-table/azure-users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
-import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-azure-users',
   imports: [
     FormsModule,
     ReactiveFormsModule,
     MultiSelectModule,
     ToggleSwitchModule,
     SliderModule,
-    UsersSkeletonComponent,
-    UsersTableComponent,
-    UserFormDialogComponent,
+    AzureUsersSkeletonComponent,
+    AzureUsersTableComponent,
   ],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.scss',
+  templateUrl: './azure-users.component.html',
 })
-export class UsersComponent implements OnInit {
+export class AzureUsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly usersService = inject(UsersService);
   private readonly destroyRef = inject(DestroyRef);

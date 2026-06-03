@@ -1,44 +1,72 @@
-import { Component, inject } from '@angular/core';
-import { RippleModule } from 'primeng/ripple';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { SidebarService } from '../../core/services/sidebar.service';
+import { NgOptimizedImage } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
-interface MenuItem {
-  icon: string;
-  label: string;
-  route?: string;
-  action?: () => void;
-}
+import { RippleModule } from 'primeng/ripple';
+
+import {PanelMenuModule } from 'primeng/panelmenu';
+
+import { SidebarService } from '../../core/services/sidebar.service';
+import { MenuItem, MenuItemComponent } from "./menu-item/menu-item.component";
 
 @Component({
   selector: 'app-side-bar',
   templateUrl: './side-bar.component.html',
   styleUrls: ['./side-bar.component.scss'],
-  imports: [RippleModule, RouterLink, RouterLinkActive],
+  imports: [RippleModule, RouterLink, RouterLinkActive, PanelMenuModule, MenuItemComponent],
 })
-export class SideBarComponent {
+export class SideBarComponent implements OnInit {
   private readonly sidebarService = inject(SidebarService);
+  private readonly router = inject(Router);
   readonly isCollapsed = this.sidebarService.isCollapsed;
-  readonly isMobile = this.sidebarService.isMobile;
 
-  menuItems: MenuItem[] = [
-    { icon: 'pi pi-objects-column', label: 'Dashboard', route: '/dashboard' },
-    { icon: 'fa-solid fa-users', label: 'Users', route: '/users' },
-    { icon: 'pi pi-chart-line', label: 'Reports', route: '/reports' },
-  ];
-  bottomMenuItems: MenuItem[] = [
-    { icon: 'fa-solid fa-gear', label: 'Settings', route: '/settings' },
-  ];
-  onLinkClick(action?: () => void): void {
-    if (this.isMobile()) {
-      this.sidebarService.closeSidebarMobile();
-    }
-    if (action) {
-      action();
-    }
+  isSubmenuOpen = signal(false);
+
+  mainMenuItems: MenuItem[] = [];
+
+  bottomMenuItems: MenuItem[] = [];
+
+  ngOnInit(): void {
+    this.initializeMenuItems();
+
   }
 
-  closeSidebarMobile(): void {
-    this.sidebarService.closeSidebarMobile();
+  initializeMenuItems(): void {
+    this.mainMenuItems = [
+      {
+        icon: 'pi pi-objects-column',
+        label: 'Dashboard',
+        routerLink: '/dashboard',
+      },
+      {
+        label: 'Users',
+        icon: 'pi pi-users',
+        action: () => { this.router.navigate(['/users/azure']); },
+        items: this.isCollapsed()
+          ? []
+          : [
+              {
+                label: 'Azure Users',
+                routerLink: '/users/azure',
+              },
+              {
+                label: 'System Users',
+                routerLink: '/users/system',
+              },
+            ],
+      },
+      {
+        icon: 'pi pi-chart-line',
+        label: 'Reports',
+        routerLink: '/reports',
+      },
+    ];
+    this.bottomMenuItems = [
+      { icon: 'fa-solid fa-gear', label: 'Settings', routerLink: '/settings' },
+    ];
   }
+
+
+
+  
 }
