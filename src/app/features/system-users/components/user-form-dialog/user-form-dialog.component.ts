@@ -10,12 +10,12 @@ import { AddSystemUserRequest } from '../../../../core/models/request/add-system
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
 
 export enum Department {
-  Backend = 'Backend',
-  Frontend = 'Frontend',
+  Backend = 'Backend Development',
+  Frontend = 'Frontend Development',
   QualityAssurance = 'Quality Assurance',
   ProductManagement = 'Product Management',
   ScrumMaster = 'Scrum Master',
-  DevOps = 'DevOps',
+  DevOps = 'DevOps Team',
   UIUXDesign = 'UI/UX Design',
 }
 
@@ -152,7 +152,7 @@ export class UserFormDialogComponent implements OnInit {
         scrumMasterId: formData.scrumMasterId,
         productOwnerId: formData.productOwnerId,
         squadName: formData.squadName,
-        title: formData.title,
+        title: formData.jobTitle,
       };
       if (this.isEditMode()) {
         this.appUsersService

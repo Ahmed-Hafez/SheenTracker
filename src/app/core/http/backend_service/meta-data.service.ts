@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../api_services/api.service';
 import { AzureUsers, User } from '../../models/reponse/azure-users.response.model';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 
 interface MetaDataUser {
   fullName: string;
@@ -20,7 +20,7 @@ export class MetaDataService {
   private readonly metaDataUsers = signal<MetaDataUser[]>([]);
   metaDataUsers$ = this.metaDataUsers.asReadonly();
 
-  isLoading = signal(true);
+  isLoading = signal(false);
 
   getAzureUsers(): Observable<MetaDataUser[]> {
    
@@ -31,7 +31,13 @@ export class MetaDataService {
           userKey: user.userKey,
           email: user.email,
         }));
-        this.metaDataUsers.set(users);
+        
+        users.forEach((user) => {
+          if (user.fullName.includes('(tilde-technology)') === false) {
+            this.metaDataUsers.update((users) => [...users, user]);
+          }
+        });
+        
         return users;
       }),
     );

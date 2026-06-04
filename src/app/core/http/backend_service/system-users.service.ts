@@ -1,9 +1,9 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { ApiService } from '../api_services/api.service';
 import { SystemUser } from '../../models/reponse/system-users.response.model';
-import { usersMock } from '../../mock/system-users.mock';
+// import { usersMock } from '../../mock/system-users.mock';
 import { AddSystemUserRequest } from '../../models/request/add-system-user.request.model';
 
 @Injectable({
@@ -15,14 +15,14 @@ export class SystemUsersService {
   private readonly apiService = inject(ApiService);
 
   private readonly allUsers = signal<SystemUser[]>([]);
-  private readonly filteredUsers = signal<SystemUser[]>(usersMock);
-  private readonly usersProjects = signal<SystemUser[]>([]);
+  private readonly filteredUsers = signal<SystemUser[]>([]);
 
   users$ = this.filteredUsers.asReadonly();
-  projects$ = this.usersProjects.asReadonly();
 
   getAppUsers(): Observable<SystemUser[]> {
-    return this.apiService.get(this.usersEndpoint);
+    return this.apiService.get<SystemUser[]>(this.usersEndpoint).pipe(
+      map((response) => { this.allUsers.set(response); this.filteredUsers.set(response); return response; }),
+    );
   }
 
   getSystemUserByKey(userKey: number): Observable<SystemUser> {

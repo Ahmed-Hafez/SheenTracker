@@ -4,6 +4,8 @@ import { of } from 'rxjs';
 
 import { TableModule } from 'primeng/table';
 import { Popover, PopoverModule } from 'primeng/popover';
+import { TagModule } from 'primeng/tag';
+
 
 import { UserFormDialogComponent } from '../user-form-dialog/user-form-dialog.component';
 import { DeletePopupComponent } from '../../../../shared/delete-popup/delete-popup.component';
@@ -18,7 +20,7 @@ interface Column {
 
 @Component({
   selector: 'app-system-users-table',
-  imports: [TableModule, PopoverModule, UserFormDialogComponent, DeletePopupComponent],
+  imports: [TableModule, PopoverModule, UserFormDialogComponent, DeletePopupComponent, TagModule],
   templateUrl: './system-users-table.component.html',
 })
 export class SystemUsersTableComponent implements OnInit {
@@ -44,6 +46,7 @@ export class SystemUsersTableComponent implements OnInit {
     this.columns = [
       { field: 'fullName', header: 'Name', },
       { field: 'email', header: 'Email', },
+      { field: 'department', header: 'Department', },
       { field: 'sqaud', header: 'Squad', },
       { field: 'jobTitle', header: 'Job Title', },
       { field: 'azure', header: 'Azure User', },

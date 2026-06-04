@@ -15,16 +15,9 @@
   <ng-template #header>
     <tr class="">
       @for (col of columns; track col) {
-        @if (col.field === 'Actions' || col.field === 'azure') {
-          <th [style.width]="col.width">{{ col.header }}</th>
-        } @else {
-          <th pSortableColumn="{{ col.field }}" [style.width]="col.width">
-            <div class="flex items-center gap-1">
-              <span class="mono-small">{{ col.header }}</span>
-              <p-sortIcon field="{{ col.field }}" />
-            </div>
-          </th>
-        }
+        <th [style.width]="col.width">
+          <span class="mono-small">{{ col.header }}</span>
+        </th>
       }
     </tr>
   </ng-template>
@@ -33,9 +26,7 @@
       <td pFrozenColumn>
         <div class="flex items-center gap-3">
           <img
-            [src]="
-              user.avatarUrl || 'https://api.dicebear.com/9.x/personas/svg?seed=' + user.userKey
-            "
+            [src]="user.avatarUrl || 'https://api.dicebear.com/9.x/personas/svg?seed=' + user.id"
             alt="{{ user.displayName }}'s avatar"
             class="h-8 w-8 rounded-full object-cover"
             (error)="onImageError($event, user.userKey)"
@@ -45,13 +36,20 @@
       </td>
       <td>{{ user.email }}</td>
       <td>
+        <p-tag [value]="user.department" severity="secondary" />
+      </td>
+      <td>
         {{ user.squadName || '—' }}
       </td>
       <td>
         {{ user.title || '—' }}
       </td>
       <td>
-        {{ user.azureUserKey === null ? 'No' : 'Yes'}}
+        <p-tag
+          [value]="user.azureUserKey === null ? 'Unlinked' : 'Linked'"
+          [icon]="user.azureUserKey === null ? 'fa-solid fa-link-slash' : 'fa-solid fa-link'"
+          [severity]="user.azureUserKey === null ? 'secondary' : 'success'"
+        />
       </td>
       <td style="text-align: start">
         <button

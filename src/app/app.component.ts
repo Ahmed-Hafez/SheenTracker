@@ -10,27 +10,29 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './app.component.html',
 })
 export class App implements OnInit {
-  private readonly metaDataService = inject(MetaDataService)
+  private readonly metaDataService = inject(MetaDataService);
   messageService = inject(MessageService);
 
   ngOnInit(): void {
     this.getMetaData();
   }
 
-  getMetaData() { 
+  getMetaData() {
     this.metaDataService.isLoading.set(true);
-    this.metaDataService.getAzureUsers().subscribe(
-      {
-        next: () => {
-           setInterval(() => { this.metaDataService.isLoading.set(false);}, 30000);
-        },
-        error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching Azure users' });
-          setInterval(() => {
-            this.metaDataService.isLoading.set(false);
-          }, 30000);
-        },
-      }
-    );
+    console.log('is loading', this.metaDataService.isLoading());
+    this.metaDataService.getAzureUsers().subscribe({
+      next: (users) => {
+        this.metaDataService.isLoading.set(false);
+        console.log('Fetched', users, 'is loading', this.metaDataService.isLoading());
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error fetching Azure users',
+        });
+        this.metaDataService.isLoading.set(false);
+      },
+    });
   }
 }
