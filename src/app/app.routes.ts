@@ -40,6 +40,14 @@ export const routes: Routes = [
                 (m) => m.UserDetailsComponent,
               ),
           },
+          {
+            path: ':userKey',
+            title: 'User Details - SheenTrack 360°',
+            loadComponent: () =>
+              import('./features/user-details/user-details.component').then(
+                (m) => m.UserDetailsComponent,
+              ),
+          },
         ],
       },
     ],

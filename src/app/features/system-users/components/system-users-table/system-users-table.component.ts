@@ -64,10 +64,10 @@ export class SystemUsersTableComponent implements OnInit {
     this.selectedUser.set(user);
   }
 
-  callActions(userkey: number, index: number): void {
+  callActions(userId: number, index: number): void {
     switch (index) {
       case 0:
-        this.router.navigate(['users', userkey]);
+        this.router.navigate(['users'], { queryParams: { userId: userId } });
         break;
       case 1:
         this.showEditUserPopup();

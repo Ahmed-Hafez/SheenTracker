@@ -20,7 +20,7 @@ export class App implements OnInit {
   getMetaData() {
     this.metaDataService.isLoading.set(true);
     console.log('is loading', this.metaDataService.isLoading());
-    this.metaDataService.getAzureUsers().subscribe({
+    this.metaDataService.getAzureUsersMetaData().subscribe({
       next: (users) => {
         this.metaDataService.isLoading.set(false);
         console.log('Fetched', users, 'is loading', this.metaDataService.isLoading());
