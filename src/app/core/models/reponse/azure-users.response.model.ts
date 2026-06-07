@@ -1,12 +1,9 @@
-
-export interface UsersResponse {
+export interface AzureUsers {
   totalUsers: number;
   usersWithHours: number;
   totalHours: number;
   users: User[];
 }
-
-
 
 export interface User {
   userKey: string;
@@ -20,4 +17,3 @@ export interface User {
   workItemsCount: number;
   projectNames: string[];
 }
-

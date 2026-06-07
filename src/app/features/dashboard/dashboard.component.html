@@ -11,19 +11,19 @@
     <app-kpi-card
       [label]="'Users with Hours'"
       [icon]="'fa-solid fa-user-check fa-sm'"
-      [value]=" 0"
+      [value]=" azureUsersKpis().usersWithHours "
     ></app-kpi-card>
 
     <app-kpi-card
       [label]="'Inactive Users'"
       [icon]="'fa-solid fa-user-slash fa-sm'"
-      [value]="0"
+      [value]="azureUsersKpis().inActiveUsers"
     ></app-kpi-card>
 
     <app-kpi-card
       [label]="'Total Users'"
       [icon]="'fa-solid fa-users fa-sm'"
-      [value]="0"
+      [value]="azureUsersKpis().totalUsers"
     ></app-kpi-card>
 
     <app-kpi-card

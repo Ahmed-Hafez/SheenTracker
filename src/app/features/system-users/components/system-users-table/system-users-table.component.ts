@@ -4,11 +4,13 @@ import { of } from 'rxjs';
 
 import { TableModule } from 'primeng/table';
 import { Popover, PopoverModule } from 'primeng/popover';
+import { TagModule } from 'primeng/tag';
+
 
 import { UserFormDialogComponent } from '../user-form-dialog/user-form-dialog.component';
 import { DeletePopupComponent } from '../../../../shared/delete-popup/delete-popup.component';
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
-import { SystemUsers } from '../../../../core/models/reponse/system-users.response.model';
+import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
 
 interface Column {
   field: string;
@@ -18,21 +20,21 @@ interface Column {
 
 @Component({
   selector: 'app-system-users-table',
-  imports: [TableModule, PopoverModule, UserFormDialogComponent, DeletePopupComponent],
+  imports: [TableModule, PopoverModule, UserFormDialogComponent, DeletePopupComponent, TagModule],
   templateUrl: './system-users-table.component.html',
 })
 export class SystemUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly appUsersService = inject(SystemUsersService);
 
-  users = input.required<SystemUsers[]>();
+  users = input.required<SystemUser[]>();
   userDialogVisible = signal(false);
   deleteRequestVisible = signal(false);
   actionTaken = output<void>();
 
   popupMenu = viewChild<Popover>('op');
 
-  selectedUser = signal<SystemUsers | null>(null);
+  selectedUser = signal<SystemUser | null>(null);
 
   columns!: Column[];
 
@@ -42,10 +44,13 @@ export class SystemUsersTableComponent implements OnInit {
 
   initializeTableColumns() {
     this.columns = [
-      { field: 'fullName', header: 'Name', width: '25%' },
-      { field: 'email', header: 'Email', width: '25%' },
-      { field: 'department', header: 'Department', width: '25%' },
-      { field: 'Actions', header: 'Actions', width: '10%' },
+      { field: 'fullName', header: 'Name', },
+      { field: 'email', header: 'Email', },
+      { field: 'department', header: 'Department', },
+      { field: 'sqaud', header: 'Squad', },
+      { field: 'jobTitle', header: 'Job Title', },
+      { field: 'azure', header: 'Azure User', },
+      { field: 'Actions', header: 'Actions', },
     ];
   }
 
@@ -53,16 +58,16 @@ export class SystemUsersTableComponent implements OnInit {
     return name.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
   }
 
-  openMenuPopup(event: Event, user: SystemUsers) {
+  openMenuPopup(event: Event, user: SystemUser) {
     console.log('Selected User:', user);
     this.popupMenu()?.toggle(event);
     this.selectedUser.set(user);
   }
 
-  callActions(userkey: string, index: number): void {
+  callActions(userId: number, index: number): void {
     switch (index) {
       case 0:
-        this.router.navigate(['users', userkey]);
+        this.router.navigate(['users'], { queryParams: { userId: userId } });
         break;
       case 1:
         this.showEditUserPopup();
@@ -87,7 +92,7 @@ export class SystemUsersTableComponent implements OnInit {
     this.deleteRequestVisible.set($event);
   }
 
-  deleteUser(userKey: string | undefined) {
+  deleteUser(userKey: number | undefined) {
     if (!userKey) {
       return of(null);
     }

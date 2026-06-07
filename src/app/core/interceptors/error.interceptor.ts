@@ -12,14 +12,27 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const messageService = inject(MessageService);
   return next(req).pipe(
     catchError((err) => {
-      console.log('Error Interceptor Caught Error:', err);
-      messageService.add({
-        severity: 'error',
-        summary: 'Network Error(remove this on production)',
-        detail:
-          err.error,
-        life: 10000,
-      });
+       if (err.error instanceof Blob && err.error.type.includes('json')) {
+         // Case 1: JSON returned as Blob
+         return from(err.error.text()).pipe(
+           switchMap((text) => {
+             try {
+               const errorJson = JSON.parse(text as string);
+               handleError(
+                 err.status,
+                 errorJson?.ErrorCode,
+                 errorJson?.ErrorMessage || errorJson?.ErrorMsg,
+                 errorJson?.Context,
+                 messageService,
+                 router,
+               );
+             } catch {
+               handleError(err.status, null, null, null, messageService, router);
+             }
+             return throwError(() => err);
+           }),
+         );
+       }
 
 
       // Case 2: JSON returned directly as object

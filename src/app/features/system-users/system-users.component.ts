@@ -34,8 +34,7 @@ export class SystemUsersComponent implements OnInit {
   userDialogVisible = signal(false);
 
   readonly loading = signal(true);
-  users$ = this.systemUsers.users$;
-  projects$ = this.systemUsers.projects$;
+  users = this.systemUsers.users$;
 
   searchTerm = '';
   usersFilterForm!: FormGroup;
@@ -89,7 +88,7 @@ export class SystemUsersComponent implements OnInit {
   private loadUsers(): void {
     this.loading.set(true);
     this.systemUsers.getAppUsers().subscribe({
-      next: () => {
+      next: (users) => {
         // this.onFilterChange();
         this.loading.set(false);
       },

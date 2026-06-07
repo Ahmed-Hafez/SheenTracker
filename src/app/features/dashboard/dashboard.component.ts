@@ -7,6 +7,7 @@ import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dash
 import { RefreshService } from '../../core/services/refresh.service';
 import { Project, ProjectsHours } from '../../core/models/reponse/projects-hours.response.model';
 import { User } from '../../core/models/reponse/top-performers.response.model';
+import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ import { User } from '../../core/models/reponse/top-performers.response.model';
 export class DashboardComponent implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly refreshService = inject(RefreshService);
+  private readonly metaDataService = inject(MetaDataService);
   private readonly injector = inject(Injector);
   readonly projectsHours = signal<ProjectsHours | null>(null);
   readonly topPerformers = signal<User[] | null>(null);
@@ -27,6 +29,8 @@ export class DashboardComponent implements OnInit {
   //   return data.dashboardUsers.userKpis.totalUsers - data.dashboardUsers.userKpis.usersWithHours;
   // });
   readonly loading = signal(true);
+
+  azureUsersKpis = this.metaDataService.usersKpis$
 
   ngOnInit(): void {
     effect(

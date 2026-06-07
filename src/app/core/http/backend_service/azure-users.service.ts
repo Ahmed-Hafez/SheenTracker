@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { User, UsersResponse } from '../../models/reponse/azure-users.response.model';
+import { User, AzureUsers } from '../../models/reponse/azure-users.response.model';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { map, Observable, of } from 'rxjs';
 import { ApiService } from '../api_services/api.service';
@@ -10,7 +10,7 @@ import { ApiService } from '../api_services/api.service';
 export class UsersService {
   private readonly apiService = inject(ApiService);
 
-  private usersResponse = signal<UsersResponse>({} as UsersResponse);
+  private usersResponse = signal<AzureUsers>({} as AzureUsers);
   private readonly allUsers = signal<User[]>([]);
   private readonly filteredUsers = signal<User[]>([]);
   private readonly usersProjects = signal<string[]>([]);
@@ -21,8 +21,8 @@ export class UsersService {
   projects$ = this.usersProjects.asReadonly();
   usersResponse$ = this.usersResponse.asReadonly();
 
-  getAzureUsers(): Observable<UsersResponse> {
-    return this.apiService.get<UsersResponse>(this.usersEndpoint).pipe(
+  getAzureUsers(): Observable<AzureUsers> {
+    return this.apiService.get<AzureUsers>(this.usersEndpoint).pipe(
       map((response) => {
         this.usersResponse.set(response);
         this.allUsers.set(response.users);

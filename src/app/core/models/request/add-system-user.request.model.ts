@@ -1,15 +1,10 @@
-export interface SystemUser {
-  id: number;
+export interface AddSystemUserRequest {
   fullName: string;
   email: string;
   department: string;
-  azureUserKey: string | null;
   teamLeadId: string | null;
-  teamLeadName: string;
   scrumMasterId: string | null;
-  scrumMasterName: string;
   productOwnerId: string | null;
-  productOwnerName: string;
   squadName: string;
   title: string;
-}
+} 
