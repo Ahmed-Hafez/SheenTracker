@@ -1,24 +1,32 @@
-<p-tabs value="overview" class="w-full">
+<p-tabs [value]="isAzureUser() ? 'work-items' : 'overview'" class="w-full">
   <p-tablist>
-    <p-tab value="overview">Overview</p-tab>
-    <p-tab value="work-items">Work Items</p-tab>
-    <p-tab value="achievements">Achievements</p-tab>
+    @if (!isAzureUser()) {
+      <p-tab value="overview">Overview</p-tab>
+    }
+    @if (!disableAzureTabs()) {
+      <p-tab value="work-items">Work Items</p-tab>
+      <p-tab value="achievements">Achievements</p-tab>
+    }
   </p-tablist>
 
   <p-tabpanels>
-    <p-tabpanel value="overview">
-      <app-overview [summary]="summary()"></app-overview>
-    </p-tabpanel>
+    @if (!isAzureUser()) {
+      <p-tabpanel value="overview">
+        <app-overview [summary]="summary()" [systemUser]="systemUser()"></app-overview>
+      </p-tabpanel>
+    }
 
-    <p-tabpanel value="work-items">
-      <app-work-items [workItems]="workItems()"></app-work-items>
-    </p-tabpanel>
+    @if (!disableAzureTabs()) {
+      <p-tabpanel value="work-items">
+        <app-work-items [workItems]="workItems()"></app-work-items>
+      </p-tabpanel>
 
-    <p-tabpanel value="achievements">
-      <app-achievements
-        [data]="achievements()"
-        [isLoading]="isAchievementsLoading()"
-      ></app-achievements>
-    </p-tabpanel>
+      <p-tabpanel value="achievements">
+        <app-achievements
+          [data]="achievements()"
+          [isLoading]="isAchievementsLoading()"
+        ></app-achievements>
+      </p-tabpanel>
+    }
   </p-tabpanels>
 </p-tabs>

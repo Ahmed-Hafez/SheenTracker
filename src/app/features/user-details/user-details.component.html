@@ -72,21 +72,32 @@
       <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
         <a routerLink="/users" class="cursor-pointer hover:text-gray-800 hover:underline">Users</a>
         <i class="pi pi-angle-right text-xs"></i>
-        <span class="text-gray-800">{{ user()!.name }}</span>
+        <span class="text-gray-800">{{ user()?.name }}</span>
       </div>
-      <app-user-card [user]="user()!"></app-user-card>
+
+      @if (user()) {
+        <app-user-card
+        [user]="user()!"
+        [showLinkSystemToAzureButton]="showLinkSystemToAzureButton()"
+        [linkAzureUser]="linkAzureUser.bind(this)"
+        ></app-user-card>
+      }
+
+
 
       <app-tabbar
         [summary]="summary()"
+        [systemUser]="systemUser()"
         [workItems]="workItems()"
         [achievements]="achievements()"
         [isAchievementsLoading]="isAchievementsLoading()"
+        [isAzureUser]="isAzureUser()"
+        [disableAzureTabs]="disableAzureTabs()"
       ></app-tabbar>
     </div>
   } @else {
     <div class="flex justify-center items-center py-20 min-h-[300px]">
-      <span class="text-gray-500 text-lg">There seems to be an error.Try again later.</span>
+      <span class="text-gray-500 text-lg">There seems to be an error. Try again later.</span>
     </div>
   }
 </div>
-

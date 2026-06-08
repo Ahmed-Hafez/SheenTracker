@@ -2,13 +2,13 @@ export interface SystemUser {
   id: number;
   fullName: string;
   email: string;
-  department: string;
+  department: number;
   azureUserKey: string | null;
-  teamLeadId: string | null;
+  teamLeadId: number | null;
   teamLeadName: string;
-  scrumMasterId: string | null;
+  scrumMasterId: number | null;
   scrumMasterName: string;
-  productOwnerId: string | null;
+  productOwnerId: number | null;
   productOwnerName: string;
   squadName: string;
   title: string;

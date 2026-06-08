@@ -18,6 +18,8 @@ import { UserDetailsResponse } from '../../core/models/reponse/user-details.resp
 import { finalize } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
 import { AchievementResponse } from '../../core/models/reponse/achievemetsResponse.model';
+import { SystemUser } from '../../core/models/reponse/system-users.response.model';
+import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 
 @Component({
   selector: 'app-user-details',
@@ -27,36 +29,77 @@ import { AchievementResponse } from '../../core/models/reponse/achievemetsRespon
   styles: ``,
 })
 export class UserDetailsComponent implements OnInit {
+
   private userDetailsService = inject(UserDetailsService);
   private readonly refreshService = inject(RefreshService);
   private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
+  private readonly metaDataService = inject(MetaDataService);
 
   readonly userId = signal<string | null>(null);
 
+  // Azure user mode: userKey present, userID absent
+  isAzureUser = computed(() => {
+    return !!this.route.snapshot.queryParamMap.get('userKey');
+  });
+
   userDetails = signal<UserDetailsResponse | null>(null);
+  systemUser = signal<SystemUser | null>(null);
+  // Holds the azure user key found from system user details or metadata lookup
+  resolvedAzureUserKey = signal<string | null>(null);
+  // Holds a matched azure key from metadata (for showing "link to azure user" button)
+  foundAzureUserKey = signal<string | null>(null);
   isLoading = signal(false);
   isError = signal(false);
 
+  // For system user: azure tabs are disabled when we have no azure key at all
+  disableAzureTabs = computed(() => {
+    if (this.isAzureUser()) return false;
+    return !this.resolvedAzureUserKey();
+  });
+
   user = computed(() => {
-    const details = this.userDetails();
-    if (!details) return null;
+    if (this.isAzureUser()) {
+      // Azure mode: user card populated from work-items API response
+      const details = this.userDetails();
+      if (!details) return null;
 
-    const displayName = details.user.displayName
-      .replace(/@?(?:tildetech.ae|shuratech.com)/gi, '')
-      .trim();
+      const displayName = details.user.displayName
+        .replace(/@?(?:tildetech.ae|shuratech.com)/gi, '')
+        .trim();
 
-    return {
-      name: displayName,
-      initials: displayName
-        .split(' ')
-        .map((n) => n[0])
-        .join(''),
-      avatarUrl: details.user.avatarUrl,
-      email1: details.user.email,
-      email2: details.user.principalName,
-      totalHours: details.totalHours,
-    };
+      return {
+        name: displayName,
+        initials: displayName
+          .split(' ')
+          .map((n) => n[0])
+          .join(''),
+        avatarUrl: details.user.avatarUrl,
+        email1: details.user.email,
+        email2: details.user.principalName,
+        totalHours: details.totalHours,
+      };
+    } else {
+      // System user mode: user card from systemUser details
+      const sUser = this.systemUser();
+      if (!sUser) return null;
+
+      const displayName = sUser.fullName
+        .replace(/@?(?:tildetech.ae|shuratech.com)/gi, '')
+        .trim();
+
+      return {
+        name: displayName,
+        initials: displayName
+          .split(' ')
+          .map((n) => n[0])
+          .join(''),
+        avatarUrl: this.userDetails()?.user?.avatarUrl || '',
+        email1: sUser.email,
+        email2: sUser.title,
+        totalHours: this.userDetails()?.totalHours || 0,
+      };
+    }
   });
 
   summary = computed(() => {
@@ -103,13 +146,13 @@ export class UserDetailsComponent implements OnInit {
   ngOnInit() {
     this.refreshAndLoadDetails();
   }
+
   private refreshAndLoadDetails() {
-    //http://localhost:4200/users?userKey=aad.mtg3owi2njgtzjawmc03ogmxlwe4y2etmtc1mzjiotuyzjc0
-    //get user key from browser link
     const userKey = this.route.snapshot.queryParamMap.get('userKey');
-    const userID = this.route.snapshot.queryParamMap.get("userID");
-    console.log("userKey: " + userKey);
+    const userID = this.route.snapshot.queryParamMap.get('userId');
+
     if (userKey) {
+      // Azure user mode
       effect(
         () => {
           this.refreshService.refreshTick();
@@ -117,12 +160,11 @@ export class UserDetailsComponent implements OnInit {
         },
         { injector: this.injector },
       );
-    }
-    else if (userID) {
+    } else if (userID) {
+      // System user mode
       effect(
         () => {
           this.refreshService.refreshTick();
-          // this.loadAzureUserDetailsAndWorkItems(userID);
           this.loadSystemUserDetails(parseInt(userID));
         },
         { injector: this.injector },
@@ -150,14 +192,14 @@ export class UserDetailsComponent implements OnInit {
         },
       });
   }
-  loadAzureUserAchievements(userKey: string){
+
+  loadAzureUserAchievements(userKey: string) {
     this.isAchievementsLoading.set(true);
     this.userDetailsService
       .getAzureUserAchievements(userKey)
       .pipe(finalize(() => this.isAchievementsLoading.set(false)))
       .subscribe({
         next: (response) => {
-          console.log("achievements: ", response);
           this.achievements.set(response);
         },
         error: (error) => {
@@ -166,7 +208,77 @@ export class UserDetailsComponent implements OnInit {
       });
   }
 
-  loadSystemUserDetails(userId: number){
+  loadSystemUserDetails(userId: number) {
+    this.isLoading.set(true);
+    this.userDetailsService
+      .getSystemUserDetails(userId)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.systemUser.set(response);
+          this.isError.set(false);
 
+          if (response.azureUserKey) {
+            // System user has an azure key → load work items & achievements
+            this.resolvedAzureUserKey.set(response.azureUserKey);
+            this.loadAzureUserDetailsAndWorkItems(response.azureUserKey);
+          } else {
+            // No azure key → search metadata for email match
+            this.checkAndFindAzureUserKey(response.email);
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching system user details:', error);
+          this.systemUser.set(null);
+          this.isError.set(true);
+        },
+      });
   }
+
+  private checkAndFindAzureUserKey(email: string) {
+    if (this.metaDataService.metaDataUsers$().length === 0) {
+      this.metaDataService.getAzureUsersMetaData().subscribe({
+        next: () => {
+          this.matchEmailToUserKey(email);
+        },
+        error: (err) => {
+          console.error('Error loading metadata users:', err);
+        },
+      });
+    } else {
+      this.matchEmailToUserKey(email);
+    }
+  }
+
+  private matchEmailToUserKey(email: string) {
+    const foundUser = this.metaDataService.metaDataUsers$().find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+    if (foundUser) {
+      this.foundAzureUserKey.set(foundUser.userKey);
+    } else {
+      this.foundAzureUserKey.set(null);
+    }
+  }
+
+  linkAzureUser() {
+    console.log("system user:", this.systemUser());
+    console.log("found azure key:", this.foundAzureUserKey());
+    const sUser = this.systemUser();
+    const azureKey = this.foundAzureUserKey();
+    if (sUser && azureKey) {
+      this.userDetailsService.linkAzureUser(sUser.id, azureKey).subscribe({
+        next: () => {
+          window.location.reload();
+        },
+        error: (err) => {
+          console.error('Error linking user to Azure:', err);
+        },
+      });
+    }
+  }
+  showLinkSystemToAzureButton(): boolean {
+    let show: boolean = (!this.systemUser()?.azureUserKey && this.foundAzureUserKey()) ? true : false;
+    return show;
+    }
 }
