@@ -15,9 +15,10 @@
     </p-tabpanel>
 
     <p-tabpanel value="achievements">
-      @if (achievements()) {
-        <app-achievements [data]="achievements()"></app-achievements>
-      }
+      <app-achievements
+        [data]="achievements()"
+        [isLoading]="isAchievementsLoading()"
+      ></app-achievements>
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>

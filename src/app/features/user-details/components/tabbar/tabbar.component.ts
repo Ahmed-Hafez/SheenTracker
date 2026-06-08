@@ -15,4 +15,5 @@ export class TabbarComponent {
   summary = input.required<any>();
   workItems = input.required<any>();
   achievements = input.required<any>();
+  isAchievementsLoading = input<boolean>(false);
 }

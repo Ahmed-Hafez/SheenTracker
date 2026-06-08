@@ -17,7 +17,7 @@ import { UserDetailsService } from '../../core/http/backend_service/user-detials
 import { UserDetailsResponse } from '../../core/models/reponse/user-details.response.model';
 import { finalize } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
-import { ACHIEVEMENTS_MOCK } from '../../core/mock/achievements.mock';
+import { AchievementResponse } from '../../core/models/reponse/achievemetsResponse.model';
 
 @Component({
   selector: 'app-user-details',
@@ -97,25 +97,40 @@ export class UserDetailsComponent implements OnInit {
     }));
   });
 
-  achievements = signal(ACHIEVEMENTS_MOCK);
+  achievements = signal<AchievementResponse | null>(null);
+  isAchievementsLoading = signal(false);
 
   ngOnInit() {
     this.refreshAndLoadDetails();
   }
   private refreshAndLoadDetails() {
-    const userId = this.route.snapshot.paramMap.get('userId');
-    if (userId) {
+    //http://localhost:4200/users?userKey=aad.mtg3owi2njgtzjawmc03ogmxlwe4y2etmtc1mzjiotuyzjc0
+    //get user key from browser link
+    const userKey = this.route.snapshot.queryParamMap.get('userKey');
+    const userID = this.route.snapshot.queryParamMap.get("userID");
+    console.log("userKey: " + userKey);
+    if (userKey) {
       effect(
         () => {
           this.refreshService.refreshTick();
-          this.loadUserDetails(userId);
+          this.loadAzureUserDetailsAndWorkItems(userKey);
+        },
+        { injector: this.injector },
+      );
+    }
+    else if (userID) {
+      effect(
+        () => {
+          this.refreshService.refreshTick();
+          // this.loadAzureUserDetailsAndWorkItems(userID);
+          this.loadSystemUserDetails(parseInt(userID));
         },
         { injector: this.injector },
       );
     }
   }
 
-  loadUserDetails(userId: string) {
+  loadAzureUserDetailsAndWorkItems(userId: string) {
     this.isLoading.set(true);
     this.userDetailsService
       .getUserDetails(userId)
@@ -124,6 +139,9 @@ export class UserDetailsComponent implements OnInit {
         next: (response) => {
           this.userDetails.set(response);
           this.isError.set(false);
+          if (response?.user?.key) {
+            this.loadAzureUserAchievements(response.user.key);
+          }
         },
         error: (error) => {
           console.error('Error fetching user details:', error);
@@ -131,5 +149,24 @@ export class UserDetailsComponent implements OnInit {
           this.isError.set(true);
         },
       });
+  }
+  loadAzureUserAchievements(userKey: string){
+    this.isAchievementsLoading.set(true);
+    this.userDetailsService
+      .getAzureUserAchievements(userKey)
+      .pipe(finalize(() => this.isAchievementsLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          console.log("achievements: ", response);
+          this.achievements.set(response);
+        },
+        error: (error) => {
+          console.error('Error fetching user achievements:', error);
+        },
+      });
+  }
+
+  loadSystemUserDetails(userId: number){
+
   }
 }

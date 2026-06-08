@@ -33,21 +33,14 @@ export const routes: Routes = [
             component: SystemUsersComponent,
           },
           {
-            path: ':userId',
+            path: '',
+            pathMatch: 'full',
             title: 'User Details - SheenTrack 360°',
             loadComponent: () =>
               import('./features/user-details/user-details.component').then(
                 (m) => m.UserDetailsComponent,
               ),
-          },
-          {
-            path: ':userKey',
-            title: 'User Details - SheenTrack 360°',
-            loadComponent: () =>
-              import('./features/user-details/user-details.component').then(
-                (m) => m.UserDetailsComponent,
-              ),
-          },
+          }
         ],
       },
     ],
