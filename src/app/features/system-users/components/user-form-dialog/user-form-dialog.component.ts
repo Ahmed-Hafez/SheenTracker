@@ -3,35 +3,30 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { Select } from 'primeng/select';
+import {  InputGroup } from 'primeng/inputgroup';
+import {  InputGroupAddon } from 'primeng/inputgroupaddon';
+import { InputText } from 'primeng/inputtext';
+
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
 import { MessageService } from 'primeng/api';
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
 import { AddSystemUserRequest } from '../../../../core/models/request/add-system-user.request.model';
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
-
-export enum Department {
-  Backend = 'Backend Development',
-  Frontend = 'Frontend Development',
-  QualityAssurance = 'Quality Assurance',
-  ProductManagement = 'Product Management',
-  ScrumMaster = 'Scrum Master',
-  DevOps = 'DevOps Team',
-  UIUXDesign = 'UI/UX Design',
-}
-
-export enum Squads {
-  NDCCore = 'NDC Core',
-  UpLift = 'UpLift',
-  WTMesseging = 'WT Messeging',
-  Integration1 = 'Integration 1',
-  Integration2 = 'Integration 2',
-  MoneyCollector = 'Money Collector',
-
-}
+import { Department, Departments } from '../../../../core/enums/departments.enum';
+import { Squad, Squads } from '../../../../core/enums/squads.enum';
+import { Seniority, Seniorities} from '../../../../core/enums/seniority.enum';
 
 @Component({
   selector: 'app-user-form-dialog',
-  imports: [DialogModule, ReactiveFormsModule, Select, MessageModule],
+  imports: [
+    DialogModule,
+    ReactiveFormsModule,
+    Select,
+    MessageModule,
+    InputGroupAddon,
+    InputGroup,
+    InputText,
+  ],
   templateUrl: './user-form-dialog.component.html',
 })
 export class UserFormDialogComponent implements OnInit {
@@ -43,7 +38,8 @@ export class UserFormDialogComponent implements OnInit {
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
   isEditMode = input<boolean>(false);
-  userData = input<SystemUser | null>(null); // Replace 'any' with your actual user data type
+  userData = input<SystemUser | null>(null);
+  users = input<SystemUser[] | null>(null);
   actionLoading = signal(false);
   userForm!: FormGroup;
 
@@ -55,10 +51,11 @@ export class UserFormDialogComponent implements OnInit {
     });
   }
 
-  departments = Object.values(Department);
-  squads = Object.values(Squads);
-  azureUsers = this.metaDataService.metaDataUsers$
-  isAzureUserLoading = this.metaDataService.isLoading
+  departments = Departments;
+  squads = Squads;
+  seniorities = Seniorities;
+  azureUsers = this.metaDataService.metaDataUsers$;
+  isAzureUserLoading = this.metaDataService.isLoading;
 
   initializeForm() {
     // Initialize your form here using FormBuilder
@@ -79,17 +76,23 @@ export class UserFormDialogComponent implements OnInit {
         ],
       ],
       department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
-      squadName: [this.isEditMode() ? this.userData()?.squadName : '', Validators.required],
-      jobTitle: [this.isEditMode() ? this.userData()?.title : '', Validators.required],
+      squadName: [this.isEditMode() ? this.userData()?.squad : '', Validators.required],
+      jobTitle: [this.isEditMode() ? this.userData()?.seniority : '', Validators.required],
       teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : ''],
       scrumMasterId: [this.isEditMode() ? this.userData()?.scrumMasterId : ''],
       productOwnerId: [this.isEditMode() ? this.userData()?.productOwnerId : ''],
-      
     });
   }
 
   ngOnInit() {
     this.initializeForm();
+    console.log('users', this.users());
+    this.appUsersService.filterUsersBySeniority(this.users() || []);
+
+    let users = this.appUsersService.usersBySeniority$;
+
+    console.log('usersBySeniority', users());
+    this.updateValidators();
   }
 
   getFieldErrorMessage(fieldName: string): string | null {
@@ -137,6 +140,24 @@ export class UserFormDialogComponent implements OnInit {
     }
   }
 
+  updateValidators() {
+    this.userForm.get('department')?.valueChanges.subscribe((dept) => {
+      const scrumControl = this.userForm.get('scrumMasterId');
+      const productOwnerControl = this.userForm.get('productOwnerId');
+
+      if (dept === Department.ScrumMaster || dept === Department.ProductManagement) {
+        scrumControl?.clearValidators();
+        productOwnerControl?.clearValidators();
+      } else {
+        scrumControl?.setValidators([Validators.required]);
+        productOwnerControl?.setValidators([Validators.required]);
+      }
+
+      scrumControl?.updateValueAndValidity();
+      productOwnerControl?.updateValueAndValidity();
+    });
+  }
+
   onSubmit() {
     this.userForm.markAllAsTouched();
     this.userForm.markAsDirty();
@@ -155,28 +176,26 @@ export class UserFormDialogComponent implements OnInit {
         title: formData.jobTitle,
       };
       if (this.isEditMode()) {
-        this.appUsersService
-          .updateAppUser(this.userData()?.id || 0, systemUserData)
-          .subscribe({
-            next: (response) => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'User updated successfully.',
-              });
-              this.onClosePopup();
-              this.actionLoading.set(false);
-            },
-            error: (error) => {
-              console.error('Error updating user:', error);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to update user.',
-              });
-              this.actionLoading.set(false);
-            },
-          });
+        this.appUsersService.updateAppUser(this.userData()?.id || 0, systemUserData).subscribe({
+          next: (response) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'User updated successfully.',
+            });
+            this.onClosePopup();
+            this.actionLoading.set(false);
+          },
+          error: (error) => {
+            console.error('Error updating user:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to update user.',
+            });
+            this.actionLoading.set(false);
+          },
+        });
       } else {
         this.appUsersService.addAppUser(systemUserData).subscribe({
           next: (response) => {

@@ -8,9 +8,10 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { SystemUsersSkeletonComponent } from './components/system-users-skeleton/system-users-skeleton.component';
 import { SystemUsersTableComponent } from './components/system-users-table/system-users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
-import { Department, UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
+import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
 import { SystemUsersService } from '../../core/http/backend_service/system-users.service';
 import { MenuItem } from 'primeng/api';
+import { Departments } from '../../core/enums/departments.enum';
 
 @Component({
   selector: 'app-system-users',
@@ -39,7 +40,7 @@ export class SystemUsersComponent implements OnInit {
   searchTerm = '';
   usersFilterForm!: FormGroup;
 
-  departments = Object.values(Department);
+  departments = Departments;
   items: MenuItem[] | undefined;
 
 

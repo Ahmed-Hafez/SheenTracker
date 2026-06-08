@@ -145,11 +145,14 @@ export const PrimeNG_Preset = definePreset(Aura, {
         light: {
           root: {
             background: 'var(--page-bg)',
-            borderColor: 'var(--charcoal-400)',
+            borderColor: 'var(--charcoal-100)',
           },
           overlay: {
             background: 'var(--page-bg)',
           },
+          dropdown: {
+            width: '1.5rem',
+          }
         }
       },
     },
@@ -166,6 +169,31 @@ export const PrimeNG_Preset = definePreset(Aura, {
           }
         },
       }
-    }
+    },
+    inputtext: {
+      colorScheme: {
+        light: {
+          root: {
+            background: 'var(--page-bg)',
+            borderColor: 'var(--charcoal-100)',
+            borderRadius: '8px',
+          },
+        }
+      }
+    },
+
+    inputgroup: {
+      colorScheme: {
+        light: {
+          addon: {
+            background: 'var(--page-bg)',
+            borderColor: 'var(--charcoal-100)',
+            borderRadius: '8px',
+            minWidth: '100px',
+            padding: '0',
+          }
+        }
+      }
+    },
   }
 });
