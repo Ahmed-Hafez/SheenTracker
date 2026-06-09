@@ -1,10 +1,8 @@
 export interface AddSystemUserRequest {
   fullName: string;
   email: string;
-  department: string;
-  teamLeadId: string | null;
-  scrumMasterId: string | null;
-  productOwnerId: string | null;
-  squadName: string;
+  department: number;
+  teamLeadId: number | null;
+  squad: number;
   title: string;
 } 
