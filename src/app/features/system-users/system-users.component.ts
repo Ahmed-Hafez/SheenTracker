@@ -4,13 +4,15 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { SelectModule } from 'primeng/select';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
-
 import { SystemUsersSkeletonComponent } from './components/system-users-skeleton/system-users-skeleton.component';
 import { SystemUsersTableComponent } from './components/system-users-table/system-users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
-import { Department, UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
+import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
 import { SystemUsersService } from '../../core/http/backend_service/system-users.service';
 import { MenuItem } from 'primeng/api';
+import { Departments } from '../../core/enums/departments.enum';
+import { startWith } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-system-users',
@@ -22,28 +24,26 @@ import { MenuItem } from 'primeng/api';
     SystemUsersSkeletonComponent,
     SelectModule,
     TieredMenuModule,
-],
+  ],
   templateUrl: './system-users.component.html',
 })
 export class SystemUsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly systemUsers = inject(SystemUsersService);
+  private readonly systemUsersService = inject(SystemUsersService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refreshService = inject(RefreshService);
   private readonly injector = inject(Injector);
   userDialogVisible = signal(false);
 
   readonly loading = signal(true);
-  users = this.systemUsers.users$;
+  users = this.systemUsersService.users$;
 
   searchTerm = '';
   usersFilterForm!: FormGroup;
 
-  departments = Object.values(Department);
+  departments = Departments;
+  userTypes = ['Linked', 'Unlinked'];
   items: MenuItem[] | undefined;
-
-
-        
 
   ngOnInit(): void {
     this.initializeFilters();
@@ -56,13 +56,12 @@ export class SystemUsersComponent implements OnInit {
       {
         label: 'Import from CSV',
         icon: 'pi pi-file-import',
-      }
+      },
     ];
-  
 
-    // this.usersFilterForm.valueChanges
-    //   .pipe(startWith(this.usersFilterForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
-    //   .subscribe(() => this.onFilterChange());
+    this.usersFilterForm.valueChanges
+      .pipe(startWith(this.usersFilterForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.onFilterChange());
 
     effect(
       () => {
@@ -76,18 +75,20 @@ export class SystemUsersComponent implements OnInit {
   initializeFilters(): void {
     this.usersFilterForm = this.fb.group({
       searchTerm: [''],
-      department: ['All Departments'],
+      department: [null],
+      userType: [null],
+      squad: [null],
     });
   }
 
-  // onFilterChange(): void {
-  //   const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
-  //   this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
-  // }
+  onFilterChange(): void {
+    const { searchTerm, department, userType, squad } = this.usersFilterForm.value;
+    this.systemUsersService.filterUsers(searchTerm, squad, department, userType);
+  }
 
   private loadUsers(): void {
     this.loading.set(true);
-    this.systemUsers.getAppUsers().subscribe({
+    this.systemUsersService.getSystemUsers().subscribe({
       next: (users) => {
         // this.onFilterChange();
         this.loading.set(false);

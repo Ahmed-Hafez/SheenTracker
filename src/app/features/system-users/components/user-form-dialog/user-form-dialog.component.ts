@@ -3,35 +3,31 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { Select } from 'primeng/select';
+import {  InputGroup } from 'primeng/inputgroup';
+import {  InputGroupAddon } from 'primeng/inputgroupaddon';
+import { InputText } from 'primeng/inputtext';
+
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
+import { RefreshService } from '../../../../core/services/refresh.service';
 import { MessageService } from 'primeng/api';
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
 import { AddSystemUserRequest } from '../../../../core/models/request/add-system-user.request.model';
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
-
-export enum Department {
-  Backend = 'Backend Development',
-  Frontend = 'Frontend Development',
-  QualityAssurance = 'Quality Assurance',
-  ProductManagement = 'Product Management',
-  ScrumMaster = 'Scrum Master',
-  DevOps = 'DevOps Team',
-  UIUXDesign = 'UI/UX Design',
-}
-
-export enum Squads {
-  NDCCore = 'NDC Core',
-  UpLift = 'UpLift',
-  WTMesseging = 'WT Messeging',
-  Integration1 = 'Integration 1',
-  Integration2 = 'Integration 2',
-  MoneyCollector = 'Money Collector',
-
-}
+import { Department, Departments } from '../../../../core/enums/departments.enum';
+import { Squad, Squads } from '../../../../core/enums/squads.enum';
+import { Seniority, Seniorities} from '../../../../core/enums/seniority.enum';
 
 @Component({
   selector: 'app-user-form-dialog',
-  imports: [DialogModule, ReactiveFormsModule, Select, MessageModule],
+  imports: [
+    DialogModule,
+    ReactiveFormsModule,
+    Select,
+    MessageModule,
+    InputGroupAddon,
+    InputGroup,
+    InputText,
+  ],
   templateUrl: './user-form-dialog.component.html',
 })
 export class UserFormDialogComponent implements OnInit {
@@ -39,14 +35,19 @@ export class UserFormDialogComponent implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly appUsersService = inject(SystemUsersService);
   private readonly metaDataService = inject(MetaDataService);
+  private readonly refreshService = inject(RefreshService);
 
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
   isEditMode = input<boolean>(false);
-  userData = input<SystemUser | null>(null); // Replace 'any' with your actual user data type
+  userData = input<SystemUser | null>(null);
+  users = input<SystemUser[] | null>(null);
   actionLoading = signal(false);
   userForm!: FormGroup;
-
+  
+  teamLeads = signal<SystemUser[]>([]);
+  isTeamLeadLoading = signal(false);
+  
   visible = false;
 
   constructor() {
@@ -55,10 +56,11 @@ export class UserFormDialogComponent implements OnInit {
     });
   }
 
-  departments = Object.values(Department);
-  squads = Object.values(Squads);
-  azureUsers = this.metaDataService.metaDataUsers$
-  isAzureUserLoading = this.metaDataService.isLoading
+  departments = Departments;
+  squads = Squads;
+  seniorities = Seniorities;
+  azureUsers = this.metaDataService.metaDataUsers$;
+  isAzureUserLoading = this.metaDataService.isLoading;
 
   initializeForm() {
     // Initialize your form here using FormBuilder
@@ -79,17 +81,16 @@ export class UserFormDialogComponent implements OnInit {
         ],
       ],
       department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
-      squadName: [this.isEditMode() ? this.userData()?.squadName : '', Validators.required],
+      squadName: [this.isEditMode() ? this.userData()?.squad : '', Validators.required],
+      seniority: [this.isEditMode() ? this.userData()?.seniority : Seniority.Junior, Validators.required],
       jobTitle: [this.isEditMode() ? this.userData()?.title : '', Validators.required],
       teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : ''],
-      scrumMasterId: [this.isEditMode() ? this.userData()?.scrumMasterId : ''],
-      productOwnerId: [this.isEditMode() ? this.userData()?.productOwnerId : ''],
-      
     });
   }
 
   ngOnInit() {
     this.initializeForm();
+    this.getDepartmentTeamleads();
   }
 
   getFieldErrorMessage(fieldName: string): string | null {
@@ -137,6 +138,47 @@ export class UserFormDialogComponent implements OnInit {
     }
   }
 
+  getDepartmentTeamleads() {
+    // disable teamlead selection if no department is selected
+    if (!this.userForm.get('department')) { 
+      this.userForm.get('teamleadId')?.disable();
+    };
+    if (this.isEditMode()) {
+      this.isTeamLeadLoading.set(true);
+      let department = this.userData()?.department;
+      console.log( 'Edit Mode' ,department);
+      this.appUsersService.getSystemTeamLeads(department? department : 0).subscribe({
+        next: (teamleads) => {
+          this.teamLeads.set(teamleads);
+          this.isTeamLeadLoading.set(false);
+        },
+        error: () => {
+          this.teamLeads.set([]);
+          this.isTeamLeadLoading.set(false);
+        },
+      });
+    }
+    else {
+      this.userForm.get('department')?.valueChanges.subscribe((dept) => {
+        this.userForm.get('teamleadId')?.enable();
+        this.isTeamLeadLoading.set(true);
+              console.log('Add Mode', dept);
+
+        this.appUsersService.getSystemTeamLeads(dept).subscribe({
+          next: (teamleads) => {
+            this.teamLeads.set(teamleads);
+            this.isTeamLeadLoading.set(false);
+          },
+          error: () => {
+            this.teamLeads.set([]);
+            this.isTeamLeadLoading.set(false);
+          },
+        });
+      });
+    }
+    
+  }
+
   onSubmit() {
     this.userForm.markAllAsTouched();
     this.userForm.markAsDirty();
@@ -155,28 +197,27 @@ export class UserFormDialogComponent implements OnInit {
         title: formData.jobTitle,
       };
       if (this.isEditMode()) {
-        this.appUsersService
-          .updateAppUser(this.userData()?.id || 0, systemUserData)
-          .subscribe({
-            next: (response) => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'User updated successfully.',
-              });
-              this.onClosePopup();
-              this.actionLoading.set(false);
-            },
-            error: (error) => {
-              console.error('Error updating user:', error);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to update user.',
-              });
-              this.actionLoading.set(false);
-            },
-          });
+        this.appUsersService.updateAppUser(this.userData()?.id || 0, systemUserData).subscribe({
+          next: (response) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'User updated successfully.',
+            });
+            this.onClosePopup();
+            this.actionLoading.set(false);
+            this.refreshService.trigger();
+          },
+          error: (error) => {
+            console.error('Error updating user:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to update user.',
+            });
+            this.actionLoading.set(false);
+          },
+        });
       } else {
         this.appUsersService.addAppUser(systemUserData).subscribe({
           next: (response) => {
@@ -187,6 +228,7 @@ export class UserFormDialogComponent implements OnInit {
             });
             this.onClosePopup();
             this.actionLoading.set(false);
+            this.refreshService.trigger();
           },
 
           error: (error) => {

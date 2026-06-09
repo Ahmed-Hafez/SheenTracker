@@ -11,7 +11,9 @@
 >
   <ng-template pTemplate="header">
     <div>
-      <h4 class="text-start text-2xl font-semibold m-0">{{ isEditMode() ? 'Update' : 'Add New' }} User</h4>
+      <h4 class="text-start text-2xl font-semibold m-0">
+        {{ isEditMode() ? 'Update' : 'Add New' }} User
+      </h4>
       <p class="text-center text-sm text-(--charcoal-600) m-0 mx-auto">
         {{ isEditMode() ? 'Update' : 'Create a new' }} user record in SheenTrack 360°.
       </p>
@@ -24,7 +26,7 @@
         <div class="flex-1">
           <label class="input-label" for="firstName">First Name</label>
           <input class="field" id="firstName" formControlName="firstName" placeholder="Layla" />
-         @if (getFieldErrorMessage('firstName')!== null) {
+          @if (getFieldErrorMessage('firstName') !== null) {
             <p-message severity="error" size="small" class="mt-1">
               {{ getFieldErrorMessage('firstName') }}
             </p-message>
@@ -33,7 +35,7 @@
         <div class="flex-1">
           <label class="input-label" for="lastName">Last Name</label>
           <input class="field" id="lastName" formControlName="lastName" placeholder="Johnson" />
-          @if (getFieldErrorMessage('lastName')!== null) {
+          @if (getFieldErrorMessage('lastName') !== null) {
             <p-message severity="error" size="small" class="mt-1">
               {{ getFieldErrorMessage('lastName') }}
             </p-message>
@@ -48,25 +50,44 @@
           formControlName="email"
           placeholder="layla.johnson@example.com"
         />
-        @if (getFieldErrorMessage('email')!== null) {
-            <p-message severity="error" size="small" class="mt-1">
-              {{ getFieldErrorMessage('email') }}
-            </p-message>
-          }
+        @if (getFieldErrorMessage('email') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('email') }}
+          </p-message>
+        }
       </div>
       <div>
         <label class="input-label" for="email">Job Title</label>
-        <input
-          class="field"
-          id="jobTitle"
-          formControlName="jobTitle"
-          placeholder="Senior Software Engineer"
-        />
-        @if (getFieldErrorMessage('jobTitle')!== null) {
-            <p-message severity="error" size="small" class="mt-1">
-              {{ getFieldErrorMessage('jobTitle') }}
-            </p-message>
-          }
+
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <p-select
+              [fluid]="true"
+              [options]="seniorities"
+              optionLabel="label"
+              optionValue="value"
+              appendTo="body"
+              inputId="department"
+              formControlName="seniority"
+              scrollHeight="400px"
+              placeholder=""
+              [style]="{ width: '10rem', border: 'none' }"
+              [invalid]="getFieldErrorMessage('department') !== null"
+            >
+            </p-select>
+          </p-inputgroup-addon>
+          <input
+            pInputText
+            id="jobTitle"
+            formControlName="jobTitle"
+            placeholder="Software Engineer"
+          />
+        </p-inputgroup>
+        @if (getFieldErrorMessage('jobTitle') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('jobTitle') }}
+          </p-message>
+        }
       </div>
       <div class="flex gap-4 flex-row">
         <div class="flex-1">
@@ -74,19 +95,21 @@
           <p-select
             [fluid]="true"
             [options]="departments"
+            optionLabel="label"
+            optionValue="value"
             appendTo="body"
             formControlName="department"
             inputId="department"
             placeholder="Select Department"
-            style="background-color: var(--page-bg);"
+            style="background-color: var(--page-bg)"
             [invalid]="getFieldErrorMessage('department') !== null"
           >
           </p-select>
-          @if (getFieldErrorMessage('department')!== null) {
-              <p-message severity="error" size="small" class="mt-1">
-                {{ getFieldErrorMessage('department') }}
-              </p-message>
-            }
+          @if (getFieldErrorMessage('department') !== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('department') }}
+            </p-message>
+          }
         </div>
         <div class="flex-1">
           <label class="input-label" for="squadName">Squad Name</label>
@@ -97,96 +120,50 @@
             formControlName="squadName"
             inputId="squadName"
             placeholder="Select Squad"
-            style="background-color: var(--page-bg);"
+            style="background-color: var(--page-bg)"
             [invalid]="getFieldErrorMessage('squadName') !== null"
           >
           </p-select>
-          @if (getFieldErrorMessage('squadName')!== null) {
-              <p-message severity="error" size="small" class="mt-1">
-                {{ getFieldErrorMessage('squadName') }}
-              </p-message>
-            }
+          @if (getFieldErrorMessage('squadName') !== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('squadName') }}
+            </p-message>
+          }
         </div>
       </div>
       <div class="flex-1">
-          <label class="input-label" for="teamleadId">Team Lead</label>
-          <p-select
-            [fluid]="true"
-            [options]="azureUsers()"
-            optionLabel="fullName"
-            optionValue="userKey"
-            [filter]="true" filterBy="fullName" 
-            appendTo="body"
-            formControlName="teamleadId"
-            inputId="teamleadId"
-            [loading]="isAzureUserLoading()"
-            [placeholder]="isAzureUserLoading() ? 'Loading Users...' : 'Select Team Lead'"
-            style="background-color: var(--page-bg);"
-            [invalid]="getFieldErrorMessage('teamleadId') !== null"
-          >
-          </p-select>
-          @if (getFieldErrorMessage('teamleadId')!== null) {
-              <p-message severity="error" size="small" class="mt-1">
-                {{ getFieldErrorMessage('teamleadId') }}
-              </p-message>
-            }
-        </div>
-      <div class="flex gap-4 flex-row">
-        <div class="flex-1">
-          <label class="input-label" for="scrumMasterId">Scrum Master</label>
-          <p-select
-            [fluid]="true"
-            [options]="azureUsers()"
-            optionLabel="fullName"
-            optionValue="userKey"
-            [filter]="true" filterBy="fullName" 
-            appendTo="body"
-            formControlName="scrumMasterId"
-            inputId="scrumMasterId"
-            [loading]="isAzureUserLoading()"
-            [placeholder]="isAzureUserLoading() ? 'Loading Users...' : 'Select Scrum Master'"
-            style="background-color: var(--page-bg);"
-            [invalid]="getFieldErrorMessage('scrumMasterId') !== null"
-          >
-          </p-select>
-          @if (getFieldErrorMessage('scrumMasterId')!== null) {
-              <p-message severity="error" size="small" class="mt-1">
-                {{ getFieldErrorMessage('scrumMasterId') }}
-              </p-message>
-            }
-        </div>
-        <div class="flex-1">
-          <label class="input-label" for="productOwnerId">Product Owner</label>
-          <p-select
-            [fluid]="true"
-            [options]="azureUsers()"
-            optionLabel="fullName"
-            optionValue="userKey"
-            [filter]="true" filterBy="fullName" 
-            appendTo="body"
-            [loading]="isAzureUserLoading()"
-            formControlName="productOwnerId"
-            inputId="productOwnerId"
-            [placeholder]="isAzureUserLoading() ? 'Loading Users...' : 'Select Team Lead'"
-            style="background-color: var(--page-bg);"
-            [invalid]="getFieldErrorMessage('productOwnerId') !== null"
-          >
-          </p-select>
-          @if (getFieldErrorMessage('productOwnerId')!== null) {
-              <p-message severity="error" size="small" class="mt-1">
-                {{ getFieldErrorMessage('productOwnerId') }}
-              </p-message>
-            }
-        </div>
+        <label class="input-label" for="teamleadId">Team Lead</label>
+        <p-select
+          [fluid]="true"
+          [options]="teamLeads()"
+          optionLabel="fullName"
+          optionValue="userKey"
+          [filter]="true"
+          filterBy="fullName"
+          appendTo="body"
+          formControlName="teamleadId"
+          inputId="teamleadId"
+          [loading]="isTeamLeadLoading()"
+          [placeholder]="isTeamLeadLoading() ? 'Loading Users...' : 'Select Team Lead'"
+          style="background-color: var(--page-bg)"
+          [invalid]="getFieldErrorMessage('teamleadId') !== null"
+        >
+        </p-select>
+        @if (getFieldErrorMessage('teamleadId') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('teamleadId') }}
+          </p-message>
+        }
       </div>
 
       <div class="flex justify-end gap-3 mt-4">
         <button type="button" class="btn btn-secondary" (click)="onClosePopup()">Cancel</button>
         <button type="submit" class="btn btn-primary" [disabled]="actionLoading()">
-         @if (actionLoading()) {
-          <i class="fa-solid fa-circle-notch fa-spin" style="color: #ffffff"></i>
-        }
-        {{isEditMode() ? 'Update User' : 'Create User'}}</button>
+          @if (actionLoading()) {
+            <i class="fa-solid fa-circle-notch fa-spin" style="color: #ffffff"></i>
+          }
+          {{ isEditMode() ? 'Update User' : 'Create User' }}
+        </button>
       </div>
     </form>
   </ng-template>
