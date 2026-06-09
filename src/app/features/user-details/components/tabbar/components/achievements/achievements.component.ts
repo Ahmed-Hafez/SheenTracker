@@ -31,21 +31,6 @@ export class AchievementsComponent {
 
   items = computed(() => {
     const tasks = this.data()?.tasks || [];
-    return tasks.map((task) => {
-      const delta = task.completedWorkHours - task.originalEstimateHours;
-      const isPositiveDelta = delta <= 0;
-      const sign = delta > 0 ? '+' : '';
-      return {
-        id: `#${task.workItemId}`,
-        urlId: task.workItemId,
-        title: task.title,
-        type: 'Task',
-        project: task.projectName,
-        deltaHours: `${sign}${delta.toFixed(1)}h`,
-        finalHours: `${task.completedWorkHours}h`,
-        closedOn: task.completedAt ? task.completedAt.split('T')[0] : '',
-        isPositiveDelta,
-      };
-    });
+    return tasks;
   });
 }

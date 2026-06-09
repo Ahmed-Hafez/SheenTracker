@@ -20,6 +20,7 @@ export class UserCardComponent {
 
   showLinkSystemToAzureButton = input.required<boolean>();
   linkAzureUser = input.required<() => void>();
+  foundAzureUserEmail = input.required<string | null>();
 
   excecuteLinkAzureUser() {
     console.log("Link Azure User button clicked");

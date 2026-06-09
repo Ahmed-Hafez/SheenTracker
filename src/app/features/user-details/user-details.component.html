@@ -70,20 +70,24 @@
   } @else if (isError() === false) {
     <div class="flex flex-col gap-6 w-full mx-auto">
       <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
-        <a routerLink="/users" class="cursor-pointer hover:text-gray-800 hover:underline">Users</a>
+        <a
+          [routerLink]="['/users', isAzureUser() ? 'azure' : 'system']"
+          class="cursor-pointer hover:text-gray-800 hover:underline"
+        >
+          {{ isAzureUser() ? 'Azure Users' : 'System Users' }}
+        </a>
         <i class="pi pi-angle-right text-xs"></i>
         <span class="text-gray-800">{{ user()?.name }}</span>
       </div>
 
       @if (user()) {
         <app-user-card
-        [user]="user()!"
-        [showLinkSystemToAzureButton]="showLinkSystemToAzureButton()"
-        [linkAzureUser]="linkAzureUser.bind(this)"
+          [user]="user()!"
+          [foundAzureUserEmail]="foundAzureUserEmail()"
+          [showLinkSystemToAzureButton]="showLinkSystemToAzureButton()"
+          [linkAzureUser]="linkAzureUser.bind(this)"
         ></app-user-card>
       }
-
-
 
       <app-tabbar
         [summary]="summary()"

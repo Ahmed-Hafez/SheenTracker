@@ -29,7 +29,6 @@ import { MetaDataService } from '../../core/http/backend_service/meta-data.servi
   styles: ``,
 })
 export class UserDetailsComponent implements OnInit {
-
   private userDetailsService = inject(UserDetailsService);
   private readonly refreshService = inject(RefreshService);
   private readonly route = inject(ActivatedRoute);
@@ -49,6 +48,7 @@ export class UserDetailsComponent implements OnInit {
   resolvedAzureUserKey = signal<string | null>(null);
   // Holds a matched azure key from metadata (for showing "link to azure user" button)
   foundAzureUserKey = signal<string | null>(null);
+  foundAzureUserEmail = signal<string | null>(null);
   isLoading = signal(false);
   isError = signal(false);
 
@@ -84,9 +84,7 @@ export class UserDetailsComponent implements OnInit {
       const sUser = this.systemUser();
       if (!sUser) return null;
 
-      const displayName = sUser.fullName
-        .replace(/@?(?:tildetech.ae|shuratech.com)/gi, '')
-        .trim();
+      const displayName = sUser.fullName.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
 
       return {
         name: displayName,
@@ -251,19 +249,21 @@ export class UserDetailsComponent implements OnInit {
   }
 
   private matchEmailToUserKey(email: string) {
-    const foundUser = this.metaDataService.metaDataUsers$().find(
-      (u) => u.email.toLowerCase() === email.toLowerCase()
-    );
-    if (foundUser) {
-      this.foundAzureUserKey.set(foundUser.userKey);
-    } else {
-      this.foundAzureUserKey.set(null);
-    }
+    const emailPrefix = email.split('@')[0].toLowerCase();
+
+    const foundUser = this.metaDataService.metaDataUsers$().find((u) => {
+      const userPrefix = u.email.split('@')[0].toLowerCase();
+      return userPrefix === emailPrefix;
+    });
+    console.log('Matching system user email to metadata users:', { email, foundUser });
+    this.foundAzureUserEmail.set(foundUser?.email ?? null);
+
+    this.foundAzureUserKey.set(foundUser?.userKey ?? null);
   }
 
   linkAzureUser() {
-    console.log("system user:", this.systemUser());
-    console.log("found azure key:", this.foundAzureUserKey());
+    console.log('system user:', this.systemUser());
+    console.log('found azure key:', this.foundAzureUserKey());
     const sUser = this.systemUser();
     const azureKey = this.foundAzureUserKey();
     if (sUser && azureKey) {
@@ -278,7 +278,7 @@ export class UserDetailsComponent implements OnInit {
     }
   }
   showLinkSystemToAzureButton(): boolean {
-    let show: boolean = (!this.systemUser()?.azureUserKey && this.foundAzureUserKey()) ? true : false;
+    let show: boolean = !this.systemUser()?.azureUserKey && this.foundAzureUserKey() ? true : false;
     return show;
-    }
+  }
 }
