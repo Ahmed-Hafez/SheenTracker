@@ -15,11 +15,10 @@ export class ApiService {
 
   get<T>(url: string, headers?: HttpHeaders): Observable<T> {
 
-    const queryParams = this.getDateRangeQueryParams();
     let fullUrl = '';
     if (url.includes('AzureDevOps')) {
        fullUrl = this.apiUrl + this.appendDateRangeQueryParams(url);
-    } else { 
+    } else {
        fullUrl = this.apiUrl + url;
     }
     return this.httpClient.get<T>(fullUrl, {
@@ -65,12 +64,12 @@ export class ApiService {
     if (selectedDateRange && selectedDateRange.start && selectedDateRange.end) {
       const fromDate = this.formatLocalDate(selectedDateRange.start);
       const toDate = this.formatLocalDate(selectedDateRange.end);
-      
+
       let cleanedUrl = url;
       while (cleanedUrl.endsWith('&') || cleanedUrl.endsWith('?')) {
         cleanedUrl = cleanedUrl.slice(0, -1);
       }
-      
+
       const separator = cleanedUrl.includes('?') ? '&' : '?';
       return `${cleanedUrl}${separator}fromDate=${fromDate}&toDate=${toDate}`;
     }
