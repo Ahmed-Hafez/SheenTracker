@@ -3,6 +3,20 @@
     <app-user-summary [summary]="summary()"></app-user-summary>
   }
 
+  @if (systemUser() == null) {
+    <!-- loading -->
+    <div class="animate-pulse flex space-x-4">
+      <div class="rounded-full bg-gray-300 h-10 w-10"></div>
+      <div class="flex-1 space-y-4 py-1">
+        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-300 rounded"></div>
+          <div class="h-4 bg-gray-300 rounded w-5/6"></div>
+        </div>
+      </div>
+    </div>
+
+  }@else{
   <!-- Employee Hierarchy Card -->
   <div class="bg-white rounded-lg shadow-sm border border-[#E3E1DE] p-5 w-full">
     <h3 class="text-xs uppercase text-gray-500 font-semibold mb-4">Employee Hierarchy</h3>
@@ -13,7 +27,9 @@
         </div>
         <div class="flex flex-col">
           <span class="text-[10px] uppercase text-gray-500 font-semibold">Team</span>
-          <span class="text-sm font-medium text-gray-800">Data Insights</span>
+          <span class="text-sm font-medium text-gray-800">{{
+            systemUser()?.squadName || 'N/A'
+          }}</span>
         </div>
       </div>
 
@@ -23,7 +39,9 @@
         </div>
         <div class="flex flex-col">
           <span class="text-[10px] uppercase text-gray-500 font-semibold">Primary Project</span>
-          <span class="text-sm font-medium text-gray-800">Equinox Portal</span>
+          <span class="text-sm font-medium text-gray-800">{{
+            systemUser()?.department || 'N/A'
+          }}</span>
         </div>
       </div>
 
@@ -33,7 +51,9 @@
         </div>
         <div class="flex flex-col">
           <span class="text-[10px] uppercase text-gray-500 font-semibold">Department</span>
-          <span class="text-sm font-medium text-gray-800">QC</span>
+          <span class="text-sm font-medium text-gray-800">{{
+            systemUser()?.department || 'N/A'
+          }}</span>
         </div>
       </div>
 
@@ -42,36 +62,50 @@
           <i class="pi pi-user text-sm"></i>
         </div>
         <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Job Title</span>
-          <span class="text-sm font-medium text-gray-800">Quality Engineer</span>
+          <span class="text-[10px] uppercase text-gray-500 font-semibold">Seniority</span>
+          <span class="text-sm font-medium text-gray-800">{{
+            systemUser()?.seniority || 'N/A'
+          }}</span>
         </div>
       </div>
 
-      <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
-        <div
-          class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold"
-        >
-          DT
-        </div>
-        <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Direct Manager</span>
-          <span class="text-sm font-medium text-gray-800">Daniel Toma</span>
-          <span class="text-xs text-gray-500">Senior Frontend Engineer</span>
-        </div>
-      </div>
+      <div (click)="navigateToUser(systemUser()?.productOwnerId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
+  <div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">
+    {{ systemUser()?.productOwnerName ? systemUser()?.productOwnerName?.charAt(0) : 'N/A' }}
+  </div>
+  <div class="flex flex-col">
+    <span class="text-[10px] uppercase text-gray-500 font-semibold">Product Owner</span>
+    <span class="text-sm font-medium text-gray-800">{{
+      systemUser()?.productOwnerName || 'N/A'
+    }}</span>
+  </div>
+</div>
 
-      <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
-        <div
-          class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold"
-        >
-          HH
-        </div>
-        <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Team Leader</span>
-          <span class="text-sm font-medium text-gray-800">Hassan Hassan</span>
-          <span class="text-xs text-gray-500">Product Owner</span>
-        </div>
-      </div>
+<div (click)="navigateToUser(systemUser()?.teamLeadId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
+  <div class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">
+    {{ systemUser()?.teamLeadName ? systemUser()?.teamLeadName?.charAt(0) : 'N/A' }}
+  </div>
+  <div class="flex flex-col">
+    <span class="text-[10px] uppercase text-gray-500 font-semibold">Team Lead</span>
+    <span class="text-sm font-medium text-gray-800">{{
+      systemUser()?.teamLeadName || 'N/A'
+    }}</span>
+  </div>
+</div>
+
+<div (click)="navigateToUser(systemUser()?.scrumMasterId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
+  <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold">
+    {{ systemUser()?.scrumMasterName ? systemUser()?.scrumMasterName?.charAt(0) : 'N/A' }}
+  </div>
+  <div class="flex flex-col">
+    <span class="text-[10px] uppercase text-gray-500 font-semibold">Scrum Master</span>
+    <span class="text-sm font-medium text-gray-800">{{
+      systemUser()?.scrumMasterName || 'N/A'
+    }}</span>
+  </div>
+</div>
     </div>
   </div>
+  }
+
 </div>

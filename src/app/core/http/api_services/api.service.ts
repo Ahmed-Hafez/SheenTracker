@@ -14,11 +14,11 @@ export class ApiService {
   private readonly dateService = inject(DateService);
 
   get<T>(url: string, headers?: HttpHeaders): Observable<T> {
-    const queryParams = this.getDateRangeQueryParams();
+
     let fullUrl = '';
     if (url.includes('AzureDevOps')) {
-       fullUrl = this.apiUrl + url + queryParams;
-    } else { 
+       fullUrl = this.apiUrl + this.appendDateRangeQueryParams(url);
+    } else {
        fullUrl = this.apiUrl + url;
     }
     return this.httpClient.get<T>(fullUrl, {
@@ -59,14 +59,21 @@ export class ApiService {
     });
   }
 
-  private getDateRangeQueryParams(): string {
+  private appendDateRangeQueryParams(url: string): string {
     const selectedDateRange = this.dateService.selectedDateRange();
     if (selectedDateRange && selectedDateRange.start && selectedDateRange.end) {
       const fromDate = this.formatLocalDate(selectedDateRange.start);
       const toDate = this.formatLocalDate(selectedDateRange.end);
-      return `?fromDate=${fromDate}&toDate=${toDate}`;
+
+      let cleanedUrl = url;
+      while (cleanedUrl.endsWith('&') || cleanedUrl.endsWith('?')) {
+        cleanedUrl = cleanedUrl.slice(0, -1);
+      }
+
+      const separator = cleanedUrl.includes('?') ? '&' : '?';
+      return `${cleanedUrl}${separator}fromDate=${fromDate}&toDate=${toDate}`;
     }
-    return '';
+    return url;
   }
 
   private formatLocalDate(date: Date): string {

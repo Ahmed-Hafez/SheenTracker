@@ -18,5 +18,18 @@ export class UserCardComponent {
     totalHours: number;
   }>();
 
+  showLinkSystemToAzureButton = input.required<boolean>();
+  linkAzureUser = input.required<() => void>();
+  foundAzureUserEmail = input.required<string | null>();
+
+  excecuteLinkAzureUser() {
+    console.log("Link Azure User button clicked");
+    if (this.linkAzureUser) {
+      const x: void =this.linkAzureUser()();
+    }
+  }
+
+
   hasImageError = signal(false);
+
 }
