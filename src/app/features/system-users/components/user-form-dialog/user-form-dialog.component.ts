@@ -81,10 +81,10 @@ export class UserFormDialogComponent implements OnInit {
         ],
       ],
       department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
-      squadName: [this.isEditMode() ? this.userData()?.squad : '', Validators.required],
+      squadName: [this.isEditMode() ? this.userData()?.squad : null, Validators.required],
       seniority: [this.isEditMode() ? this.userData()?.seniority : Seniority.Junior, Validators.required],
       jobTitle: [this.isEditMode() ? this.userData()?.title : '', Validators.required],
-      teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : ''],
+      teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : null],
     });
   }
 
@@ -191,9 +191,7 @@ export class UserFormDialogComponent implements OnInit {
         email: formData.email,
         department: formData.department,
         teamLeadId: formData.teamleadId,
-        scrumMasterId: formData.scrumMasterId,
-        productOwnerId: formData.productOwnerId,
-        squadName: formData.squadName,
+        squad: formData.squadName,
         title: formData.jobTitle,
       };
       if (this.isEditMode()) {
