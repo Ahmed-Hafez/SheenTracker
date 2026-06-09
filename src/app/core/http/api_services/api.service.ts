@@ -15,7 +15,12 @@ export class ApiService {
 
   get<T>(url: string, headers?: HttpHeaders): Observable<T> {
     const queryParams = this.getDateRangeQueryParams();
-    const fullUrl = this.apiUrl + url + queryParams;
+    let fullUrl = '';
+    if (url.includes('AzureDevOps')) {
+       fullUrl = this.apiUrl + url + queryParams;
+    } else { 
+       fullUrl = this.apiUrl + url;
+    }
     return this.httpClient.get<T>(fullUrl, {
       headers: headers,
     });
