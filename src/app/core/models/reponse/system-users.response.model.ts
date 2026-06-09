@@ -2,20 +2,15 @@ export interface SystemUser {
   id: number;
   fullName: string;
   email: string;
-  department: number | string;
+  department: number;
   azureUserKey: string | null;
   teamLeadId: number | null;
-  teamLeadName: string;
+  teamLeadName: string | null;
   scrumMasterId: number | null;
-  scrumMasterName: string;
+  scrumMasterName: string | null;
   productOwnerId: number | null;
-  productOwnerName: string;
-  squad: number | string;
-  seniority: number | string;
+  productOwnerName: string | null;
+  squad: number;
+  seniority: number;
+  title: string;
 }
-
-export interface SystemUserBySeniority {
-  scrumMasters: SystemUser[];
-  teamLeads: SystemUser[]
-  productOwners: SystemUser[]
- }

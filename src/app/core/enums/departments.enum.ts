@@ -1,9 +1,9 @@
 export enum Department {
-  Backend = 1,
-  Frontend = 2,
-  QualityAssurance = 3,
-  ProductManagement = 4,
-  ScrumMaster = 5,
+  Frontend = 1,
+  Backend = 2,
+  ProductManagement = 3,
+  ScrumMaster = 4,
+  QualityAssurance = 5,
   DevOps = 6,
   UIUXDesign = 7,
 }

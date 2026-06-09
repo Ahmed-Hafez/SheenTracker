@@ -8,6 +8,7 @@ import {  InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
 
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
+import { RefreshService } from '../../../../core/services/refresh.service';
 import { MessageService } from 'primeng/api';
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
 import { AddSystemUserRequest } from '../../../../core/models/request/add-system-user.request.model';
@@ -34,6 +35,7 @@ export class UserFormDialogComponent implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly appUsersService = inject(SystemUsersService);
   private readonly metaDataService = inject(MetaDataService);
+  private readonly refreshService = inject(RefreshService);
 
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
@@ -42,7 +44,10 @@ export class UserFormDialogComponent implements OnInit {
   users = input<SystemUser[] | null>(null);
   actionLoading = signal(false);
   userForm!: FormGroup;
-
+  
+  teamLeads = signal<SystemUser[]>([]);
+  isTeamLeadLoading = signal(false);
+  
   visible = false;
 
   constructor() {
@@ -77,22 +82,15 @@ export class UserFormDialogComponent implements OnInit {
       ],
       department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
       squadName: [this.isEditMode() ? this.userData()?.squad : '', Validators.required],
-      jobTitle: [this.isEditMode() ? this.userData()?.seniority : '', Validators.required],
+      seniority: [this.isEditMode() ? this.userData()?.seniority : Seniority.Junior, Validators.required],
+      jobTitle: [this.isEditMode() ? this.userData()?.title : '', Validators.required],
       teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : ''],
-      scrumMasterId: [this.isEditMode() ? this.userData()?.scrumMasterId : ''],
-      productOwnerId: [this.isEditMode() ? this.userData()?.productOwnerId : ''],
     });
   }
 
   ngOnInit() {
     this.initializeForm();
-    console.log('users', this.users());
-    this.appUsersService.filterUsersBySeniority(this.users() || []);
-
-    let users = this.appUsersService.usersBySeniority$;
-
-    console.log('usersBySeniority', users());
-    this.updateValidators();
+    this.getDepartmentTeamleads();
   }
 
   getFieldErrorMessage(fieldName: string): string | null {
@@ -140,22 +138,45 @@ export class UserFormDialogComponent implements OnInit {
     }
   }
 
-  updateValidators() {
-    this.userForm.get('department')?.valueChanges.subscribe((dept) => {
-      const scrumControl = this.userForm.get('scrumMasterId');
-      const productOwnerControl = this.userForm.get('productOwnerId');
+  getDepartmentTeamleads() {
+    // disable teamlead selection if no department is selected
+    if (!this.userForm.get('department')) { 
+      this.userForm.get('teamleadId')?.disable();
+    };
+    if (this.isEditMode()) {
+      this.isTeamLeadLoading.set(true);
+      let department = this.userData()?.department;
+      console.log( 'Edit Mode' ,department);
+      this.appUsersService.getSystemTeamLeads(department? department : 0).subscribe({
+        next: (teamleads) => {
+          this.teamLeads.set(teamleads);
+          this.isTeamLeadLoading.set(false);
+        },
+        error: () => {
+          this.teamLeads.set([]);
+          this.isTeamLeadLoading.set(false);
+        },
+      });
+    }
+    else {
+      this.userForm.get('department')?.valueChanges.subscribe((dept) => {
+        this.userForm.get('teamleadId')?.enable();
+        this.isTeamLeadLoading.set(true);
+              console.log('Add Mode', dept);
 
-      if (dept === Department.ScrumMaster || dept === Department.ProductManagement) {
-        scrumControl?.clearValidators();
-        productOwnerControl?.clearValidators();
-      } else {
-        scrumControl?.setValidators([Validators.required]);
-        productOwnerControl?.setValidators([Validators.required]);
-      }
-
-      scrumControl?.updateValueAndValidity();
-      productOwnerControl?.updateValueAndValidity();
-    });
+        this.appUsersService.getSystemTeamLeads(dept).subscribe({
+          next: (teamleads) => {
+            this.teamLeads.set(teamleads);
+            this.isTeamLeadLoading.set(false);
+          },
+          error: () => {
+            this.teamLeads.set([]);
+            this.isTeamLeadLoading.set(false);
+          },
+        });
+      });
+    }
+    
   }
 
   onSubmit() {
@@ -185,6 +206,7 @@ export class UserFormDialogComponent implements OnInit {
             });
             this.onClosePopup();
             this.actionLoading.set(false);
+            this.refreshService.trigger();
           },
           error: (error) => {
             console.error('Error updating user:', error);
@@ -206,6 +228,7 @@ export class UserFormDialogComponent implements OnInit {
             });
             this.onClosePopup();
             this.actionLoading.set(false);
+            this.refreshService.trigger();
           },
 
           error: (error) => {

@@ -68,18 +68,19 @@
               optionValue="value"
               appendTo="body"
               inputId="department"
+              formControlName="seniority"
               scrollHeight="400px"
               placeholder=""
-              [style]="{ width: '1rem', border: 'none' }"
+              [style]="{ width: '10rem', border: 'none' }"
               [invalid]="getFieldErrorMessage('department') !== null"
             >
             </p-select>
-            </p-inputgroup-addon>
+          </p-inputgroup-addon>
           <input
             pInputText
             id="jobTitle"
             formControlName="jobTitle"
-            placeholder="Senior Software Engineer"
+            placeholder="Software Engineer"
           />
         </p-inputgroup>
         @if (getFieldErrorMessage('jobTitle') !== null) {
@@ -134,7 +135,7 @@
         <label class="input-label" for="teamleadId">Team Lead</label>
         <p-select
           [fluid]="true"
-          [options]="azureUsers()"
+          [options]="teamLeads()"
           optionLabel="fullName"
           optionValue="userKey"
           [filter]="true"
@@ -142,8 +143,8 @@
           appendTo="body"
           formControlName="teamleadId"
           inputId="teamleadId"
-          [loading]="isAzureUserLoading()"
-          [placeholder]="isAzureUserLoading() ? 'Loading Users...' : 'Select Team Lead'"
+          [loading]="isTeamLeadLoading()"
+          [placeholder]="isTeamLeadLoading() ? 'Loading Users...' : 'Select Team Lead'"
           style="background-color: var(--page-bg)"
           [invalid]="getFieldErrorMessage('teamleadId') !== null"
         >
@@ -153,56 +154,6 @@
             {{ getFieldErrorMessage('teamleadId') }}
           </p-message>
         }
-      </div>
-      <div class="flex gap-4 flex-row">
-        <div class="flex-1">
-          <label class="input-label" for="scrumMasterId">Scrum Master</label>
-          <p-select
-            [fluid]="true"
-            [options]="azureUsers()"
-            optionLabel="fullName"
-            optionValue="userKey"
-            [filter]="true"
-            filterBy="fullName"
-            appendTo="body"
-            formControlName="scrumMasterId"
-            inputId="scrumMasterId"
-            [loading]="isAzureUserLoading()"
-            [placeholder]="isAzureUserLoading() ? 'Loading Users...' : 'Select Scrum Master'"
-            style="background-color: var(--page-bg)"
-            [invalid]="getFieldErrorMessage('scrumMasterId') !== null"
-          >
-          </p-select>
-          @if (getFieldErrorMessage('scrumMasterId') !== null) {
-            <p-message severity="error" size="small" class="mt-1">
-              {{ getFieldErrorMessage('scrumMasterId') }}
-            </p-message>
-          }
-        </div>
-        <div class="flex-1">
-          <label class="input-label" for="productOwnerId">Product Owner</label>
-          <p-select
-            [fluid]="true"
-            [options]="azureUsers()"
-            optionLabel="fullName"
-            optionValue="userKey"
-            [filter]="true"
-            filterBy="fullName"
-            appendTo="body"
-            [loading]="isAzureUserLoading()"
-            formControlName="productOwnerId"
-            inputId="productOwnerId"
-            [placeholder]="isAzureUserLoading() ? 'Loading Users...' : 'Select Team Lead'"
-            style="background-color: var(--page-bg)"
-            [invalid]="getFieldErrorMessage('productOwnerId') !== null"
-          >
-          </p-select>
-          @if (getFieldErrorMessage('productOwnerId') !== null) {
-            <p-message severity="error" size="small" class="mt-1">
-              {{ getFieldErrorMessage('productOwnerId') }}
-            </p-message>
-          }
-        </div>
       </div>
 
       <div class="flex justify-end gap-3 mt-4">

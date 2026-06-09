@@ -150,9 +150,6 @@ export const PrimeNG_Preset = definePreset(Aura, {
           overlay: {
             background: 'var(--page-bg)',
           },
-          dropdown: {
-            width: '1.5rem',
-          }
         }
       },
     },
