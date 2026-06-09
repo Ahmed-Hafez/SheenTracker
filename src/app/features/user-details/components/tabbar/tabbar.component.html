@@ -1,6 +1,6 @@
-<p-tabs [value]="isAzureUser() ? 'work-items' : 'overview'" class="w-full">
+<p-tabs [value]="systemUser() ? 'overview' : 'work-items'" class="w-full">
   <p-tablist>
-    @if (!isAzureUser()) {
+    @if (systemUser()) {
       <p-tab value="overview">Overview</p-tab>
     }
     @if (!disableAzureTabs()) {
@@ -10,7 +10,7 @@
   </p-tablist>
 
   <p-tabpanels>
-    @if (!isAzureUser()) {
+    @if (systemUser()) {
       <p-tabpanel value="overview">
         <app-overview [summary]="summary()" [systemUser]="systemUser()"></app-overview>
       </p-tabpanel>

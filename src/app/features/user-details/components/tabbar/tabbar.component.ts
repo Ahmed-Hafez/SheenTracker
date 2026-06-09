@@ -17,7 +17,6 @@ export class TabbarComponent {
   workItems = input.required<any>();
   achievements = input.required<any>();
   isAchievementsLoading = input<boolean>(false);
-  isAzureUser = input<boolean>(false);
   disableAzureTabs = input<boolean>(false);
   systemUser = input<SystemUser | null>(null);
 }

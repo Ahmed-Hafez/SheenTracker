@@ -174,7 +174,6 @@ export class UserDetailsComponent implements OnInit {
     this.isLoading.set(true);
     this.userDetailsService
       .getUserDetails(userId)
-      .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (response) => {
           this.userDetails.set(response);
@@ -182,11 +181,16 @@ export class UserDetailsComponent implements OnInit {
           if (response?.user?.key) {
             this.loadAzureUserAchievements(response.user.key);
           }
+          setTimeout(() => {
+            this.loadSystemUserDetails(response.user.key, false);
+          }, 1000);
         },
         error: (error) => {
+          this.isLoading.set(false);
           console.error('Error fetching user details:', error);
           this.userDetails.set(null);
           this.isError.set(true);
+
         },
       });
   }
@@ -206,7 +210,7 @@ export class UserDetailsComponent implements OnInit {
       });
   }
 
-  loadSystemUserDetails(userId: number) {
+  loadSystemUserDetails(userId: number| string, checkForAzureKey:boolean = true) {
     this.isLoading.set(true);
     this.userDetailsService
       .getSystemUserDetails(userId)
@@ -214,9 +218,11 @@ export class UserDetailsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.systemUser.set(response);
+
           this.isError.set(false);
 
-          if (response.azureUserKey) {
+          if(checkForAzureKey){
+            if (response.azureUserKey) {
             // System user has an azure key → load work items & achievements
             this.resolvedAzureUserKey.set(response.azureUserKey);
             this.loadAzureUserDetailsAndWorkItems(response.azureUserKey);
@@ -224,11 +230,14 @@ export class UserDetailsComponent implements OnInit {
             // No azure key → search metadata for email match
             this.checkAndFindAzureUserKey(response.email);
           }
+          }
+
         },
         error: (error) => {
           console.error('Error fetching system user details:', error);
           this.systemUser.set(null);
-          this.isError.set(true);
+          if(error.status !== 404){this.isError.set(true);}
+
         },
       });
   }

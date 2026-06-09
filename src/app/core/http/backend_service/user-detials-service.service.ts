@@ -19,7 +19,7 @@ export class UserDetailsService {
     return this.apiService.get<AchievementResponse>(`AzureDevOps/user-achievements?userKey=${userKey}&&`);
   }
 
-  getSystemUserDetails(userId: number): Observable<SystemUser> {
+  getSystemUserDetails(userId: number| string): Observable<SystemUser> {
     return this.apiService.get<SystemUser>(`AppUsers/${userId}`);
   }
 
