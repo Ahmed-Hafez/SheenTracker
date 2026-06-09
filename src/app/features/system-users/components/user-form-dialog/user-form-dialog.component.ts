@@ -5,7 +5,7 @@ import { MessageModule } from 'primeng/message';
 import { Select } from 'primeng/select';
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
 import { MessageService } from 'primeng/api';
-import { SystemUserDetails } from '../../../../core/models/reponse/system-user-details.response.model';
+import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
 import { AddSystemUserRequest } from '../../../../core/models/request/add-system-user.request.model';
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
 
@@ -26,6 +26,7 @@ export enum Squads {
   Integration1 = 'Integration 1',
   Integration2 = 'Integration 2',
   MoneyCollector = 'Money Collector',
+
 }
 
 @Component({
@@ -42,7 +43,7 @@ export class UserFormDialogComponent implements OnInit {
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
   isEditMode = input<boolean>(false);
-  userData = input<SystemUserDetails | null>(null); // Replace 'any' with your actual user data type
+  userData = input<SystemUser | null>(null); // Replace 'any' with your actual user data type
   actionLoading = signal(false);
   userForm!: FormGroup;
 
@@ -56,8 +57,8 @@ export class UserFormDialogComponent implements OnInit {
 
   departments = Object.values(Department);
   squads = Object.values(Squads);
-  azureUsers = this.metaDataService.metaDataUsers$;
-  isAzureUserLoading = this.metaDataService.isLoading;
+  azureUsers = this.metaDataService.metaDataUsers$
+  isAzureUserLoading = this.metaDataService.isLoading
 
   initializeForm() {
     // Initialize your form here using FormBuilder
@@ -83,6 +84,7 @@ export class UserFormDialogComponent implements OnInit {
       teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : ''],
       scrumMasterId: [this.isEditMode() ? this.userData()?.scrumMasterId : ''],
       productOwnerId: [this.isEditMode() ? this.userData()?.productOwnerId : ''],
+      
     });
   }
 
@@ -153,26 +155,28 @@ export class UserFormDialogComponent implements OnInit {
         title: formData.jobTitle,
       };
       if (this.isEditMode()) {
-        this.appUsersService.updateAppUser(this.userData()?.id || 0, systemUserData).subscribe({
-          next: (response) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'User updated successfully.',
-            });
-            this.onClosePopup();
-            this.actionLoading.set(false);
-          },
-          error: (error) => {
-            console.error('Error updating user:', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to update user.',
-            });
-            this.actionLoading.set(false);
-          },
-        });
+        this.appUsersService
+          .updateAppUser(this.userData()?.id || 0, systemUserData)
+          .subscribe({
+            next: (response) => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'User updated successfully.',
+              });
+              this.onClosePopup();
+              this.actionLoading.set(false);
+            },
+            error: (error) => {
+              console.error('Error updating user:', error);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to update user.',
+              });
+              this.actionLoading.set(false);
+            },
+          });
       } else {
         this.appUsersService.addAppUser(systemUserData).subscribe({
           next: (response) => {

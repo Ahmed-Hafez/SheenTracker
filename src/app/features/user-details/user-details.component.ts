@@ -18,7 +18,7 @@ import { UserDetailsResponse } from '../../core/models/reponse/user-details.resp
 import { finalize } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
 import { AchievementResponse } from '../../core/models/reponse/achievemetsResponse.model';
-import { SystemUserDetails } from '../../core/models/reponse/system-user-details.response.model';
+import { SystemUser } from '../../core/models/reponse/system-users.response.model';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 
 @Component({
@@ -43,7 +43,7 @@ export class UserDetailsComponent implements OnInit {
   });
 
   userDetails = signal<UserDetailsResponse | null>(null);
-  systemUser = signal<SystemUserDetails | null>(null);
+  systemUser = signal<SystemUser | null>(null);
   // Holds the azure user key found from system user details or metadata lookup
   resolvedAzureUserKey = signal<string | null>(null);
   // Holds a matched azure key from metadata (for showing "link to azure user" button)
@@ -172,24 +172,27 @@ export class UserDetailsComponent implements OnInit {
 
   loadAzureUserDetailsAndWorkItems(userId: string) {
     this.isLoading.set(true);
-    this.userDetailsService.getUserDetails(userId).subscribe({
-      next: (response) => {
-        this.userDetails.set(response);
-        this.isError.set(false);
-        if (response?.user?.key) {
-          this.loadAzureUserAchievements(response.user.key);
-        }
-        setTimeout(() => {
-          this.loadSystemUserDetails(response.user.key, false);
-        }, 1000);
-      },
-      error: (error) => {
-        this.isLoading.set(false);
-        console.error('Error fetching user details:', error);
-        this.userDetails.set(null);
-        this.isError.set(true);
-      },
-    });
+    this.userDetailsService
+      .getUserDetails(userId)
+      .subscribe({
+        next: (response) => {
+          this.userDetails.set(response);
+          this.isError.set(false);
+          if (response?.user?.key) {
+            this.loadAzureUserAchievements(response.user.key);
+          }
+          setTimeout(() => {
+            this.loadSystemUserDetails(response.user.key, false);
+          }, 1000);
+        },
+        error: (error) => {
+          this.isLoading.set(false);
+          console.error('Error fetching user details:', error);
+          this.userDetails.set(null);
+          this.isError.set(true);
+
+        },
+      });
   }
 
   loadAzureUserAchievements(userKey: string) {
@@ -207,7 +210,7 @@ export class UserDetailsComponent implements OnInit {
       });
   }
 
-  loadSystemUserDetails(userId: number | string, checkForAzureKey: boolean = true) {
+  loadSystemUserDetails(userId: number| string, checkForAzureKey:boolean = true) {
     this.isLoading.set(true);
     this.userDetailsService
       .getSystemUserDetails(userId)
@@ -218,23 +221,23 @@ export class UserDetailsComponent implements OnInit {
 
           this.isError.set(false);
 
-          if (checkForAzureKey) {
+          if(checkForAzureKey){
             if (response.azureUserKey) {
-              // System user has an azure key → load work items & achievements
-              this.resolvedAzureUserKey.set(response.azureUserKey);
-              this.loadAzureUserDetailsAndWorkItems(response.azureUserKey);
-            } else {
-              // No azure key → search metadata for email match
-              this.checkAndFindAzureUserKey(response.email);
-            }
+            // System user has an azure key → load work items & achievements
+            this.resolvedAzureUserKey.set(response.azureUserKey);
+            this.loadAzureUserDetailsAndWorkItems(response.azureUserKey);
+          } else {
+            // No azure key → search metadata for email match
+            this.checkAndFindAzureUserKey(response.email);
           }
+          }
+
         },
         error: (error) => {
           console.error('Error fetching system user details:', error);
           this.systemUser.set(null);
-          if (error.status !== 404) {
-            this.isError.set(true);
-          }
+          if(error.status !== 404){this.isError.set(true);}
+
         },
       });
   }
