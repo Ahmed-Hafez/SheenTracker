@@ -69,48 +69,41 @@
         </div>
       </div>
 
-      <div (click)="navigateToUser(systemUser()?.productOwnerId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
-        <div
-          class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold"
-        >
-          {{ systemUser()?.productOwnerName ? systemUser()?.productOwnerName?.charAt(0) : 'N/A' }}
-        </div>
-        <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Product Owner</span>
-          <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.productOwnerName || 'N/A'
-          }}</span>
-        </div>
-      </div>
+      <div (click)="navigateToUser(systemUser()?.productOwnerId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
+  <div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">
+    {{ systemUser()?.productOwnerName ? systemUser()?.productOwnerName?.charAt(0) : 'N/A' }}
+  </div>
+  <div class="flex flex-col">
+    <span class="text-[10px] uppercase text-gray-500 font-semibold">Product Owner</span>
+    <span class="text-sm font-medium text-gray-800">{{
+      systemUser()?.productOwnerName || 'N/A'
+    }}</span>
+  </div>
+</div>
 
-      <div (click)="navigateToUser(systemUser()?.teamLeadId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
-        <div
-          class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold"
-        >
-          {{ systemUser()?.teamLeadName ? systemUser()?.teamLeadName?.charAt(0) : 'N/A' }}
-        </div>
-        <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Team Lead</span>
-          <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.teamLeadName || 'N/A'
-          }}</span>
-        </div>
-      </div>
+<div (click)="navigateToUser(systemUser()?.teamLeadId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
+  <div class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">
+    {{ systemUser()?.teamLeadName ? systemUser()?.teamLeadName?.charAt(0) : 'N/A' }}
+  </div>
+  <div class="flex flex-col">
+    <span class="text-[10px] uppercase text-gray-500 font-semibold">Team Lead</span>
+    <span class="text-sm font-medium text-gray-800">{{
+      systemUser()?.teamLeadName || 'N/A'
+    }}</span>
+  </div>
+</div>
 
-      <div (click)="navigateToUser(systemUser()?.scrumMasterId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
-        <div
-          class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold"
-        >
-          {{ systemUser()?.scrumMasterName ? systemUser()?.scrumMasterName?.charAt(0) : 'N/A' }}
-        </div>
-        <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Scrum Master</span>
-          <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.scrumMasterName || 'N/A'
-          }}</span>
-        </div>
-
-      </div>
+<div (click)="navigateToUser(systemUser()?.scrumMasterId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
+  <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold">
+    {{ systemUser()?.scrumMasterName ? systemUser()?.scrumMasterName?.charAt(0) : 'N/A' }}
+  </div>
+  <div class="flex flex-col">
+    <span class="text-[10px] uppercase text-gray-500 font-semibold">Scrum Master</span>
+    <span class="text-sm font-medium text-gray-800">{{
+      systemUser()?.scrumMasterName || 'N/A'
+    }}</span>
+  </div>
+</div>
     </div>
   </div>
   }
