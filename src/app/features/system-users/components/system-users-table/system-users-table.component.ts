@@ -6,11 +6,10 @@ import { TableModule } from 'primeng/table';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { TagModule } from 'primeng/tag';
 
-
 import { UserFormDialogComponent } from '../user-form-dialog/user-form-dialog.component';
 import { DeletePopupComponent } from '../../../../shared/delete-popup/delete-popup.component';
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
-import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
+import { SystemUserDetails } from '../../../../core/models/reponse/system-user-details.response.model';
 
 interface Column {
   field: string;
@@ -27,14 +26,14 @@ export class SystemUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly appUsersService = inject(SystemUsersService);
 
-  users = input.required<SystemUser[]>();
+  users = input.required<SystemUserDetails[]>();
   userDialogVisible = signal(false);
   deleteRequestVisible = signal(false);
   actionTaken = output<void>();
 
   popupMenu = viewChild<Popover>('op');
 
-  selectedUser = signal<SystemUser | null>(null);
+  selectedUser = signal<SystemUserDetails | null>(null);
 
   columns!: Column[];
 
@@ -44,13 +43,13 @@ export class SystemUsersTableComponent implements OnInit {
 
   initializeTableColumns() {
     this.columns = [
-      { field: 'fullName', header: 'Name', },
-      { field: 'email', header: 'Email', },
-      { field: 'department', header: 'Department', },
-      { field: 'sqaud', header: 'Squad', },
-      { field: 'jobTitle', header: 'Job Title', },
-      { field: 'azure', header: 'Azure User', },
-      { field: 'Actions', header: 'Actions', },
+      { field: 'fullName', header: 'Name' },
+      { field: 'email', header: 'Email' },
+      { field: 'department', header: 'Department' },
+      { field: 'sqaud', header: 'Squad' },
+      { field: 'jobTitle', header: 'Job Title' },
+      { field: 'azure', header: 'Azure User' },
+      { field: 'Actions', header: 'Actions' },
     ];
   }
 
@@ -58,7 +57,7 @@ export class SystemUsersTableComponent implements OnInit {
     return name.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
   }
 
-  openMenuPopup(event: Event, user: SystemUser) {
+  openMenuPopup(event: Event, user: SystemUserDetails) {
     console.log('Selected User:', user);
     this.popupMenu()?.toggle(event);
     this.selectedUser.set(user);

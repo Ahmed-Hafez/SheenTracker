@@ -3,7 +3,7 @@ import { UserDetailsResponse } from '../../models/reponse/user-details.response.
 import { ApiService } from '../api_services/api.service';
 import { Observable } from 'rxjs';
 import { AchievementResponse } from '../../models/reponse/achievemetsResponse.model';
-import { SystemUser } from '../../models/reponse/system-users.response.model';
+import { SystemUserDetails } from '../../models/reponse/system-user-details.response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,12 +15,14 @@ export class UserDetailsService {
     return this.apiService.get<UserDetailsResponse>(`AzureDevOps/users/${userId}/work-items`);
   }
 
-  getAzureUserAchievements(userKey: string): Observable<AchievementResponse>{
-    return this.apiService.get<AchievementResponse>(`AzureDevOps/user-achievements?userKey=${userKey}&&`);
+  getAzureUserAchievements(userKey: string): Observable<AchievementResponse> {
+    return this.apiService.get<AchievementResponse>(
+      `AzureDevOps/user-achievements?userKey=${userKey}&&`,
+    );
   }
 
-  getSystemUserDetails(userId: number| string): Observable<SystemUser> {
-    return this.apiService.get<SystemUser>(`AppUsers/${userId}`);
+  getSystemUserDetails(userId: number | string): Observable<SystemUserDetails> {
+    return this.apiService.get<SystemUserDetails>(`AppUsers/${userId}`);
   }
 
   linkAzureUser(appUserId: number, azureUserKey: string): Observable<any> {

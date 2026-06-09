@@ -3,7 +3,7 @@ import { TabsModule } from 'primeng/tabs';
 import { OverviewComponent } from './components/overview/overview.component';
 import { WorkItemsComponent } from './components/work-items/work-items.component';
 import { AchievementsComponent } from './components/achievements/achievements.component';
-import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
+import { SystemUserDetails } from '../../../../core/models/reponse/system-user-details.response.model';
 
 @Component({
   selector: 'app-tabbar',
@@ -18,5 +18,5 @@ export class TabbarComponent {
   achievements = input.required<any>();
   isAchievementsLoading = input<boolean>(false);
   disableAzureTabs = input<boolean>(false);
-  systemUser = input<SystemUser | null>(null);
+  systemUser = input<SystemUserDetails | null>(null);
 }

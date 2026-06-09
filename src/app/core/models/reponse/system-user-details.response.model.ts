@@ -1,10 +1,10 @@
-export interface SystemUser {
+export interface SystemUserDetails {
   id: number;
   fullName: string;
   email: string;
   department: number;
   azureUserKey: string | null;
-  seniority: string|null;
+  seniority: string | null;
   teamLeadId: number | null;
   teamLeadName: string;
   scrumMasterId: number | null;
