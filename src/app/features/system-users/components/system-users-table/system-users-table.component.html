@@ -36,13 +36,13 @@
       </td>
       <td>{{ user.email }}</td>
       <td>
-        <p-tag [value]="user.department" severity="secondary" />
+        <p-tag [value]="user.department | enumLabel: departments" severity="secondary" />
       </td>
       <td>
-        {{ user.squadName || '—' }}
+        {{ user.squad | enumLabel: squads}}
       </td>
       <td>
-        {{ user.title || '—' }}
+        {{ user.seniority | enumLabel: seniorities}} {{ user.title || '—' }}
       </td>
       <td>
         <p-tag
@@ -80,19 +80,19 @@
     <ul class="list-none p-0 m-0 flex flex-col">
       <li
         class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="selectedUser() ? callActions(selectedUser()?.id || 0, 0) : ''"
+        (click)="selectedUser() ? callActions(0) : ''"
       >
         <i class="fa-solid fa-info-circle mr-2"></i> View Details
       </li>
       <li
         class="px-4 py-2 text-sm text-amber-600 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="selectedUser() ? callActions(selectedUser()?.id || 0, 1) : ''"
+        (click)="selectedUser() ? callActions(1) : ''"
       >
         <i class="fa-solid fa-edit mr-2"></i> Edit Client
       </li>
       <li
         class="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="selectedUser() ? callActions(selectedUser()?.id || 0, 2) : ''"
+        (click)="selectedUser() ? callActions(2) : ''"
       >
         <i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Client
       </li>
@@ -106,6 +106,7 @@
     [inputVisibleSignal]="userDialogVisible()"
     [isEditMode]="true"
     [userData]="selectedUser()"
+    [users]="users()"
   ></app-user-form-dialog>
 }
 
