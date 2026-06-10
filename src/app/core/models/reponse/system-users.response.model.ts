@@ -10,7 +10,8 @@ export interface SystemUser {
   scrumMasterName: string | null;
   productOwnerId: number | null;
   productOwnerName: string | null;
-  squad: number;
+  squadId: number;
+  squadName: string;
   seniority: number;
   title: string;
 }

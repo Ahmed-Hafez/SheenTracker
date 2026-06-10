@@ -81,7 +81,7 @@ export class UserFormDialogComponent implements OnInit {
         ],
       ],
       department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
-      squadName: [this.isEditMode() ? this.userData()?.squad : null, Validators.required],
+      squadName: [this.isEditMode() ? this.userData()?.squadId : null, Validators.required],
       seniority: [this.isEditMode() ? this.userData()?.seniority : Seniority.Junior, Validators.required],
       jobTitle: [this.isEditMode() ? this.userData()?.title : '', Validators.required],
       teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : null],
@@ -158,7 +158,6 @@ export class UserFormDialogComponent implements OnInit {
         },
       });
     }
-    else {
       this.userForm.get('department')?.valueChanges.subscribe((dept) => {
         this.userForm.get('teamleadId')?.enable();
         this.isTeamLeadLoading.set(true);
@@ -175,7 +174,7 @@ export class UserFormDialogComponent implements OnInit {
           },
         });
       });
-    }
+    
     
   }
 
@@ -191,9 +190,12 @@ export class UserFormDialogComponent implements OnInit {
         email: formData.email,
         department: formData.department,
         teamLeadId: formData.teamleadId,
-        squad: formData.squadName,
+        squadId: formData.squadName,
         title: formData.jobTitle,
+        seniority: formData.seniority,
       };
+
+      console.log('systemUserData', systemUserData);
       if (this.isEditMode()) {
         this.appUsersService.updateAppUser(this.userData()?.id || 0, systemUserData).subscribe({
           next: (response) => {

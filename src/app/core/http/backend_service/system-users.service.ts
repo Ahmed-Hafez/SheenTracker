@@ -5,13 +5,13 @@ import { ApiService } from '../api_services/api.service';
 import { SystemUser } from '../../models/reponse/system-users.response.model';
 import { AddSystemUserRequest } from '../../models/request/add-system-user.request.model';
 import { Department } from '../../enums/departments.enum';
-import { usersMock } from '../../mock/system-users.mock';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SystemUsersService {
   private usersEndpoint = 'AppUsers';
+  private teamLeadsEndpoint = 'AppUsers/team-leads/department/';
 
   private readonly apiService = inject(ApiService);
 
@@ -43,7 +43,7 @@ export class SystemUsersService {
       );
     }
     if (squad) {
-      filteredUsers = filteredUsers.filter((user) => user.squad === squad);
+      filteredUsers = filteredUsers.filter((user) => user.squadId === squad);
     }
     if (department) {
       filteredUsers = filteredUsers.filter((user) => user.department === department);
@@ -59,7 +59,8 @@ export class SystemUsersService {
   }
 
   getSystemTeamLeads(departmentId: number): Observable<SystemUser[]> {
-    return this.apiService.get<SystemUser[]>(`${this.usersEndpoint}`);
+    return this.apiService.get<any>(`${this.teamLeadsEndpoint}${departmentId}`)
+      .pipe(map((response) => response.data));
   }
 
   getSystemUserByKey(userKey: number): Observable<SystemUser> {

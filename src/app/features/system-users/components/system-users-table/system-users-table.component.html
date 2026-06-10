@@ -39,7 +39,7 @@
         <p-tag [value]="user.department | enumLabel: departments" severity="secondary" />
       </td>
       <td>
-        {{ user.squad | enumLabel: squads}}
+        {{ user.squadId | enumLabel: squads}}
       </td>
       <td>
         {{ user.seniority | enumLabel: seniorities}} {{ user.title || '—' }}
