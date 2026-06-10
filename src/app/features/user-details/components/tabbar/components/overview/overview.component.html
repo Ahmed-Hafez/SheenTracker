@@ -26,7 +26,7 @@
           <i class="pi pi-users"></i>
         </div>
         <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Team</span>
+          <span class="text-[10px] uppercase text-gray-500 font-semibold">Squad Name</span>
           <span class="text-sm font-medium text-gray-800">{{
             systemUser()?.squadName || 'N/A'
           }}</span>
@@ -38,9 +38,9 @@
           <i class="pi pi-folder"></i>
         </div>
         <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Primary Project</span>
+          <span class="text-[10px] uppercase text-gray-500 font-semibold">Title</span>
           <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.department || 'N/A'
+            systemUser()?.title || 'N/A'
           }}</span>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <div class="flex flex-col">
           <span class="text-[10px] uppercase text-gray-500 font-semibold">Department</span>
           <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.department || 'N/A'
+            (systemUser()?.department??0 | enumLabel: departments)|| 'N/A'
           }}</span>
         </div>
       </div>
@@ -64,7 +64,7 @@
         <div class="flex flex-col">
           <span class="text-[10px] uppercase text-gray-500 font-semibold">Seniority</span>
           <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.seniority || 'N/A'
+            (systemUser()?.seniority??0 | enumLabel: seniorities) || 'N/A'
           }}</span>
         </div>
       </div>
