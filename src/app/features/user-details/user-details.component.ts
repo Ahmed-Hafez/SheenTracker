@@ -1,3 +1,4 @@
+import { SystemUsersService } from './../../core/http/backend_service/system-users.service';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -7,6 +8,7 @@ import {
   computed,
   Injector,
   effect,
+  viewChild,
 } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Skeleton } from 'primeng/skeleton';
@@ -15,7 +17,7 @@ import { TabbarComponent } from './components/tabbar/tabbar.component';
 import { ProjectGroup } from './components/work-items-table/work-items-table.component';
 import { UserDetailsService } from '../../core/http/backend_service/user-detials-service.service';
 import { UserDetailsResponse } from '../../core/models/reponse/user-details.response.model';
-import { finalize } from 'rxjs';
+import { finalize, of } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
 import { AchievementResponse } from '../../core/models/reponse/achievemetsResponse.model';
 import { SystemUser } from '../../core/models/reponse/system-users.response.model';
@@ -34,6 +36,8 @@ export class UserDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
   private readonly metaDataService = inject(MetaDataService);
+    private readonly appUsersService = inject(SystemUsersService);
+
 
   readonly userId = signal<string | null>(null);
 
@@ -181,9 +185,8 @@ export class UserDetailsComponent implements OnInit {
           if (response?.user?.key) {
             this.loadAzureUserAchievements(response.user.key);
           }
-          setTimeout(() => {
-            this.loadSystemUserDetails(response.user.key, false);
-          }, 1000);
+          this.loadSystemUserDetails(response.user.key, false);
+
         },
         error: (error) => {
           this.isLoading.set(false);
@@ -290,4 +293,15 @@ export class UserDetailsComponent implements OnInit {
     let show: boolean = !this.systemUser()?.azureUserKey && this.foundAzureUserKey() ? true : false;
     return show;
   }
+
+
+  deleteUser(userKey: number | undefined) {
+      if (!userKey) {
+        return of(null);
+      }
+      // Implement the actual API call to delete the user
+      return this.appUsersService.deleteAppUser(userKey);
+    }
+
+
 }

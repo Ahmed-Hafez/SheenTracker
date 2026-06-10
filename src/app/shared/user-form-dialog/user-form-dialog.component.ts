@@ -7,15 +7,15 @@ import {  InputGroup } from 'primeng/inputgroup';
 import {  InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
 
-import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
-import { RefreshService } from '../../../../core/services/refresh.service';
+import { SystemUsersService } from '../../core/http/backend_service/system-users.service';
+import { RefreshService } from '../../core/services/refresh.service';
 import { MessageService } from 'primeng/api';
-import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
-import { AddSystemUserRequest } from '../../../../core/models/request/add-system-user.request.model';
-import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
-import { Department, Departments } from '../../../../core/enums/departments.enum';
-import { Squad, Squads } from '../../../../core/enums/squads.enum';
-import { Seniority, Seniorities} from '../../../../core/enums/seniority.enum';
+import { SystemUser } from '../../core/models/reponse/system-users.response.model';
+import { AddSystemUserRequest } from '../../core/models/request/add-system-user.request.model';
+import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
+import { Department, Departments } from '../../core/enums/departments.enum';
+import { Squad, Squads } from '../../core/enums/squads.enum';
+import { Seniority, Seniorities} from '../../core/enums/seniority.enum';
 
 @Component({
   selector: 'app-user-form-dialog',
@@ -44,10 +44,10 @@ export class UserFormDialogComponent implements OnInit {
   users = input<SystemUser[] | null>(null);
   actionLoading = signal(false);
   userForm!: FormGroup;
-  
+
   teamLeads = signal<SystemUser[]>([]);
   isTeamLeadLoading = signal(false);
-  
+
   visible = false;
 
   constructor() {
@@ -140,7 +140,7 @@ export class UserFormDialogComponent implements OnInit {
 
   getDepartmentTeamleads() {
     // disable teamlead selection if no department is selected
-    if (!this.userForm.get('department')) { 
+    if (!this.userForm.get('department')) {
       this.userForm.get('teamleadId')?.disable();
     };
     if (this.isEditMode()) {
@@ -176,7 +176,7 @@ export class UserFormDialogComponent implements OnInit {
         });
       });
     }
-    
+
   }
 
   onSubmit() {
