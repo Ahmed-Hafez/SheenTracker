@@ -13,6 +13,7 @@ import { MenuItem } from 'primeng/api';
 import { Departments } from '../../core/enums/departments.enum';
 import { startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 
 @Component({
   selector: 'app-system-users',
@@ -30,18 +31,23 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class SystemUsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly systemUsersService = inject(SystemUsersService);
+  private readonly metaDataService = inject(MetaDataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refreshService = inject(RefreshService);
   private readonly injector = inject(Injector);
   userDialogVisible = signal(false);
-
+  
   readonly loading = signal(true);
   users = this.systemUsersService.users$;
-
+  
   searchTerm = '';
   usersFilterForm!: FormGroup;
-
+  
   departments = Departments;
+  
+  squads = this.metaDataService.metaDataSquads$;
+  isSquadsLoading = this.metaDataService.isSquadsLoading;
+
   userTypes = ['Linked', 'Unlinked'];
   items: MenuItem[] | undefined;
 

@@ -28,7 +28,10 @@
           <div class="">
             <p-select
               [fluid]="true"
-              [options]="departments"
+              [options]="squads()"
+              [loading]="isSquadsLoading()"
+              optionLabel="name"
+              optionValue="id"
               formControlName="squad"
               [showClear]="true"
               placeholder="All Squads"

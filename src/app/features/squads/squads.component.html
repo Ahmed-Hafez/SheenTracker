@@ -1,0 +1,36 @@
+@if (loading()) {
+    <app-squads-skeleton />
+} @else {
+  <div class="card w-full m-0 mb-6">
+    <form [formGroup]="squadsFilterForm" class="w-full">
+      <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between w-full">
+        <div class="search-field w-full md:max-w-sm">
+          <input
+            type="text"
+            placeholder="Search squad name..."
+            class="field w-full"
+            formControlName="searchTerm"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary whitespace-nowrap w-full md:w-auto shrink-0"
+          (click)="showSquadDialog()"
+        >
+          <i class="pi pi-plus"></i> Add squad
+        </button>
+      </div>
+    </form>
+  </div>
+  <app-squads-table [squads]="squads()"> </app-squads-table>
+
+  @if (squadDialogVisible()) {
+    <app-squad-form-dialog
+      (outputVisibleSignal)="onSquadDialogVisibleChange($event)"
+      [inputVisibleSignal]="squadDialogVisible()"
+      [isEditMode]="false"
+      [squadData]="null"
+    ></app-squad-form-dialog>
+  }
+}

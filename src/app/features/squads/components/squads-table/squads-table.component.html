@@ -1,5 +1,5 @@
 <p-table
-  [value]="users()"
+  [value]="squads()"
   [paginator]="true"
   [rows]="10"
   [tableStyle]="{
@@ -21,41 +21,43 @@
       }
     </tr>
   </ng-template>
-  <ng-template #body let-user let-rowIndex="rowIndex">
+  <ng-template #body let-squad let-rowIndex="rowIndex">
     <tr>
       <td pFrozenColumn>
         <div class="flex items-center gap-3">
-          <img
-            [src]="user.avatarUrl || 'https://api.dicebear.com/9.x/personas/svg?seed=' + user.id"
-            alt="{{ user.displayName }}'s avatar"
-            class="h-8 w-8 rounded-full object-cover"
-            (error)="onImageError($event, user.userKey)"
-          />
-          <span>{{ fixDisplayName(user.fullName) }}</span>
+          <span>{{ squad.name }}</span>
         </div>
       </td>
-      <td>{{ user.email }}</td>
       <td>
-        <p-tag [value]="user.department | enumLabel: departments" severity="secondary" />
-      </td>
-      <td>
-        {{ user.squadName}}
-      </td>
-      <td>
-        {{ user.seniority | enumLabel: seniorities}} {{ user.title || '—' }}
-      </td>
-      <td>
-        <p-tag
-          [value]="user.azureUserKey === null ? 'Unlinked' : 'Linked'"
-          [icon]="user.azureUserKey === null ? 'fa-solid fa-link-slash' : 'fa-solid fa-link'"
-          [severity]="user.azureUserKey === null ? 'secondary' : 'success'"
+        <div>
+        <p-avatar
+          [label]="getInitials(squad.productOwnerName)"
+          class="mr-2"
+          [style]="pickRandomColor(squad.productOwnerName || '')"
+          shape="circle"
         />
+        {{ squad.productOwnerName }}
+        </div>
+      </td>
+      <td>
+        <div>
+       <p-avatar
+          [label]="getInitials(squad.scrumMasterName)"
+          class="mr-2"
+          [style]="pickRandomColor(squad.scrumMasterName || '')"
+          shape="circle"
+        />
+        {{ squad.scrumMasterName }}
+        </div>
+      </td>
+      <td>
+        {{ squad.usersCount }}
       </td>
       <td style="text-align: start">
         <button
           type="button"
           class="btn btn-secondary btn-sm"
-          (click)="openMenuPopup($event, user)"
+          (click)="openMenuPopup($event, squad)"
         >
           <i class="pi pi-ellipsis-h"></i>
         </button>
@@ -80,40 +82,39 @@
     <ul class="list-none p-0 m-0 flex flex-col">
       <li
         class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="selectedUser() ? callActions(0) : ''"
+        (click)="selectedSquad() ? callActions(0) : ''"
       >
         <i class="fa-solid fa-info-circle mr-2"></i> View Details
       </li>
       <li
         class="px-4 py-2 text-sm text-amber-600 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="selectedUser() ? callActions(1) : ''"
+        (click)="selectedSquad() ? callActions(1) : ''"
       >
-        <i class="fa-solid fa-edit mr-2"></i> Edit Client
+        <i class="fa-solid fa-edit mr-2"></i> Edit Squad
       </li>
       <li
         class="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="selectedUser() ? callActions(2) : ''"
+        (click)="selectedSquad() ? callActions(2) : ''"
       >
-        <i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Client
+        <i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Squad
       </li>
     </ul>
   </div>
 </p-popover>
 
-@if (userDialogVisible()) {
-  <app-user-form-dialog
+@if (squadDialogVisible()) {
+  <app-squad-form-dialog
     (outputVisibleSignal)="onDialogVisibleChange($event)"
-    [inputVisibleSignal]="userDialogVisible()"
+    [inputVisibleSignal]="squadDialogVisible()"
     [isEditMode]="true"
-    [userData]="selectedUser()"
-    [users]="users()"
-  ></app-user-form-dialog>
+    [squadData]="selectedSquad()"
+  ></app-squad-form-dialog>
 }
 
 <app-delete-popup
-  [title]="fixDisplayName(selectedUser()?.fullName || 'User') || 'User'"
-  [description]="'Are you sure you want to delete this user?'"
-  [action]="deleteUser(selectedUser()?.id || 0)"
+  [title]="selectedSquad()?.name || 'Squad'"
+  [description]="'Are you sure you want to delete this squad?'"
+  [action]="deleteSquad(selectedSquad()?.id || 0)"
   [inputVisibleSignal]="deleteRequestVisible()"
   (outputVisibleSignal)="closeDeletePopup($event)"
   (outputDeleteSignal)="actionTaken.emit()"

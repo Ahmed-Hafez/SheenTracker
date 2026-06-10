@@ -84,7 +84,6 @@ export const PrimeNG_Preset = definePreset(Aura, {
           },
           submenuIcon: {
             color: 'rgba(255, 255, 255, 0.5)',
-            
           },
         },
       },
@@ -150,22 +149,21 @@ export const PrimeNG_Preset = definePreset(Aura, {
           overlay: {
             background: 'var(--page-bg)',
           },
-        }
+        },
       },
     },
     tabs: {
       colorScheme: {
         light: {
-          tablist:{
+          tablist: {
             background: 'var(--page-bg)',
-          }
-          ,
-          tabpanel:{
+          },
+          tabpanel: {
             background: 'var(--page-bg)',
             padding: '2rem 0',
-          }
+          },
         },
-      }
+      },
     },
     inputtext: {
       colorScheme: {
@@ -175,8 +173,8 @@ export const PrimeNG_Preset = definePreset(Aura, {
             borderColor: 'var(--charcoal-100)',
             borderRadius: '8px',
           },
-        }
-      }
+        },
+      },
     },
 
     inputgroup: {
@@ -188,9 +186,21 @@ export const PrimeNG_Preset = definePreset(Aura, {
             borderRadius: '8px',
             minWidth: '100px',
             padding: '0',
-          }
-        }
-      }
+          },
+        },
+      },
     },
-  }
+
+    textarea: {
+      colorScheme: {
+        light: {
+          root: {
+            background: 'var(--page-bg)',
+            borderColor: 'var(--charcoal-100)',
+            borderRadius: '8px',
+          },
+        },
+      },
+    },
+  },
 });

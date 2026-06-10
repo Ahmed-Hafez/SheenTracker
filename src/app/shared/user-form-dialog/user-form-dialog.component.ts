@@ -3,19 +3,17 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { Select } from 'primeng/select';
-import {  InputGroup } from 'primeng/inputgroup';
-import {  InputGroupAddon } from 'primeng/inputgroupaddon';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
 
 import { SystemUsersService } from '../../core/http/backend_service/system-users.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { MessageService } from 'primeng/api';
-import { SystemUser } from '../../core/models/reponse/system-users.response.model';
-import { AddSystemUserRequest } from '../../core/models/request/add-system-user.request.model';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
-import { Department, Departments } from '../../core/enums/departments.enum';
-import { Squad, Squads } from '../../core/enums/squads.enum';
-import { Seniority, Seniorities} from '../../core/enums/seniority.enum';
+import { SystemUser } from '../../core/models/reponse/system-users.response.model';
+import { Departments } from '../../core/enums/departments.enum';
+import { Seniorities, Seniority } from '../../core/enums/seniority.enum';
 
 @Component({
   selector: 'app-user-form-dialog',
@@ -57,10 +55,12 @@ export class UserFormDialogComponent implements OnInit {
   }
 
   departments = Departments;
-  squads = Squads;
   seniorities = Seniorities;
+
   azureUsers = this.metaDataService.metaDataUsers$;
-  isAzureUserLoading = this.metaDataService.isLoading;
+  squads = this.metaDataService.metaDataSquads$;
+  isAzureUserLoading = this.metaDataService.isUsersLoading;
+  isSquadsLoading = this.metaDataService.isSquadsLoading;
 
   initializeForm() {
     // Initialize your form here using FormBuilder
@@ -81,8 +81,11 @@ export class UserFormDialogComponent implements OnInit {
         ],
       ],
       department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
-      squadName: [this.isEditMode() ? this.userData()?.squad : null, Validators.required],
-      seniority: [this.isEditMode() ? this.userData()?.seniority : Seniority.Junior, Validators.required],
+      squadName: [this.isEditMode() ? this.userData()?.squadId : null, Validators.required],
+      seniority: [
+        this.isEditMode() ? this.userData()?.seniority : Seniority.Junior,
+        Validators.required,
+      ],
       jobTitle: [this.isEditMode() ? this.userData()?.title : '', Validators.required],
       teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : null],
     });
@@ -142,12 +145,12 @@ export class UserFormDialogComponent implements OnInit {
     // disable teamlead selection if no department is selected
     if (!this.userForm.get('department')) {
       this.userForm.get('teamleadId')?.disable();
-    };
+    }
     if (this.isEditMode()) {
       this.isTeamLeadLoading.set(true);
       let department = this.userData()?.department;
-      console.log( 'Edit Mode' ,department);
-      this.appUsersService.getSystemTeamLeads(department? department : 0).subscribe({
+      console.log('Edit Mode', department);
+      this.appUsersService.getSystemTeamLeads(department ? department : 0).subscribe({
         next: (teamleads) => {
           this.teamLeads.set(teamleads);
           this.isTeamLeadLoading.set(false);
@@ -158,11 +161,10 @@ export class UserFormDialogComponent implements OnInit {
         },
       });
     }
-    else {
-      this.userForm.get('department')?.valueChanges.subscribe((dept) => {
-        this.userForm.get('teamleadId')?.enable();
-        this.isTeamLeadLoading.set(true);
-              console.log('Add Mode', dept);
+    this.userForm.get('department')?.valueChanges.subscribe((dept) => {
+      this.userForm.get('teamleadId')?.enable();
+      this.isTeamLeadLoading.set(true);
+      console.log('Add Mode', dept);
 
         this.appUsersService.getSystemTeamLeads(dept).subscribe({
           next: (teamleads) => {
@@ -176,10 +178,7 @@ export class UserFormDialogComponent implements OnInit {
         });
       });
     }
-
-  }
-
-  onSubmit() {
+    onSubmit() {
     this.userForm.markAllAsTouched();
     this.userForm.markAsDirty();
     if (this.userForm.valid) {
@@ -191,9 +190,12 @@ export class UserFormDialogComponent implements OnInit {
         email: formData.email,
         department: formData.department,
         teamLeadId: formData.teamleadId,
-        squad: formData.squadName,
+        squadId: formData.squadName,
         title: formData.jobTitle,
+        seniority: formData.seniority,
       };
+
+      console.log('systemUserData', systemUserData);
       if (this.isEditMode()) {
         this.appUsersService.updateAppUser(this.userData()?.id || 0, systemUserData).subscribe({
           next: (response) => {
@@ -250,4 +252,8 @@ export class UserFormDialogComponent implements OnInit {
     this.outputVisibleSignal.emit(false);
     this.userForm.reset();
   }
-}
+
+  }
+
+
+
