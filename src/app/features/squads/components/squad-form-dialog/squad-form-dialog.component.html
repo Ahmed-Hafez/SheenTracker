@@ -1,0 +1,109 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '40rem', backgroundColor: 'var(--page-bg)' }"
+  (onHide)="onClosePopup()"
+  (onShow)="onOpenPopup()"
+  [dismissableMask]="true"
+  [resizable]="false"
+  [draggable]="false"
+  [focusOnShow]="false"
+>
+  <ng-template pTemplate="header">
+    <div>
+      <h4 class="text-start text-2xl font-semibold m-0">
+        {{ isEditMode() ? 'Update' : 'Add New' }} Squad
+      </h4>
+      <p class="text-center text-sm text-(--charcoal-600) m-0 mx-auto">
+        {{ isEditMode() ? 'Update' : 'Create a new' }} squad record in SheenTrack 360°.
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="squadForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <div class="flex-1">
+        <label class="input-label" for="name">Squad Name</label>
+        <input class="field" id="name" formControlName="name" placeholder="Squad Name" />
+        @if (getFieldErrorMessage('name') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('name') }}
+          </p-message>
+        }
+      </div>
+      <div class="flex gap-4 flex-row">
+        <div class="flex-1">
+          <label class="input-label" for="productOwnerId">Product Owner</label>
+          <p-select
+            [fluid]="true"
+            [options]="productOwners()"
+            [loading]="isUsersLoading()"
+            optionLabel="fullName"
+            optionValue="id"
+            appendTo="body"
+            formControlName="productOwnerId"
+            inputId="productOwnerId"
+            placeholder="Select Product Owner"
+            style="background-color: var(--page-bg)"
+            [invalid]="getFieldErrorMessage('productOwnerId') !== null"
+          >
+          </p-select>
+          @if (getFieldErrorMessage('productOwnerId') !== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('productOwnerId') }}
+            </p-message>
+          }
+        </div>
+        <div class="flex-1">
+          <label class="input-label" for="scrumMasterId">Scrum Master</label>
+          <p-select
+            [fluid]="true"
+            [options]="scrumMasters()"
+            [loading]="isUsersLoading()"
+            optionLabel="fullName"
+            optionValue="id"
+            appendTo="body"
+            formControlName="scrumMasterId"
+            inputId="scrumMasterId"
+            placeholder="Select Scrum Master"
+            style="background-color: var(--page-bg)"
+            [invalid]="getFieldErrorMessage('scrumMasterId') !== null"
+          >
+          </p-select>
+          @if (getFieldErrorMessage('scrumMasterId') !== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('scrumMasterId') }}
+            </p-message>
+          }
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <label class="input-label" for="description">Description <small>(optional)</small></label>
+        <textarea
+          rows="4"
+          pTextarea
+          fluid="true"
+          formControlName="description"
+          placeholder="What is the Squad responsible for..."
+          [invalid]="getFieldErrorMessage('description') !== null"
+        ></textarea>
+
+        @if (getFieldErrorMessage('description') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('description') }}
+          </p-message>
+        }
+      </div>
+      <div class="flex justify-end gap-3 mt-4">
+        <button type="button" class="btn btn-secondary" (click)="onClosePopup()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="actionLoading()">
+          @if (actionLoading()) {
+            <i class="fa-solid fa-circle-notch fa-spin" style="color: #ffffff"></i>
+          }
+          {{ isEditMode() ? 'Update Squad' : 'Create Squad' }}
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</p-dialog>

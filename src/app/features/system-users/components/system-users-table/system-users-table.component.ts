@@ -11,7 +11,6 @@ import { DeletePopupComponent } from '../../../../shared/delete-popup/delete-pop
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
 import { RefreshService } from '../../../../core/services/refresh.service';
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
-import { Squad, Squads } from '../../../../core/enums/squads.enum';
 import { EnumLabelPipe } from '../../../../core/pipes/enum-label-pipe';
 import { Seniorities } from '../../../../core/enums/seniority.enum';
 import { Departments } from '../../../../core/enums/departments.enum';
@@ -49,7 +48,6 @@ export class SystemUsersTableComponent implements OnInit {
   selectedUser = signal<SystemUser | null>(null);
 
   columns!: Column[];
-  squads = Squads;
   seniorities = Seniorities;
   departments = Departments;
 

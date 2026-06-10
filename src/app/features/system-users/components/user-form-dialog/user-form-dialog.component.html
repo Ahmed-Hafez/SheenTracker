@@ -115,7 +115,10 @@
           <label class="input-label" for="squadName">Squad Name</label>
           <p-select
             [fluid]="true"
-            [options]="squads"
+            [options]="squads()"
+            [loading]="isSquadsLoading()"
+            optionLabel="name"
+            optionValue="id"
             appendTo="body"
             formControlName="squadName"
             inputId="squadName"
@@ -137,7 +140,7 @@
           [fluid]="true"
           [options]="teamLeads()"
           optionLabel="fullName"
-          optionValue="userKey"
+          optionValue="id"
           [filter]="true"
           filterBy="fullName"
           appendTo="body"

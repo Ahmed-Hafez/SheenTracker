@@ -15,15 +15,16 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.getMetaData();
+    this.getSquads();
   }
 
   getMetaData() {
-    this.metaDataService.isLoading.set(true);
-    console.log('is loading', this.metaDataService.isLoading());
+    this.metaDataService.isUsersLoading.set(true);
+    console.log('is loading', this.metaDataService.isUsersLoading());
     this.metaDataService.getAzureUsersMetaData().subscribe({
       next: (users) => {
-        this.metaDataService.isLoading.set(false);
-        console.log('Fetched', users, 'is loading', this.metaDataService.isLoading());
+        this.metaDataService.isUsersLoading.set(false);
+        console.log('Fetched', users, 'is loading', this.metaDataService.isUsersLoading());
       },
       error: () => {
         this.messageService.add({
@@ -31,7 +32,24 @@ export class App implements OnInit {
           summary: 'Error',
           detail: 'Error fetching Azure users',
         });
-        this.metaDataService.isLoading.set(false);
+        this.metaDataService.isUsersLoading.set(false);
+      },
+    });
+  }
+
+  getSquads() {
+    this.metaDataService.isSquadsLoading.set(true);
+    this.metaDataService.getSquads().subscribe({
+      next: (squads) => {
+        this.metaDataService.isSquadsLoading.set(false);
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error fetching squads',
+        });
+        this.metaDataService.isSquadsLoading.set(false);
       },
     });
   }

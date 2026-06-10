@@ -41,7 +41,9 @@ export class SideBarComponent implements OnInit {
       {
         label: 'Users',
         icon: 'pi pi-users',
-        action: () => { this.router.navigate(['/users/azure']); },
+        action: () => {
+          this.router.navigate(['/users/azure']);
+        },
         items: this.isCollapsed()
           ? []
           : [
@@ -54,6 +56,11 @@ export class SideBarComponent implements OnInit {
                 routerLink: '/users/system',
               },
             ],
+      },
+      {
+        label: 'Squads',
+        icon: 'pi pi-sitemap',
+        routerLink: '/squads',
       },
       {
         icon: 'pi pi-chart-line',

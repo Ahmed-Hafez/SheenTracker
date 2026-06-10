@@ -3,6 +3,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AzureUsersComponent } from './features/azure-users/azure-users.component';
 import { SystemUsersComponent } from './features/system-users/system-users.component';
+import { SquadsComponent } from './features/squads/squads.component';
 
 export const routes: Routes = [
   {
@@ -42,6 +43,11 @@ export const routes: Routes = [
               ),
           }
         ],
+      },
+      {
+        path: 'squads',
+        title: 'Squads - SheenTrack 360°',
+        component: SquadsComponent,
       },
     ],
   },
