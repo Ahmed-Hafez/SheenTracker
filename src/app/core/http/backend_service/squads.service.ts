@@ -3,6 +3,7 @@ import { ApiService } from '../api_services/api.service';
 import { Squad } from '../../models/reponse/sqauds.response.model';
 import { map, Observable } from 'rxjs';
 import { AddSquadRequest } from '../../models/request/add-squad.request.model';
+import { SystemUsersService } from './system-users.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class SquadsService {
   private squadsEndpoint = 'squads';
 
   private readonly apiService = inject(ApiService);
+  private readonly systemUserService = inject(SystemUsersService);
 
   private readonly allSquads = signal<Squad[]>([]);
   private readonly filteredSquads = signal<Squad[]>([]);
@@ -35,7 +37,15 @@ export class SquadsService {
   }
 
   getSquadById(squadId: number): Observable<Squad> {
-    return this.apiService.get(`${this.squadsEndpoint}/${squadId}`);
+    return this.apiService
+      .get<any>(`${this.squadsEndpoint}/${squadId}`)
+      .pipe(map((response) => response.data));
+  }
+
+  getEmailAndUserkey(userId: number): Observable<{ email: string; userKey: string | null }> {
+    return this.systemUserService
+      .getSystemUserByKey(userId)
+      .pipe(map((response) => ({ email: response.email, userKey: response.azureUserKey})));
   }
 
   addSquad(userData: AddSquadRequest): Observable<any> {
@@ -48,5 +58,11 @@ export class SquadsService {
 
   deleteSquad(userKey: number): Observable<any> {
     return this.apiService.delete(`${this.squadsEndpoint}/${userKey}`);
+  }
+
+  updateMembers(squadId: number, memberIds: string[]): Observable<any> {
+    return this.apiService.post(`${this.squadsEndpoint}/${squadId}/users`, {
+      userIds: memberIds.map(Number),
+    });
   }
 }

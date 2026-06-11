@@ -18,7 +18,7 @@ import { Departments } from '../../../../core/enums/departments.enum';
 import { SquadsService } from '../../../../core/http/backend_service/squads.service';
 import { Squad } from '../../../../core/models/reponse/sqauds.response.model';
 
-interface Column {
+export interface Column {
   field: string;
   header: string;
   width?: string;
@@ -65,12 +65,12 @@ export class SquadsTableComponent implements OnInit {
 
   pickRandomColor(name: string): string {
     const colors = [
-      'background-color: #F87171; color: white;', // Red
-      'background-color: #60A5FA; color: white;', // Blue
-      'background-color: #34D399; color: white;', // Green
-      'background-color: #FBBF24; color: white;', // Yellow
-      'background-color: #A78BFA; color: white;', // Purple
-      'background-color: #F472B6; color: white;', // Pink
+      'background-color: #F87171; color: white; font-size: 10px;', // Red
+      'background-color: #60A5FA; color: white; font-size: 10px;', // Blue
+      'background-color: #34D399; color: white; font-size: 10px;', // Green
+      'background-color: #FBBF24; color: white; font-size: 10px;', // Yellow
+      'background-color: #A78BFA; color: white; font-size: 10px;', // Purple
+      'background-color: #F472B6; color: white; font-size: 10px;', // Pink
     ];
     // Simple hash function to get a consistent color for the same name
     let hash = 0;
@@ -83,10 +83,10 @@ export class SquadsTableComponent implements OnInit {
 
   initializeTableColumns() {
     this.columns = [
-      { field: 'name', header: 'Name' },
+      { field: 'name', header: 'Squad Name' },
       { field: 'productOwnerId', header: 'Product Owner' },
       { field: 'scrumMasterId', header: 'Scrum Master' },
-      { field: 'membersCount', header: 'Members Count' },
+      { field: 'membersCount', header: 'Members' },
       { field: 'actions', header: 'Actions' },
     ];
   }

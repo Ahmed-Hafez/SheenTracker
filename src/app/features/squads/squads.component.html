@@ -1,8 +1,7 @@
 @if (loading()) {
     <app-squads-skeleton />
 } @else {
-  <div class="card w-full m-0 mb-6">
-    <form [formGroup]="squadsFilterForm" class="w-full">
+    <form [formGroup]="squadsFilterForm" class="w-full mb-6">
       <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between w-full">
         <div class="search-field w-full md:max-w-sm">
           <input
@@ -22,7 +21,6 @@
         </button>
       </div>
     </form>
-  </div>
   <app-squads-table [squads]="squads()"> </app-squads-table>
 
   @if (squadDialogVisible()) {

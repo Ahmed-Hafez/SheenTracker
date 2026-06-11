@@ -191,6 +191,7 @@ export class UserFormDialogComponent implements OnInit {
         fullName: formData.firstName + ' ' + formData.lastName,
         email: formData.email,
         department: formData.department,
+        azureUserKey: this.userData()?.azureUserKey || null,
         teamLeadId: formData.teamleadId,
         squadId: formData.squadName,
         title: formData.jobTitle,

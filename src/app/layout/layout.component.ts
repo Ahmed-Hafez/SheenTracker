@@ -70,9 +70,9 @@ export class LayoutComponent implements OnInit {
   private getTitleFromUrl(url: string): string {
     if (url.startsWith('/users/azure')) return 'Azure Users';
     if (url.startsWith('/users/system')) return 'System Users';
-    if (url.startsWith('/users/')) return 'User Details';
-    if (url.startsWith('/squads')) return 'Squads';
+    if (url.startsWith('/users?')) return 'User Details';
     if (url.startsWith('/squads/')) return 'Squad Details';
+    if (url.startsWith('/squads')) return 'Squads';
     if (url.startsWith('/reports')) return 'Reports';
     if (url.startsWith('/settings')) return 'Settings';
     if (url === '/' || url.startsWith('/dashboard')) return 'Dashboard';

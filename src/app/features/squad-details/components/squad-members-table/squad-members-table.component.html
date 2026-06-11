@@ -1,0 +1,82 @@
+<div class="flex flex-col mt-8">
+  <div class="flex flex-row justify-between items-end mb-4">
+    <p class="text-[14px] font-medium text-foreground mb-2 pl-2">Members ({{ squadDetails().users.length }})</p>
+    <button
+      type="button"
+      class="inline-flex items-center gap-2 px-4 py-2 shadow-sm rounded-md border border-[#e8e6e3] bg-(--page-bg) text-sm font-medium text-gray-700 hover:bg-[#f5efe0] transition-colors cursor-pointer"
+      (click)="openManageMembersDialog()"
+    >
+      <i class="pi pi-users mr-1"></i>Manage members
+    </button>
+  </div>
+  <p-table
+    [value]="squadDetails().users"
+    [paginator]="true"
+    [rows]="10"
+    [tableStyle]="{
+      'min-width': '50rem',
+      'border-radius': '8px 8px 0 0',
+      border: '1px solid #ebe9e7',
+      'border-bottom': 'none',
+      'box-shadow': '0px 4px 4px rgba(0, 0, 0, 1)',
+    }"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [selectionMode]="'single'"
+    [(selection)]="selectedMember"
+    (onRowSelect)="navigateToUser()"
+    [sortOrder]="-1"
+  >
+    <ng-template #header>
+      <tr class="">
+        @for (col of columns; track col) {
+          <th [style.width]="col.width">
+            <span class="mono-small">{{ col.header }}</span>
+          </th>
+        }
+      </tr>
+    </ng-template>
+    <ng-template #body let-user let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="user">
+        <td pFrozenColumn>
+          <div class="flex items-center gap-3">
+            <p-avatar
+              [label]="getInitials(user.fullName)"
+              class="mr-2 text-"
+              [style]="pickRandomColor(user.fullName || '')"
+              shape="circle"
+            />
+            <span>{{ user.fullName }}</span>
+          </div>
+        </td>
+        <td>
+          {{ user.department | enumLabel: departments }}
+        </td>
+        <td>{{ user.seniority | enumLabel: seniorities }} {{ user.title || '—' }}</td>
+        <td>
+          <p-tag
+            [value]="user.azureUserKey === null ? 'Unlinked' : 'Linked'"
+            [icon]="user.azureUserKey === null ? 'fa-solid fa-link-slash' : 'fa-solid fa-link'"
+            [severity]="user.azureUserKey === null ? 'secondary' : 'success'"
+          />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td [attr.colspan]="columns.length + 1">
+          <div class="flex md:justify-center items-center p-10">
+            <p class="block mono-metric" style="font-weight: 400">
+              No users match the current filters.
+            </p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-manage-members-dialog
+    [squadDetails]="squadDetails()"
+    [currentMemberIds]="currentMemberIds()"
+    (membersUpdated)="onMembersUpdated($event)"
+  />
+</div>

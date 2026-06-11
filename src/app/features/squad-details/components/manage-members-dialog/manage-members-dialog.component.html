@@ -1,0 +1,119 @@
+<p-dialog
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="false"
+  [visible]="dialogVisible()"
+  (visibleChange)="onVisibleChange($event)"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+  [focusOnShow]="false"
+>
+  <ng-template #header>
+    <div class="flex flex-col gap-1">
+      <h4 class="text-xl font-semibold m-0 text-(--charcoal-900)">Manage members</h4>
+      <p class="text-sm text-(--charcoal-600) m-0">
+        Add or remove members of <strong>{{ squadDetails().name }}</strong
+        >.
+      </p>
+    </div>
+  </ng-template>
+
+  <div class="flex flex-col gap-3">
+    <input type="text" placeholder="Search squad name..." class="field w-full" />
+
+    @if (isUsersLoading()) {
+      <div class="flex justify-center py-8">
+        <p-progressSpinner [style]="{ width: '32px', height: '32px' }" strokeWidth="4" />
+      </div>
+    } @else {
+      <p-listbox
+        [options]="filteredUsers()"
+        [multiple]="true"
+        [metaKeySelection]="false"
+        [dataKey]="'id'"
+        [optionDisabled]="isUserDisabled"
+        [ngModel]="selectedUsers()"
+        (ngModelChange)="onSelectionChange($event)"
+        [pt]="listboxPt"
+        [scrollHeight]="'320px'"
+        emptyMessage="No users found."
+        class="w-full"
+      >
+        <ng-template #item let-user let-selected="selected" let-disabled="disabled">
+          <div class="flex items-center gap-3 w-full py-1.5">
+            <p-avatar
+              [label]="getInitials(user.fullName)"
+              [style]="getAvatarStyle(user.fullName)"
+              shape="circle"
+              size="normal"
+            />
+
+            <div class="flex flex-col flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-semibold text-sm text-(--charcoal-900) truncate">
+                  {{ user.fullName }}
+                </span>
+                @if (getUserRoleBadge(user); as badge) {
+                  <span class="role-badge">{{ badge }}</span>
+                }
+              </div>
+              <span class="text-xs text-(--charcoal-600) truncate">
+                {{ user.title || '—' }}
+              </span>
+            </div>
+
+            <div
+              class="member-checkbox shrink-0"
+              [class.member-checkbox--checked]="selected"
+              [class.member-checkbox--disabled]="disabled"
+              aria-hidden="true"
+            >
+              @if (selected) {
+                <i class="pi pi-check text-white text-[10px]"></i>
+              }
+            </div>
+          </div>
+        </ng-template>
+      </p-listbox>
+    }
+  </div>
+
+  <ng-template #footer>
+    <div class="flex items-center justify-between w-full gap-4">
+      <div class="flex items-center gap-2 text-sm text-(--charcoal-600)">
+        <i class="pi pi-users"></i>
+        <span>{{ selectedCount() }} members selected</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <p-button
+          label="Cancel"
+          [text]="true"
+          severity="secondary"
+          (onClick)="cancel()"
+          [disabled]="isSaving()"
+        />
+        <p-button
+          [disabled]="!hasChanges() || isSaving()"
+          (onClick)="save()"
+          [pt]="{
+            root: {
+              class:
+                'inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#E8821A] border-0 enabled:hover:bg-[var(--orange-700)] disabled:opacity-45 disabled:cursor-not-allowed',
+            },
+          }"
+        >
+          @if (isSaving()) {
+            <p-progressSpinner
+              [style]="{ width: '16px', height: '16px' }"
+              strokeWidth="4"
+              ariaLabel="Saving"
+            />
+          }
+          <span>Save changes</span>
+        </p-button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
