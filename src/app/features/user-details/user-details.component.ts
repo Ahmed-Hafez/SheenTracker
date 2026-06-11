@@ -22,6 +22,8 @@ import { RefreshService } from '../../core/services/refresh.service';
 import { AchievementResponse } from '../../core/models/reponse/achievemetsResponse.model';
 import { SystemUser } from '../../core/models/reponse/system-users.response.model';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
+import { DateService } from '../../core/services/date.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-user-details',
@@ -30,13 +32,14 @@ import { MetaDataService } from '../../core/http/backend_service/meta-data.servi
   templateUrl: './user-details.component.html',
   styles: ``,
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent {
   private userDetailsService = inject(UserDetailsService);
   private readonly refreshService = inject(RefreshService);
   private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
   private readonly metaDataService = inject(MetaDataService);
     private readonly appUsersService = inject(SystemUsersService);
+    private readonly dateService = inject(DateService);
 
 
   readonly userId = signal<string | null>(null);
@@ -105,6 +108,8 @@ export class UserDetailsComponent implements OnInit {
     }
   });
 
+
+
   summary = computed(() => {
     const details = this.userDetails();
     if (!details) return null;
@@ -146,35 +151,41 @@ export class UserDetailsComponent implements OnInit {
   achievements = signal<AchievementResponse | null>(null);
   isAchievementsLoading = signal(false);
 
-  ngOnInit() {
-    this.refreshAndLoadDetails();
+
+  queryParams = toSignal(this.route.queryParamMap);
+  constructor() {
+  effect(
+    () => {
+      this.refreshService.refreshTick();// re-run effect on manual refresh trigger
+      this.dateService.selectedDateRange(); // re-run effect on date range change
+
+      const params = this.queryParams();
+      const userKey = params?.get('userKey');
+      const userID = params?.get('userId');
+
+      this.reset();
+
+      if (userKey) {
+        this.loadAzureUserDetailsAndWorkItems(userKey);
+      } else if (userID) {
+        this.loadSystemUserDetails(+userID);
+      }
+    },
+    { injector: this.injector }
+  );
+}
+
+    private reset(){
+      this.userId.set(null);
+      this.userDetails.set(null);
+      this.systemUser.set(null);
+      this.resolvedAzureUserKey.set(null);
+      this.foundAzureUserKey.set(null);
+      this.foundAzureUserEmail.set(null);
+      this.isAzureLoading.set(false);
+      this.isSystemUserLoading.set(false);
+      this.isError.set(false);
   }
-
-  private refreshAndLoadDetails() {
-    const userKey = this.route.snapshot.queryParamMap.get('userKey');
-    const userID = this.route.snapshot.queryParamMap.get('userId');
-
-    if (userKey) {
-      // Azure user mode
-      effect(
-        () => {
-          this.refreshService.refreshTick();
-          this.loadAzureUserDetailsAndWorkItems(userKey);
-        },
-        { injector: this.injector },
-      );
-    } else if (userID) {
-      // System user mode
-      effect(
-        () => {
-          this.refreshService.refreshTick();
-          this.loadSystemUserDetails(parseInt(userID));
-        },
-        { injector: this.injector },
-      );
-    }
-  }
-
   loadAzureUserDetailsAndWorkItems(userId: string) {
     this.isAzureLoading.set(true);
     this.userDetailsService
