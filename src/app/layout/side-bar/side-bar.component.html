@@ -21,7 +21,7 @@
     }
 
     <ul class="m-0 list-none px-0 py-2">
-      @for (item of mainMenuItems; track $index) {
+      @for (item of mainMenuItems(); track $index) {
         @if (item.items) {
           <app-menu-item
             [menuItem]="item"
