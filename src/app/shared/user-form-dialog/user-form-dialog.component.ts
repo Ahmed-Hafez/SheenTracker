@@ -14,6 +14,7 @@ import { MetaDataService } from '../../core/http/backend_service/meta-data.servi
 import { SystemUser } from '../../core/models/reponse/system-users.response.model';
 import { Departments } from '../../core/enums/departments.enum';
 import { Seniorities, Seniority } from '../../core/enums/seniority.enum';
+import { AddSystemUserRequest } from '../../core/models/request/add-system-user.request.model';
 
 @Component({
   selector: 'app-user-form-dialog',

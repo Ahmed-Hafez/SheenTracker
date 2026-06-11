@@ -35,19 +35,41 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
        }
 
 
+       try{
+         // {
+//     "success": false,
+//     "statusCode": 500,
+//     "message": "Internal server error",
+//     "data": null,
+//     "errors": [
+//         "Selected squad does not exist."
+//     ]
+// }
+        // handleError(
+        //   err.status,
+        //   err.error?.ErrorCode,
+        //   err.error?.ErrorMessage || err.error?.ErrorMsg,
+        //   err.error?.Context,
+        //   messageService,
+        //   router,
+        // );
+       }catch{
+
+       }
       // Case 2: JSON returned directly as object
       if (typeof err.error === 'object') {
+        console.log('Error object:', err.error);
         handleError(
-          err.status,
+          err.status || err.statusCode,
           err.error?.ErrorCode,
-          err.error?.ErrorMessage || err.error?.ErrorMsg,
-          err.error?.Context,
+          err.error?.ErrorMessage || err.error?.ErrorMsg || err.error?.message,
+          err.error?.Context || err.error?.errors,
           messageService,
           router,
         );
       } else {
         // Case 3: plain text or unknown error
-        handleError(err.status, null, err.message, null, messageService, router);
+        handleError(err.status || err.statusCode, null, err.message, null, messageService, router);
       }
 
       return throwError(() => err);
@@ -64,7 +86,15 @@ function handleError(
 ) {
   let finalErrorMessage = errorMessage;
   if (context && Array.isArray(context) && context.length > 0) {
-    finalErrorMessage = context.map((c: any) => c.Value).join(', ');
+    console.log('Context array:', context);
+    finalErrorMessage = context.map((c: any) => {
+      if(c.Value){
+        return c.Value;
+      }else if(typeof c === 'string'){
+        return c;
+      }
+      return c.Value;
+    }).join(', ');
   }
 
   switch (status) {
