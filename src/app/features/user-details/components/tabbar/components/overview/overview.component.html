@@ -21,7 +21,9 @@
   <div class="bg-white rounded-lg shadow-sm border border-[#E3E1DE] p-5 w-full">
     <h3 class="text-xs uppercase text-gray-500 font-semibold mb-4">Employee Hierarchy</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
+
+
+      <div (click)="navigateToSquad(systemUser()?.squadId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
         <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
           <i class="pi pi-users"></i>
         </div>
