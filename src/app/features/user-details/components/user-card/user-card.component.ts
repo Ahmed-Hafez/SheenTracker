@@ -58,6 +58,7 @@ export class UserCardComponent {
 
   onDialogVisibleChange($event: boolean) {
     this.userDialogVisible.set($event);
+    window.location.reload();
   }
 
 

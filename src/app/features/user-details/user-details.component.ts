@@ -53,7 +53,8 @@ export class UserDetailsComponent implements OnInit {
   // Holds a matched azure key from metadata (for showing "link to azure user" button)
   foundAzureUserKey = signal<string | null>(null);
   foundAzureUserEmail = signal<string | null>(null);
-  isLoading = signal(false);
+  isAzureLoading = signal(false);
+  isSystemUserLoading = signal(false);
   isError = signal(false);
 
   // For system user: azure tabs are disabled when we have no azure key at all
@@ -175,21 +176,31 @@ export class UserDetailsComponent implements OnInit {
   }
 
   loadAzureUserDetailsAndWorkItems(userId: string) {
-    this.isLoading.set(true);
+    this.isAzureLoading.set(true);
     this.userDetailsService
       .getUserDetails(userId)
+      .pipe(finalize(() => {
+        //delay by 100 ms to prevent loading spinner flash on fast responses
+        setTimeout(() => {
+          this.isAzureLoading.set(false);
+        }, 100);
+      }))
       .subscribe({
         next: (response) => {
           this.userDetails.set(response);
           this.isError.set(false);
           if (response?.user?.key) {
             this.loadAzureUserAchievements(response.user.key);
+            if(this.systemUser() === null){
+             this.loadSystemUserDetails(response.user.key);
           }
-          this.loadSystemUserDetails(response.user.key, false);
+          }
+
+
 
         },
         error: (error) => {
-          this.isLoading.set(false);
+          this.isAzureLoading.set(false);
           console.error('Error fetching user details:', error);
           this.userDetails.set(null);
           this.isError.set(true);
@@ -213,18 +224,23 @@ export class UserDetailsComponent implements OnInit {
       });
   }
 
-  loadSystemUserDetails(userId: number| string, checkForAzureKey:boolean = true) {
-    this.isLoading.set(true);
+  loadSystemUserDetails(userId: number| string) {
+    this.isSystemUserLoading.set(true);
     this.userDetailsService
       .getSystemUserDetails(userId)
-      .pipe(finalize(() => this.isLoading.set(false)))
+      .pipe(finalize(() => {
+        //delay by 100 ms to prevent loading spinner flash on fast responses
+        setTimeout(() => {
+          this.isSystemUserLoading.set(false);
+        }, 100);
+      }))
       .subscribe({
         next: (response) => {
           this.systemUser.set(response);
 
           this.isError.set(false);
 
-          if(checkForAzureKey){
+          if(this.userDetails() === null){
             if (response.azureUserKey) {
             // System user has an azure key → load work items & achievements
             this.resolvedAzureUserKey.set(response.azureUserKey);
@@ -234,6 +250,7 @@ export class UserDetailsComponent implements OnInit {
             this.checkAndFindAzureUserKey(response.email);
           }
           }
+
 
         },
         error: (error) => {

@@ -194,6 +194,7 @@ export class UserFormDialogComponent implements OnInit {
         squadId: formData.squadName,
         title: formData.jobTitle,
         seniority: formData.seniority,
+        azureUserKey: this.userData()?.azureUserKey || null,
       };
 
       console.log('systemUserData', systemUserData);
