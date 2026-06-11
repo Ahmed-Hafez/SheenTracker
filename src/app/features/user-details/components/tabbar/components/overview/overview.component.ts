@@ -21,14 +21,19 @@ export class OverviewComponent {
   seniorities = Seniorities;
 
    navigateToUser(userId: number|null|undefined): void {
+    console.log('Navigating to user details for userId:', userId);
     if(userId === null || userId === undefined) {
       console.warn('User ID is null or undefined in overview tab. Cannot navigate to user details.');
       return;
     }
 
 
-    this.router.navigate(['/users'], {
-      queryParams: { userId: userId }
-    });
+    const url = this.router.serializeUrl(
+  this.router.createUrlTree(['/users'], {
+    queryParams: { userId }
+  })
+);
+
+window.open(url, '_blank');
   }
 }
