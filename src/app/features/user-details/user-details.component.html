@@ -1,5 +1,5 @@
 <div>
-  @if (isLoading()) {
+  @if (isAzureLoading()) {
     <div class="flex flex-col gap-6 w-full mx-auto">
       <div class="flex items-center gap-2">
         <p-skeleton width="3rem" height="1rem"></p-skeleton>
@@ -80,14 +80,16 @@
         <span class="text-gray-800">{{ user()?.name }}</span>
       </div>
 
-      @if (user()) {
         <app-user-card
           [user]="user()!"
           [foundAzureUserEmail]="foundAzureUserEmail()"
           [showLinkSystemToAzureButton]="showLinkSystemToAzureButton()"
           [linkAzureUser]="linkAzureUser.bind(this)"
+          [systemUserId]="systemUser()?.id"
+          [deleteUser]="deleteUser.bind(this)"
+          [systemUser]="systemUser()"
         ></app-user-card>
-      }
+
 
       <app-tabbar
         [summary]="summary()"
@@ -104,3 +106,5 @@
     </div>
   }
 </div>
+
+

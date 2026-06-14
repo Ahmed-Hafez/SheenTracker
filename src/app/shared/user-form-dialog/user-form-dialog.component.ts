@@ -7,14 +7,14 @@ import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
 
-import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
-import { RefreshService } from '../../../../core/services/refresh.service';
+import { SystemUsersService } from '../../core/http/backend_service/system-users.service';
+import { RefreshService } from '../../core/services/refresh.service';
 import { MessageService } from 'primeng/api';
-import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
-import { AddSystemUserRequest } from '../../../../core/models/request/add-system-user.request.model';
-import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
-import { Department, Departments } from '../../../../core/enums/departments.enum';
-import { Seniority, Seniorities } from '../../../../core/enums/seniority.enum';
+import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
+import { SystemUser } from '../../core/models/reponse/system-users.response.model';
+import { Departments } from '../../core/enums/departments.enum';
+import { Seniorities, Seniority } from '../../core/enums/seniority.enum';
+import { AddSystemUserRequest } from '../../core/models/request/add-system-user.request.model';
 
 @Component({
   selector: 'app-user-form-dialog',
@@ -57,7 +57,7 @@ export class UserFormDialogComponent implements OnInit {
 
   departments = Departments;
   seniorities = Seniorities;
-  
+
   azureUsers = this.metaDataService.metaDataUsers$;
   squads = this.metaDataService.metaDataSquads$;
   isAzureUserLoading = this.metaDataService.isUsersLoading;
@@ -167,20 +167,19 @@ export class UserFormDialogComponent implements OnInit {
       this.isTeamLeadLoading.set(true);
       console.log('Add Mode', dept);
 
-      this.appUsersService.getSystemTeamLeads(dept).subscribe({
-        next: (teamleads) => {
-          this.teamLeads.set(teamleads);
-          this.isTeamLeadLoading.set(false);
-        },
-        error: () => {
-          this.teamLeads.set([]);
-          this.isTeamLeadLoading.set(false);
-        },
+        this.appUsersService.getSystemTeamLeads(dept).subscribe({
+          next: (teamleads) => {
+            this.teamLeads.set(teamleads);
+            this.isTeamLeadLoading.set(false);
+          },
+          error: () => {
+            this.teamLeads.set([]);
+            this.isTeamLeadLoading.set(false);
+          },
+        });
       });
-    });
-  }
-
-  onSubmit() {
+    }
+    onSubmit() {
     this.userForm.markAllAsTouched();
     this.userForm.markAsDirty();
     if (this.userForm.valid) {
@@ -195,6 +194,7 @@ export class UserFormDialogComponent implements OnInit {
         squadId: formData.squadName,
         title: formData.jobTitle,
         seniority: formData.seniority,
+        azureUserKey: this.userData()?.azureUserKey || null,
       };
 
       console.log('systemUserData', systemUserData);
@@ -254,4 +254,8 @@ export class UserFormDialogComponent implements OnInit {
     this.outputVisibleSignal.emit(false);
     this.userForm.reset();
   }
-}
+
+  }
+
+
+

@@ -6,7 +6,7 @@ import { TableModule } from 'primeng/table';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { TagModule } from 'primeng/tag';
 
-import { UserFormDialogComponent } from '../user-form-dialog/user-form-dialog.component';
+import { UserFormDialogComponent } from '../../../../shared/user-form-dialog/user-form-dialog.component';
 import { DeletePopupComponent } from '../../../../shared/delete-popup/delete-popup.component';
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
 import { RefreshService } from '../../../../core/services/refresh.service';

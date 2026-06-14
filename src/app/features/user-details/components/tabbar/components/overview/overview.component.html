@@ -21,12 +21,14 @@
   <div class="bg-white rounded-lg shadow-sm border border-[#E3E1DE] p-5 w-full">
     <h3 class="text-xs uppercase text-gray-500 font-semibold mb-4">Employee Hierarchy</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
+
+
+      <div (click)="navigateToSquad(systemUser()?.squadId)" class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors">
         <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
           <i class="pi pi-users"></i>
         </div>
         <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Team</span>
+          <span class="text-[10px] uppercase text-gray-500 font-semibold">Squad Name</span>
           <span class="text-sm font-medium text-gray-800">{{
             systemUser()?.squadName || 'N/A'
           }}</span>
@@ -38,9 +40,9 @@
           <i class="pi pi-folder"></i>
         </div>
         <div class="flex flex-col">
-          <span class="text-[10px] uppercase text-gray-500 font-semibold">Primary Project</span>
+          <span class="text-[10px] uppercase text-gray-500 font-semibold">Title</span>
           <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.department || 'N/A'
+            systemUser()?.title || 'N/A'
           }}</span>
         </div>
       </div>
@@ -52,7 +54,7 @@
         <div class="flex flex-col">
           <span class="text-[10px] uppercase text-gray-500 font-semibold">Department</span>
           <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.department || 'N/A'
+            (systemUser()?.department??0 | enumLabel: departments)|| 'N/A'
           }}</span>
         </div>
       </div>
@@ -64,7 +66,7 @@
         <div class="flex flex-col">
           <span class="text-[10px] uppercase text-gray-500 font-semibold">Seniority</span>
           <span class="text-sm font-medium text-gray-800">{{
-            systemUser()?.seniority || 'N/A'
+            (systemUser()?.seniority??0 | enumLabel: seniorities) || 'N/A'
           }}</span>
         </div>
       </div>
