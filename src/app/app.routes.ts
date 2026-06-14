@@ -4,6 +4,7 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AzureUsersComponent } from './features/azure-users/azure-users.component';
 import { SystemUsersComponent } from './features/system-users/system-users.component';
 import { SquadsComponent } from './features/squads/squads.component';
+import { SquadDetailsComponent } from './features/squad-details/squad-details.component';
 
 export const routes: Routes = [
   {
@@ -41,13 +42,24 @@ export const routes: Routes = [
               import('./features/user-details/user-details.component').then(
                 (m) => m.UserDetailsComponent,
               ),
-          }
+          },
         ],
       },
       {
         path: 'squads',
         title: 'Squads - SheenTrack 360°',
-        component: SquadsComponent,
+        children: [
+          {
+            path: '',
+            title: 'Squads - SheenTrack 360°',
+            component: SquadsComponent,
+          },
+          {
+            path: ':squadId',
+            title: 'Squad Details - SheenTrack 360°',
+            component: SquadDetailsComponent,
+          },
+        ],
       },
     ],
   },

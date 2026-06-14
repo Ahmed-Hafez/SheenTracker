@@ -202,5 +202,32 @@ export const PrimeNG_Preset = definePreset(Aura, {
         },
       },
     },
+
+    breadcrumb: {
+      colorScheme: {
+        light: {
+          root: {
+            background: 'var(--page-bg)',
+            padding: '4px 0',
+          },
+        },
+      },
+    },
+    listbox: {
+      colorScheme: {
+        light: {
+          root: {
+            disabledBackground: 'transparent',
+            disabledColor: 'var(--charcoal-400)',
+          },
+          list: {
+
+          },
+          option: {
+            selectedBackground: 'transparent',
+          },
+        },
+      },
+    },
   },
 });

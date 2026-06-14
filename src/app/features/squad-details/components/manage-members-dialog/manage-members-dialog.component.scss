@@ -1,0 +1,33 @@
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--orange-50);
+  color: var(--orange-500);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.member-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--charcoal-100);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.member-checkbox--checked {
+  background: #e8821a;
+  border-color: #e8821a;
+}
+
+.member-checkbox--checked.member-checkbox--disabled {
+  opacity: 0.4;
+}
