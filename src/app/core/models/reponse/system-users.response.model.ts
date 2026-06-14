@@ -11,6 +11,7 @@ export interface SystemUser {
   productOwnerId: number | null;
   productOwnerName: string | null;
   squadId: number;
+
   squadName: string;
   seniority: number;
   title: string;

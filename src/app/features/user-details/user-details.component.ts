@@ -1,3 +1,4 @@
+import { SystemUsersService } from './../../core/http/backend_service/system-users.service';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -7,6 +8,7 @@ import {
   computed,
   Injector,
   effect,
+  viewChild,
 } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Skeleton } from 'primeng/skeleton';
@@ -15,11 +17,13 @@ import { TabbarComponent } from './components/tabbar/tabbar.component';
 import { ProjectGroup } from './components/work-items-table/work-items-table.component';
 import { UserDetailsService } from '../../core/http/backend_service/user-detials-service.service';
 import { UserDetailsResponse } from '../../core/models/reponse/user-details.response.model';
-import { finalize } from 'rxjs';
+import { finalize, of } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
 import { AchievementResponse } from '../../core/models/reponse/achievemetsResponse.model';
 import { SystemUser } from '../../core/models/reponse/system-users.response.model';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
+import { DateService } from '../../core/services/date.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-user-details',
@@ -28,12 +32,15 @@ import { MetaDataService } from '../../core/http/backend_service/meta-data.servi
   templateUrl: './user-details.component.html',
   styles: ``,
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent {
   private userDetailsService = inject(UserDetailsService);
   private readonly refreshService = inject(RefreshService);
   private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
   private readonly metaDataService = inject(MetaDataService);
+    private readonly appUsersService = inject(SystemUsersService);
+    private readonly dateService = inject(DateService);
+
 
   readonly userId = signal<string | null>(null);
 
@@ -49,7 +56,8 @@ export class UserDetailsComponent implements OnInit {
   // Holds a matched azure key from metadata (for showing "link to azure user" button)
   foundAzureUserKey = signal<string | null>(null);
   foundAzureUserEmail = signal<string | null>(null);
-  isLoading = signal(false);
+  isAzureLoading = signal(false);
+  isSystemUserLoading = signal(false);
   isError = signal(false);
 
   // For system user: azure tabs are disabled when we have no azure key at all
@@ -100,6 +108,8 @@ export class UserDetailsComponent implements OnInit {
     }
   });
 
+
+
   summary = computed(() => {
     const details = this.userDetails();
     if (!details) return null;
@@ -141,52 +151,67 @@ export class UserDetailsComponent implements OnInit {
   achievements = signal<AchievementResponse | null>(null);
   isAchievementsLoading = signal(false);
 
-  ngOnInit() {
-    this.refreshAndLoadDetails();
+
+  queryParams = toSignal(this.route.queryParamMap);
+  constructor() {
+  effect(
+    () => {
+      this.refreshService.refreshTick();// re-run effect on manual refresh trigger
+      this.dateService.selectedDateRange(); // re-run effect on date range change
+
+      const params = this.queryParams();
+      const userKey = params?.get('userKey');
+      const userID = params?.get('userId');
+
+      this.reset();
+
+      if (userKey) {
+        this.loadAzureUserDetailsAndWorkItems(userKey);
+      } else if (userID) {
+        this.loadSystemUserDetails(+userID);
+      }
+    },
+    { injector: this.injector }
+  );
+}
+
+    private reset(){
+      this.userId.set(null);
+      this.userDetails.set(null);
+      this.systemUser.set(null);
+      this.resolvedAzureUserKey.set(null);
+      this.foundAzureUserKey.set(null);
+      this.foundAzureUserEmail.set(null);
+      this.isAzureLoading.set(false);
+      this.isSystemUserLoading.set(false);
+      this.isError.set(false);
   }
-
-  private refreshAndLoadDetails() {
-    const userKey = this.route.snapshot.queryParamMap.get('userKey');
-    const userID = this.route.snapshot.queryParamMap.get('userId');
-
-    if (userKey) {
-      // Azure user mode
-      effect(
-        () => {
-          this.refreshService.refreshTick();
-          this.loadAzureUserDetailsAndWorkItems(userKey);
-        },
-        { injector: this.injector },
-      );
-    } else if (userID) {
-      // System user mode
-      effect(
-        () => {
-          this.refreshService.refreshTick();
-          this.loadSystemUserDetails(parseInt(userID));
-        },
-        { injector: this.injector },
-      );
-    }
-  }
-
   loadAzureUserDetailsAndWorkItems(userId: string) {
-    this.isLoading.set(true);
+    this.isAzureLoading.set(true);
     this.userDetailsService
       .getUserDetails(userId)
+      .pipe(finalize(() => {
+        //delay by 100 ms to prevent loading spinner flash on fast responses
+        setTimeout(() => {
+          this.isAzureLoading.set(false);
+        }, 100);
+      }))
       .subscribe({
         next: (response) => {
           this.userDetails.set(response);
           this.isError.set(false);
           if (response?.user?.key) {
             this.loadAzureUserAchievements(response.user.key);
+            if(this.systemUser() === null){
+             this.loadSystemUserDetails(response.user.key);
           }
-          setTimeout(() => {
-            this.loadSystemUserDetails(response.user.key, false);
-          }, 1000);
+          }
+
+
+
         },
         error: (error) => {
-          this.isLoading.set(false);
+          this.isAzureLoading.set(false);
           console.error('Error fetching user details:', error);
           this.userDetails.set(null);
           this.isError.set(true);
@@ -210,18 +235,23 @@ export class UserDetailsComponent implements OnInit {
       });
   }
 
-  loadSystemUserDetails(userId: number| string, checkForAzureKey:boolean = true) {
-    this.isLoading.set(true);
+  loadSystemUserDetails(userId: number| string) {
+    this.isSystemUserLoading.set(true);
     this.userDetailsService
       .getSystemUserDetails(userId)
-      .pipe(finalize(() => this.isLoading.set(false)))
+      .pipe(finalize(() => {
+        //delay by 100 ms to prevent loading spinner flash on fast responses
+        setTimeout(() => {
+          this.isSystemUserLoading.set(false);
+        }, 100);
+      }))
       .subscribe({
         next: (response) => {
           this.systemUser.set(response);
 
           this.isError.set(false);
 
-          if(checkForAzureKey){
+          if(this.userDetails() === null){
             if (response.azureUserKey) {
             // System user has an azure key → load work items & achievements
             this.resolvedAzureUserKey.set(response.azureUserKey);
@@ -231,6 +261,7 @@ export class UserDetailsComponent implements OnInit {
             this.checkAndFindAzureUserKey(response.email);
           }
           }
+
 
         },
         error: (error) => {
@@ -290,4 +321,15 @@ export class UserDetailsComponent implements OnInit {
     let show: boolean = !this.systemUser()?.azureUserKey && this.foundAzureUserKey() ? true : false;
     return show;
   }
+
+
+  deleteUser(userKey: number | undefined) {
+      if (!userKey) {
+        return of(null);
+      }
+      // Implement the actual API call to delete the user
+      return this.appUsersService.deleteAppUser(userKey);
+    }
+
+
 }
