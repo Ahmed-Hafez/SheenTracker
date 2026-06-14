@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { RippleModule } from 'primeng/ripple';
@@ -15,24 +15,21 @@ import { MenuItem, MenuItemComponent } from "./menu-item/menu-item.component";
   styleUrls: ['./side-bar.component.scss'],
   imports: [RippleModule, RouterLink, RouterLinkActive, PanelMenuModule, MenuItemComponent],
 })
-export class SideBarComponent implements OnInit {
+export class SideBarComponent {
   private readonly sidebarService = inject(SidebarService);
   private readonly router = inject(Router);
   readonly isCollapsed = this.sidebarService.isCollapsed;
 
   isSubmenuOpen = signal(false);
 
-  mainMenuItems: MenuItem[] = [];
+  mainMenuItems = signal<MenuItem[]>([]);
 
   bottomMenuItems: MenuItem[] = [];
 
-  ngOnInit(): void {
-    this.initializeMenuItems();
 
-  }
-
-  initializeMenuItems(): void {
-    this.mainMenuItems = [
+  constructor() {
+    effect(() => {
+      this.mainMenuItems.set([
       {
         icon: 'pi pi-objects-column',
         label: 'Dashboard',
@@ -67,7 +64,10 @@ export class SideBarComponent implements OnInit {
         label: 'Reports',
         routerLink: '/reports',
       },
-    ];
+    ]);
+    });
+
+
     this.bottomMenuItems = [
       { icon: 'fa-solid fa-gear', label: 'Settings', routerLink: '/settings' },
     ];
@@ -75,5 +75,7 @@ export class SideBarComponent implements OnInit {
 
 
 
-  
+
+
+
 }
