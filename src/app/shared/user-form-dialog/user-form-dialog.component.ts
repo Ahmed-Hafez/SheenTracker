@@ -12,7 +12,7 @@ import { RefreshService } from '../../core/services/refresh.service';
 import { MessageService } from 'primeng/api';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 import { SystemUser } from '../../core/models/reponse/system-users.response.model';
-import { Departments } from '../../core/enums/departments.enum';
+import { Department, Departments } from '../../core/enums/departments.enum';
 import { Seniorities, Seniority } from '../../core/enums/seniority.enum';
 import { AddSystemUserRequest } from '../../core/models/request/add-system-user.request.model';
 
@@ -81,7 +81,7 @@ export class UserFormDialogComponent implements OnInit {
           Validators.pattern('^[A-Za-z0-9._%+-]+@(tildetech\\.ae|shuratech\\.com)$'),
         ],
       ],
-      department: [this.isEditMode() ? this.userData()?.department : '', Validators.required],
+      department: [this.isEditMode() ? this.userData()?.department : null, Validators.required],
       squadName: [this.isEditMode() ? this.userData()?.squadId : null, Validators.required],
       seniority: [
         this.isEditMode() ? this.userData()?.seniority : Seniority.Junior,
@@ -95,6 +95,7 @@ export class UserFormDialogComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.getDepartmentTeamleads();
+    this.disableTeamleadSelection();
   }
 
   getFieldErrorMessage(fieldName: string): string | null {
@@ -150,7 +151,6 @@ export class UserFormDialogComponent implements OnInit {
     if (this.isEditMode()) {
       this.isTeamLeadLoading.set(true);
       let department = this.userData()?.department;
-      console.log('Edit Mode', department);
       this.appUsersService.getSystemTeamLeads(department ? department : 0).subscribe({
         next: (teamleads) => {
           this.teamLeads.set(teamleads);
@@ -163,23 +163,49 @@ export class UserFormDialogComponent implements OnInit {
       });
     }
     this.userForm.get('department')?.valueChanges.subscribe((dept) => {
+      if (dept === null) {
+        return;
+      } else if (dept === Department.ScrumMaster || dept === Department.ProductManagement) {
+        this.userForm.get('teamleadId')?.disable();
+        return;
+      }
       this.userForm.get('teamleadId')?.enable();
-      this.isTeamLeadLoading.set(true);
-      console.log('Add Mode', dept);
 
-        this.appUsersService.getSystemTeamLeads(dept).subscribe({
-          next: (teamleads) => {
-            this.teamLeads.set(teamleads);
-            this.isTeamLeadLoading.set(false);
-          },
-          error: () => {
-            this.teamLeads.set([]);
-            this.isTeamLeadLoading.set(false);
-          },
-        });
+      this.isTeamLeadLoading.set(true);
+      this.appUsersService.getSystemTeamLeads(dept).subscribe({
+        next: (teamleads) => {
+          this.teamLeads.set(teamleads);
+          this.isTeamLeadLoading.set(false);
+        },
+        error: () => {
+          this.teamLeads.set([]);
+          this.isTeamLeadLoading.set(false);
+        },
       });
+    });
+  }
+
+  disableTeamleadSelection() {
+    let seniority = this.userForm.get('seniority');
+    if (this.isEditMode()) {
+      if (seniority?.value === Seniority.Lead || seniority?.value === Seniority.Manager) {
+        this.userForm.get('teamleadId')?.reset();
+        this.userForm.get('teamleadId')?.disable();
+      } else {
+        this.userForm.get('teamleadId')?.enable();
+      }
     }
-    onSubmit() {
+    this.userForm.get('seniority')?.valueChanges.subscribe((seniority) => {
+      console.log(this.userForm.get('seniority')?.value);
+      if (seniority === Seniority.Lead || seniority === Seniority.Manager) {
+        this.userForm.get('teamleadId')?.reset();
+        this.userForm.get('teamleadId')?.disable();
+      } else {
+        this.userForm.get('teamleadId')?.enable();
+      }
+    });
+  }
+  onSubmit() {
     this.userForm.markAllAsTouched();
     this.userForm.markAsDirty();
     if (this.userForm.valid) {
@@ -254,8 +280,4 @@ export class UserFormDialogComponent implements OnInit {
     this.outputVisibleSignal.emit(false);
     this.userForm.reset();
   }
-
-  }
-
-
-
+}
