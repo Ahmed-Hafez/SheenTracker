@@ -7,5 +7,4 @@ export interface AddSystemUserRequest {
   squadId: number;
   title: string;
   seniority: number;
-  azureUserKey: string | null;
 }
