@@ -41,6 +41,7 @@ export class MetaDataService {
   isSquadsLoading = signal(false);
 
   getAzureUsersMetaData(): Observable<any> {
+    this.isUsersLoading.set(true);
     return this.apiService.get<AzureUsers>(this.usersEndpoint).pipe(
       map((azureUsers) => {
         const users = azureUsers.users.map((user) => ({
@@ -62,6 +63,7 @@ export class MetaDataService {
         };
 
         this.usersKpis.set(kpis);
+        this.isUsersLoading.set(false);
       }),
     );
   }

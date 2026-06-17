@@ -1,17 +1,19 @@
-import { Component, ChangeDetectionStrategy, input, signal, viewChild, output, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, signal, viewChild, output, inject, effect, Injector } from '@angular/core';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Popover } from "primeng/popover";
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
 import { UserFormDialogComponent } from "../../../../shared/user-form-dialog/user-form-dialog.component";
 import { DeletePopupComponent } from "../../../../shared/delete-popup/delete-popup.component";
-import { of } from 'rxjs';
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
+import { Skeleton } from "primeng/skeleton";
 
 @Component({
   selector: 'app-user-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HoursBadgeComponent, Popover, UserFormDialogComponent, DeletePopupComponent],
+  imports: [HoursBadgeComponent, Popover, UserFormDialogComponent, DeletePopupComponent, Skeleton],
   templateUrl: './user-card.component.html',
   styles: ``,
 })
@@ -39,6 +41,28 @@ export class UserCardComponent {
   systemUsersList = this.systemUsersService.users$;
   deleteUser = input.required<(userKey: number | undefined) => any>();
   router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly injector = inject(Injector);
+
+  queryParams = toSignal(this.route.queryParamMap);
+
+  isSystemUser = signal(false);
+  private readonly metaDataService = inject(MetaDataService);
+  isAzureUsersLoading = this.metaDataService.isUsersLoading;
+  isSearchingForAzureUser = input.required<boolean>();
+
+  constructor() {
+  effect(
+    () => {
+      const params = this.queryParams();
+      const userID = params?.get('userId');
+      if(userID)this.isSystemUser.set(true);
+      else this.isSystemUser.set(false);
+
+    },
+    { injector: this.injector }
+  );
+}
 
 
   deleteActionTaken(event$: boolean) {
