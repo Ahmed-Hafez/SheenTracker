@@ -21,15 +21,10 @@
         <span class="text-sm text-gray-500">{{ user().email1 }}</span>
         <span class="text-sm text-gray-400">{{ user().email2 }}</span>
       </div>
-
     </div>
     <div class="flex flex-col items-end pt-2 pr-2">
-      @if (systemUser()){
-<button
-          type="button"
-          class="btn mb-4"
-          (click)="openMenuPopup($event, systemUser()!)"
-        >
+      @if (systemUser()) {
+        <button type="button" class="btn mb-4" (click)="openMenuPopup($event, systemUser()!)">
           <i class="pi pi-ellipsis-v"></i>
         </button>
       }
@@ -41,64 +36,98 @@
     </div>
   </div>
   <p-popover #op>
-  <div class="flex flex-col gap-4">
-    <ul class="list-none p-0 m-0 flex flex-col">
-      <li
-        class="px-4 py-2 text-sm text-amber-600 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="showEditUserPopup()"
-      >
-        <i class="fa-solid fa-edit mr-2"></i> Edit Client
-      </li>
-      <li
-        class="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
-        (click)="showDeletePopup()"
-      >
-        <i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Client
-      </li>
-    </ul>
-  </div>
-</p-popover>
+    <div class="flex flex-col gap-4">
+      <ul class="list-none p-0 m-0 flex flex-col">
+        <li
+          class="px-4 py-2 text-sm text-amber-600 hover:bg-gray-100 rounded cursor-pointer"
+          (click)="showEditUserPopup()"
+        >
+          <i class="fa-solid fa-edit mr-2"></i> Edit Client
+        </li>
+        <li
+          class="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
+          (click)="showDeletePopup()"
+        >
+          <i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Client
+        </li>
+      </ul>
+    </div>
+  </p-popover>
 
-@if (userDialogVisible()) {
-  <!-- edit form -->
-  <app-user-form-dialog
-    (outputVisibleSignal)="onDialogVisibleChange($event)"
-    [inputVisibleSignal]="userDialogVisible()"
-    [isEditMode]="true"
-    [userData]="systemUser()"
-    [users]="systemUsersList()"
-  ></app-user-form-dialog>
-}
+  @if (userDialogVisible()) {
+    <!-- edit form -->
+    <app-user-form-dialog
+      (outputVisibleSignal)="onDialogVisibleChange($event)"
+      [inputVisibleSignal]="userDialogVisible()"
+      [isEditMode]="true"
+      [userData]="systemUser()"
+      [users]="systemUsersList()"
+    ></app-user-form-dialog>
+  }
 
-<!-- delete form -->
-<app-delete-popup
-  [title]="fixDisplayName(systemUser()?.fullName || 'User') || 'User'"
-  [description]="'Are you sure you want to delete this user?'"
-  [action]="deleteUser()(systemUser()?.id || 0)"
-  [inputVisibleSignal]="deleteRequestVisible()"
-  (outputVisibleSignal)="closeDeletePopup($event)"
-  (outputDeleteSignal)="deleteActionTaken($event)"
->
-</app-delete-popup>
+  <!-- delete form -->
+  <app-delete-popup
+    [title]="fixDisplayName(systemUser()?.fullName || 'User') || 'User'"
+    [description]="'Are you sure you want to delete this user?'"
+    [action]="deleteUser()(systemUser()?.id || 0)"
+    [inputVisibleSignal]="deleteRequestVisible()"
+    (outputVisibleSignal)="closeDeletePopup($event)"
+    (outputDeleteSignal)="deleteActionTaken($event)"
+  >
+  </app-delete-popup>
 
   <!-- Added Button Section -->
-  @if (showLinkSystemToAzureButton()) {
-    <div class="m-4 p-4 bg-gray-50 rounded border border-gray-200 flex items-center justify-between">
-      <div class="flex items-center gap-2 text-gray-600">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-        </svg>
-        <span class="text-sm font-medium">No Azure account linked, ready to connect to {{ foundAzureUserEmail() }}</span>
+  @if (isSystemUser()) {
+    @if (isAzureUsersLoading() || isSearchingForAzureUser()) {
+      <div class="my-6">
+        <p-skeleton width="100%" height="3.5rem"></p-skeleton>
       </div>
-      <button
-      (click)="excecuteLinkAzureUser()"
-        class="px-6 py-2 bg-white border border-gray-300 rounded text-gray-700 font-medium text-sm hover:bg-gray-50 hover:border-gray-400 transition-colors"
+    }
+    <!-- loading done and email is found -->
+    @else if (foundAzureUserEmail() && showLinkSystemToAzureButton()) {
+      <div
+        class="m-4 p-4 bg-gray-50 rounded border border-gray-200 flex items-center justify-between"
       >
-        Connect
-      </button>
-    </div>
+        <div class="flex items-center gap-2 text-gray-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+            />
+          </svg>
+          <span class="text-sm font-medium"
+            >No Azure account linked, ready to connect to {{ foundAzureUserEmail() }}</span
+          >
+        </div>
+        <button
+          (click)="excecuteLinkAzureUser()"
+          class="px-6 py-2 bg-white border border-gray-300 rounded text-gray-700 font-medium text-sm hover:bg-gray-50 hover:border-gray-400 transition-colors"
+        >
+          Connect
+        </button>
+      </div>
+    } @else if (!foundAzureUserEmail()) {
+      <div
+        class="m-4 p-4 bg-red-50 rounded border border-gray-200 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-2 text-gray-600">
+          <svg
+            class="h-5 w-5 text-red-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          <span class="text-sm font-medium text-red-500"
+            >No Azure account found to link to this user</span
+          >
+        </div>
+      </div>
+    }
   }
 </div>
-
-
-

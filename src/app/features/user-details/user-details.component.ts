@@ -48,6 +48,7 @@ export class UserDetailsComponent {
   isAzureUser = computed(() => {
     return !!this.route.snapshot.queryParamMap.get('userKey');
   });
+  isSearchingForMatchingAzureUser = signal(false);
 
   userDetails = signal<UserDetailsResponse | null>(null);
   systemUser = signal<SystemUser | null>(null);
@@ -257,7 +258,7 @@ export class UserDetailsComponent {
             this.resolvedAzureUserKey.set(response.azureUserKey);
             this.loadAzureUserDetailsAndWorkItems(response.azureUserKey);
           } else {
-            // No azure key → search metadata for email match
+            this.isSearchingForMatchingAzureUser.set(true);
             this.checkAndFindAzureUserKey(response.email);
           }
           }
@@ -275,11 +276,13 @@ export class UserDetailsComponent {
 
   private checkAndFindAzureUserKey(email: string) {
     if (this.metaDataService.metaDataUsers$().length === 0) {
+      this.isSearchingForMatchingAzureUser.set(true);
       this.metaDataService.getAzureUsersMetaData().subscribe({
         next: () => {
           this.matchEmailToUserKey(email);
         },
         error: (err) => {
+          
           console.error('Error loading metadata users:', err);
         },
       });
@@ -289,6 +292,7 @@ export class UserDetailsComponent {
   }
 
   private matchEmailToUserKey(email: string) {
+    this.isSearchingForMatchingAzureUser.set(true);
     const emailPrefix = email.split('@')[0].toLowerCase();
 
     const foundUser = this.metaDataService.metaDataUsers$().find((u) => {
@@ -299,6 +303,7 @@ export class UserDetailsComponent {
     this.foundAzureUserEmail.set(foundUser?.email ?? null);
 
     this.foundAzureUserKey.set(foundUser?.userKey ?? null);
+    this.isSearchingForMatchingAzureUser.set(false);
   }
 
   linkAzureUser() {

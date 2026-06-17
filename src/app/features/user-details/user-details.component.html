@@ -82,6 +82,7 @@
 
         <app-user-card
           [user]="user()!"
+          [isSearchingForAzureUser]="isSearchingForMatchingAzureUser()"
           [foundAzureUserEmail]="foundAzureUserEmail()"
           [showLinkSystemToAzureButton]="showLinkSystemToAzureButton()"
           [linkAzureUser]="linkAzureUser.bind(this)"
