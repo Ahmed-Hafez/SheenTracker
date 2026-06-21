@@ -29,7 +29,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <app-kpi-card
         label="CLOSED TASKS"
-        [value]="closedTasks().toString()"
+        [value]="closedTasksCount().toString()"
         icon="pi pi-trophy text-xl"
       ></app-kpi-card>
 
@@ -65,6 +65,7 @@
           <tr>
             <th class="text-xs uppercase text-gray-500 font-semibold bg-gray-50">ID</th>
             <th class="text-xs uppercase text-gray-500 font-semibold bg-gray-50">Title</th>
+            <th class="text-xs uppercase text-gray-500 font-semibold bg-gray-50">Type</th>
              <th class="text-xs uppercase text-gray-500 font-semibold bg-gray-50">Duration Days</th>
             <th class="text-xs uppercase text-gray-500 font-semibold bg-gray-50">Working Days</th>
             <th class="text-xs uppercase text-gray-500 font-semibold bg-gray-50">Project</th>
@@ -93,6 +94,7 @@
               </a>
             </td>
             <td class="text-sm font-medium text-gray-700">{{ item.title }}</td>
+            <td class="text-sm text-gray-500">{{ item.workItemType }}</td>
             <td class="text-sm text-gray-500">{{ item.durationDays }}</td>
             <td class="text-sm text-gray-500">{{ item.workingDays }}</td>
             <td class="text-sm text-gray-500">{{ item.projectName }}</td>

@@ -17,7 +17,7 @@ export class AchievementsComponent {
   data = input.required<AchievementResponse | null>();
   isLoading = input<boolean>(false);
 
-  closedTasks = computed(() => this.data()?.completedTasksCount ?? 0);
+  closedTasksCount = computed(() => this.data()?.completedTasksCount ?? 0);
 
   totalClosedHours = computed(() => {
     const hours = this.data()?.totalCompletedWorkHours ?? 0;

@@ -83,7 +83,6 @@ export class UserCardComponent {
 
   onDialogVisibleChange($event: boolean) {
     this.userDialogVisible.set($event);
-    window.location.reload();
   }
 
 
@@ -98,7 +97,6 @@ export class UserCardComponent {
 
    closeDeletePopup($event: boolean) {
     this.deleteRequestVisible.set($event);
-    window.location.reload();
   }
 
   fixDisplayName(name: string): string {

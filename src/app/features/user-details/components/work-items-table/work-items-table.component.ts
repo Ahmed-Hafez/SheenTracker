@@ -36,6 +36,19 @@ export class WorkItemsTableComponent {
 
   searchQuery = signal('');
   statusFilter = signal('All statuses');
+  typeFilter = signal('All types');
+
+  availableTypes = computed(() => {
+    const types = new Set<string>();
+    for (const group of this.groupedItems()) {
+      for (const item of group.items) {
+        if (item.type) {
+          types.add(item.type);
+        }
+      }
+    }
+    return Array.from(types).sort();
+  });
 
   availableStatuses = computed(() => {
     const statuses = new Set<string>();
@@ -63,7 +76,11 @@ export class WorkItemsTableComponent {
           if(selectedStatus === 'All statuses') {
             matchesStatus = true;
           }
-          return matchesSearch && matchesStatus;
+          var matchesType: Boolean = item.type === this.typeFilter();
+          if(this.typeFilter() === 'All types') {
+            matchesType = true;
+          }
+          return matchesSearch && matchesStatus && matchesType;
         });
 
         // Recalculate total hours for the filtered items

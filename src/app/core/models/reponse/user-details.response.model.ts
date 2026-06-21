@@ -11,6 +11,7 @@ export interface WorkItemDetail {
   id: number;
   title: string;
   state: string;
+  workItemType: string;
   assignedTo: string;
   previousCompletedWork: number;
   currentCompletedWork: number;

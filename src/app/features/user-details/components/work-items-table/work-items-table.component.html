@@ -20,6 +20,16 @@
         <option [value]="status">{{ status }}</option>
       }
     </select>
+    <select
+      [ngModel]="typeFilter()"
+      (ngModelChange)="typeFilter.set($event)"
+      class="w-48 bg-gray-50 border border-gray-200 rounded-md py-2 px-3 outline-none focus:border-[#E8821A]"
+    >
+      <option value="All types">All types</option>
+      @for (type of availableTypes(); track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
   </div>
 
   @if (filteredGroups().length === 0) {
