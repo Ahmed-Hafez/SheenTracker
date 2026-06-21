@@ -46,6 +46,12 @@
       <td>{{ user.email }}</td>
       <td><app-hours-badge [hours]="user.totalHours" [size]="'sm'"></app-hours-badge></td>
       <td>
+        <goal-status-badge
+          [loggedHours]="user.totalHours"
+          [targetHours]="targetHours$()"
+        />
+      </td>
+      <td>
         {{ user.projectsCount }}
         <span class="mono-small text-gray-400" style="font-size: 12px">
           {{ user.projectsCount === 1 ? 'project' : 'projects' }}</span
@@ -76,5 +82,3 @@
     </tr>
   </ng-template>
 </p-table>
-
-
