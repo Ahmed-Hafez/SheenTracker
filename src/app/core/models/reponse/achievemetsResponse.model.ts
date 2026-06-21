@@ -12,6 +12,7 @@ interface AchievementTasks{
   originalEstimateHours: number;
   completedWorkHours: number;
   hoursPerWorkingDay: number;
+  workItemType: string;
 }
 
 export interface AchievementResponse{

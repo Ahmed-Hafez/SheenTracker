@@ -138,7 +138,7 @@ export class UserDetailsComponent {
       items: p.workItems.map((wi) => ({
         id: `#${wi.id}`,
         title: wi.title,
-        type: 'Task',
+        type: wi.workItemType,
         status: wi.state,
         deltaHours: `${wi.deltaHours > 0 ? '+' : ''}${wi.deltaHours}h`,
         before: `${wi.previousCompletedWork}h`,
@@ -282,7 +282,7 @@ export class UserDetailsComponent {
           this.matchEmailToUserKey(email);
         },
         error: (err) => {
-          
+
           console.error('Error loading metadata users:', err);
         },
       });
