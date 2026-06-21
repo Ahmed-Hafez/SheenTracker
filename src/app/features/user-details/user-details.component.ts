@@ -40,6 +40,7 @@ export class UserDetailsComponent {
   private readonly metaDataService = inject(MetaDataService);
     private readonly appUsersService = inject(SystemUsersService);
     private readonly dateService = inject(DateService);
+    isAzureConnectedToSystemUser = signal(false);
 
 
   readonly userId = signal<string | null>(null);
@@ -254,6 +255,7 @@ export class UserDetailsComponent {
 
           if(this.userDetails() === null){
             if (response.azureUserKey) {
+              this.isAzureConnectedToSystemUser.set(true);
             // System user has an azure key → load work items & achievements
             this.resolvedAzureUserKey.set(response.azureUserKey);
             this.loadAzureUserDetailsAndWorkItems(response.azureUserKey);
@@ -282,7 +284,7 @@ export class UserDetailsComponent {
           this.matchEmailToUserKey(email);
         },
         error: (err) => {
-          
+
           console.error('Error loading metadata users:', err);
         },
       });

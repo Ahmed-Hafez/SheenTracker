@@ -50,6 +50,7 @@ export class UserCardComponent {
   private readonly metaDataService = inject(MetaDataService);
   isAzureUsersLoading = this.metaDataService.isUsersLoading;
   isSearchingForAzureUser = input.required<boolean>();
+  isAzureConnectedToSystemUser = input.required<boolean>();
 
   constructor() {
   effect(
