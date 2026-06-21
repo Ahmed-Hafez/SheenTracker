@@ -171,10 +171,12 @@ p {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 8px 18px;
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -202,12 +204,12 @@ p {
 
 .btn-secondary {
   background: var(--page-bg);
-  color: var(--charcoal-900);
-  border: 1.5px solid var(--charcoal-100);
+  color: #374151;
+  border: 1px solid #e3e1de;
 }
 
 .btn-secondary:hover {
-  border-color: var(--charcoal-400);
+  background-color: #ffefd9;
 }
 
 .btn-secondary:focus {
@@ -252,8 +254,7 @@ p {
 
 .btn-danger:hover {
   background: var(--danger-hover);
-    transform: scale(0.98);
-
+  transform: scale(0.98);
 }
 
 .btn-danger:active {

@@ -7,6 +7,9 @@
         <button type="button" class="btn btn-secondary mb-3" (click)="exportToCSV()">
           <i class="pi pi-download"></i> Export CVS
         </button>
+        <button type="button" class="btn btn-secondary mb-3" (click)="exportToCSV()">
+          <i class="pi pi-calendar-times"></i> Holidays
+        </button>
       </div>
 
       <div
@@ -53,6 +56,38 @@
       </div>
     </form>
 
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px">
+      <app-target-hours-card
+        [data]="{
+          icon: 'pi-clock',
+          label: 'Target hours',
+          value: targetHours$(),
+          sub: 'for selected range',
+        }"
+      />
+      <app-target-hours-card
+        [data]="{
+          icon: 'pi-calendar-times',
+          label: 'Holidays',
+          value: holidaysCount$(),
+          sub: 'in this period',
+        }"
+      />
+      <app-target-hours-card
+        [data]="{
+          icon: 'pi-calendar',
+          label: 'Weekdays',
+          value: weekdaysCount$(),
+          sub: '× 6.5h per day',
+        }"
+      />
+    </div>
+
     <app-azure-users-table [users]="users$()"> </app-azure-users-table>
   </div>
+
+  <app-holiday-calculator
+    [inputVisibleSignal]="holidaysCalculatorVisible()"
+    (outputVisibleSignal)="onDialogVisibleChange($event)"
+  />
 }

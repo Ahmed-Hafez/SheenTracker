@@ -10,6 +10,9 @@ import { startWith } from 'rxjs';
 import { AzureUsersSkeletonComponent } from './components/azure-users-skeleton/azure-users-skeleton.component';
 import { AzureUsersTableComponent } from './components/azure-users-table/azure-users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
+import { HolidayCalculatorComponent } from "./components/holiday-calculator/holiday-calculator.component";
+import { TargetHoursCardComponent } from "./components/target-hours-card/target-hours-card.component";
+import { DateService } from '../../core/services/date.service';
 
 @Component({
   selector: 'app-azure-users',
@@ -21,7 +24,9 @@ import { RefreshService } from '../../core/services/refresh.service';
     SliderModule,
     AzureUsersSkeletonComponent,
     AzureUsersTableComponent,
-  ],
+    HolidayCalculatorComponent,
+    TargetHoursCardComponent
+],
   templateUrl: './azure-users.component.html',
 })
 export class AzureUsersComponent implements OnInit {
@@ -30,11 +35,17 @@ export class AzureUsersComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly refreshService = inject(RefreshService);
   private readonly injector = inject(Injector);
-  userDialogVisible = signal(false);
+  private readonly dateService = inject(DateService);
+  holidaysCalculatorVisible = signal(false);
 
   readonly loading = signal(true);
   users$ = this.usersService.users$;
   projects$ = this.usersService.projects$;
+
+  readonly targetHours$ = this.dateService.targetHoursCount;
+  readonly weekdaysCount$ = this.dateService.weekdaysCount;
+  readonly holidaysCount$ = this.dateService.holidaysCount;
+
 
   searchTerm = '';
   usersFilterForm!: FormGroup;
@@ -86,11 +97,11 @@ export class AzureUsersComponent implements OnInit {
     this.usersService.exportUsersToCSV(this.users$());
   }
 
-  showUserPopup() {
-    this.userDialogVisible.set(true);
+  showHolidayCalculatorPopup() {
+    this.holidaysCalculatorVisible.set(true);
   }
 
   onDialogVisibleChange($event: boolean) {
-    this.userDialogVisible.set($event);
+    this.holidaysCalculatorVisible.set($event);
   }
 }

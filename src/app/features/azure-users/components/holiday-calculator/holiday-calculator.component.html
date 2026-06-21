@@ -1,0 +1,31 @@
+<p-dialog
+  [modal]="true"
+  [style]="{ width: '30rem', backgroundColor: 'var(--page-bg)' }"
+  [(visible)]="visible"
+  (onHide)="onClosePopup()"
+  (onShow)="onOpenPopup()"
+  [dismissableMask]="true"
+  [resizable]="false"
+  [draggable]="false"
+>
+  <ng-template #header>
+    <div class="flex flex-col">
+      <h4 class="text-start text-2xl font-semibold m-0">Holidays in range</h4>
+      <p class="text-start m-0 text-(--charcoal-600)">Enter the number of holiday days within the selected range</p>
+    </div>
+  </ng-template>
+
+  <div class="flex flex-col gap-1">
+    <span class="input-label">Number of holiday days</span>
+    <input type="number" pInputText class="field" [(ngModel)]="days" />
+    <span class="text-sm text-(--charcoal-600) my-1 mx-2">Max {{weekdaysCount}} weekdays in current range.</span>
+    
+  </div>
+
+  <ng-template #footer>
+    <div class="flex justify-end gap-3">
+      <button type="button" class="btn btn-secondary" style="width: 7rem;" (click)="onClosePopup()">Cancel</button>
+      <button type="button" class="btn btn-primary" style="width: 7rem;" (click)="onCalculateHoliday()">Submit</button>
+    </div>
+  </ng-template>
+</p-dialog>
