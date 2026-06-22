@@ -16,4 +16,5 @@ export interface User {
   projectsCount: number;
   workItemsCount: number;
   projectNames: string[];
+  projectHoursMap: { [key: string]: number };
 }
