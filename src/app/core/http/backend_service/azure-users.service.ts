@@ -137,7 +137,7 @@ export class UsersService {
   projectNameAndHours(user: User) : string[] {
     const projectNameAndHours = [];
     for (const [project, hours] of Object.entries(user.projectHoursMap)) {
-      projectNameAndHours.push(`${project} - ${hours} hours`);
+      projectNameAndHours.push(`${project} - ${(hours / user.totalHours * 100).toFixed(2)} %`);
     }
     return projectNameAndHours;
   }
