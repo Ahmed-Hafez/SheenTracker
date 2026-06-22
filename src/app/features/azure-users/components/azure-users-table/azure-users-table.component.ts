@@ -1,6 +1,6 @@
 import { Component, inject, input, OnInit, output, signal, viewChild } from '@angular/core';
 import { User } from '../../../../core/models/reponse/azure-users.response.model';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Router } from '@angular/router';
 import { Popover, PopoverModule } from 'primeng/popover';
@@ -24,6 +24,9 @@ export class AzureUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dateService = inject(DateService);
 
+  azureUsersTable = viewChild<Table>('dt');
+  first = 0;
+
   users = input.required<User[]>();
   userDialogVisible = signal(false);
   deleteRequestVisible = signal(false);
@@ -33,7 +36,7 @@ export class AzureUsersTableComponent implements OnInit {
 
   selectedUser = signal<User | null>(null);
 
-  targetHours$ = this.dateService.targetHoursCount
+  targetHours$ = this.dateService.targetHoursCount;
 
   columns!: Column[];
 
@@ -57,13 +60,20 @@ export class AzureUsersTableComponent implements OnInit {
     return name.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
   }
 
+  resetToFirstPage() {
+    // const table = this.azureUsersTable();
+    // if (table) table.first = 0;
+      this.first = 0;
+
+  }
+
   openMenuPopup(event: Event, user: User) {
     this.popupMenu()?.toggle(event);
     this.selectedUser.set(user);
   }
 
   showDetails(userKey: string) {
-    this.router.navigate(['/users'] , { queryParams: { userKey: userKey } });
+    this.router.navigate(['/users'], { queryParams: { userKey: userKey } });
   }
 
   onImageError(event: Event, userkey: string) {

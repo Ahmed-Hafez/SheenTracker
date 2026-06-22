@@ -1,4 +1,13 @@
-import { Component, DestroyRef, effect, inject, Injector, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Checkbox } from 'primeng/checkbox';
@@ -10,8 +19,8 @@ import { startWith } from 'rxjs';
 import { AzureUsersSkeletonComponent } from './components/azure-users-skeleton/azure-users-skeleton.component';
 import { AzureUsersTableComponent } from './components/azure-users-table/azure-users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
-import { HolidayCalculatorComponent } from "./components/holiday-calculator/holiday-calculator.component";
-import { TargetHoursCardComponent } from "./components/target-hours-card/target-hours-card.component";
+import { HolidayCalculatorComponent } from './components/holiday-calculator/holiday-calculator.component';
+import { TargetHoursCardComponent } from './components/target-hours-card/target-hours-card.component';
 import { DateService } from '../../core/services/date.service';
 
 @Component({
@@ -25,8 +34,8 @@ import { DateService } from '../../core/services/date.service';
     AzureUsersSkeletonComponent,
     AzureUsersTableComponent,
     HolidayCalculatorComponent,
-    TargetHoursCardComponent
-],
+    TargetHoursCardComponent,
+  ],
   templateUrl: './azure-users.component.html',
 })
 export class AzureUsersComponent implements OnInit {
@@ -42,10 +51,11 @@ export class AzureUsersComponent implements OnInit {
   users$ = this.usersService.users$;
   projects$ = this.usersService.projects$;
 
+  tableChild = viewChild<AzureUsersTableComponent>('tableRef');
+
   readonly targetHours$ = this.dateService.targetHoursCount;
   readonly weekdaysCount$ = this.dateService.weekdaysCount;
   readonly holidaysCount$ = this.dateService.holidaysCount;
-
 
   searchTerm = '';
   usersFilterForm!: FormGroup;
@@ -78,6 +88,7 @@ export class AzureUsersComponent implements OnInit {
   onFilterChange(): void {
     const { searchTerm, projects, hoursRange, zeroHoursUsers } = this.usersFilterForm.value;
     this.usersService.filterUsers(searchTerm, projects, hoursRange, zeroHoursUsers);
+    this.tableChild()?.resetToFirstPage();
   }
 
   private loadUsers(): void {
