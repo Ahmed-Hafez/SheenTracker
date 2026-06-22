@@ -20,7 +20,7 @@ export class AchievementsComponent {
   closedTasksCount = computed(() => this.data()?.completedTasksCount ?? 0);
 
   totalClosedHours = computed(() => {
-    const hours = this.data()?.totalCompletedWorkHours ?? 0;
+    const hours = this.data()?.totalCompletedWorkHours?.toFixed(1) ?? 0;
     return `${hours}h`;
   });
 
