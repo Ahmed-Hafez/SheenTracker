@@ -3,12 +3,14 @@ import { User, AzureUsers } from '../../models/reponse/azure-users.response.mode
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { map, Observable, of } from 'rxjs';
 import { ApiService } from '../api_services/api.service';
+import { DateService } from '../../services/date.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
   private readonly apiService = inject(ApiService);
+  private readonly dateService = inject(DateService);
 
   private usersResponse = signal<AzureUsers>({} as AzureUsers);
   private readonly allUsers = signal<User[]>([]);
@@ -106,24 +108,41 @@ export class UsersService {
       useTextFile: false,
       useBom: true, // Ensures Excel compatibility
       headers: [
-        'userKey',
-        'displayName',
-        'email',
-        'principalName',
-        'descriptor',
-        'avatarUrl',
-        'totalHours',
-        'projectsCount',
-        'workItemsCount',
+        'UserKey',
+        'Display Name',
+        'Email',
+        'Total Hours',
+        'Goal',
+        'Projects Count',
+        'WorkItems Count',
+        'Project Names',
       ], // Custom column titles
     };
 
     optimizedUsers = users.map((user) => ({
-      ...user,
-      // projectNames: user.projectNames.join('|'),
+      userKey: user.userKey,
+      displayName: user.displayName,
+      email: user.email,
+      totalHours: user.totalHours,
+      goal: this.isUserAchieved(user.totalHours) ? 'Achieved' : 'Not Achieved',
+      projectsCount: user.projectsCount,
+      workItemsCount: user.workItemsCount,
+      projectNames: this.projectNameAndHours(user).join(' | '),
     }));
 
     // Instantiate to trigger immediate browser download
     new ngxCsv(optimizedUsers, 'User_Report_File', options);
+  }
+
+  projectNameAndHours(user: User) : string[] {
+    const projectNameAndHours = [];
+    for (const [project, hours] of Object.entries(user.projectHoursMap)) {
+      projectNameAndHours.push(`${project} - ${(hours / user.totalHours * 100).toFixed(2)} %`);
+    }
+    return projectNameAndHours;
+  }
+
+  isUserAchieved(totalHours: number): boolean {
+    return totalHours >= this.dateService.targetHoursCount();
   }
 }

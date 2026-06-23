@@ -106,6 +106,7 @@ export class AzureUsersComponent implements OnInit {
 
   exportToCSV(): void {
     this.usersService.exportUsersToCSV(this.users$());
+    // this.tableChild()?.azureUsersTable.;
   }
 
   showHolidayCalculatorPopup() {
