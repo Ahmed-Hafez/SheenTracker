@@ -58,9 +58,7 @@ export class UserFormDialogComponent implements OnInit {
   departments = Departments;
   seniorities = Seniorities;
 
-  azureUsers = this.metaDataService.metaDataUsers$;
   squads = this.metaDataService.metaDataSquads$;
-  isAzureUserLoading = this.metaDataService.isUsersLoading;
   isSquadsLoading = this.metaDataService.isSquadsLoading;
 
   initializeForm() {
@@ -82,7 +80,7 @@ export class UserFormDialogComponent implements OnInit {
         ],
       ],
       department: [this.isEditMode() ? this.userData()?.department : null, Validators.required],
-      squadName: [this.isEditMode() ? this.userData()?.squadId : null, Validators.required],
+      squadName: [this.isEditMode() ? this.userData()?.squadId : null],
       seniority: [
         this.isEditMode() ? this.userData()?.seniority : Seniority.Junior,
         Validators.required,
@@ -148,6 +146,7 @@ export class UserFormDialogComponent implements OnInit {
     if (!this.userForm.get('department')) {
       this.userForm.get('teamleadId')?.disable();
     }
+
     if (this.isEditMode()) {
       this.isTeamLeadLoading.set(true);
       let department = this.userData()?.department;
@@ -163,9 +162,16 @@ export class UserFormDialogComponent implements OnInit {
       });
     }
     this.userForm.get('department')?.valueChanges.subscribe((dept) => {
+      let seniority: number = this.userForm.get('seniority')?.getRawValue();
+
       if (dept === null) {
         return;
-      } else if (dept === Department.ScrumMaster || dept === Department.ProductManagement) {
+      } else if (
+        dept === Department.ScrumMaster ||
+        dept === Department.ProductManagement ||
+        seniority === Seniority.Lead ||
+        seniority === Seniority.Manager
+      ) {
         this.userForm.get('teamleadId')?.disable();
         return;
       }
