@@ -44,6 +44,7 @@ export class SystemUsersTableComponent implements OnInit {
   actionTaken = output<void>();
 
   popupMenu = viewChild<Popover>('op');
+  first = 0;
 
   selectedUser = signal<SystemUser | null>(null);
 
@@ -75,6 +76,10 @@ export class SystemUsersTableComponent implements OnInit {
     console.log('Selected User:', user);
     this.popupMenu()?.toggle(event);
     this.selectedUser.set(user);
+  }
+
+  resetToFirstPage() {
+    this.first = 0;
   }
 
   callActions(index: number): void {

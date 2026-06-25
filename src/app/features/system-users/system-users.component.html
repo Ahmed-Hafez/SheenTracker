@@ -67,7 +67,7 @@
       </div>
     </form>
   </div>
-  <app-system-users-table [users]="users()"> </app-system-users-table>
+  <app-system-users-table [users]="users()" #tableRef> </app-system-users-table>
 
   @if (userDialogVisible()) {
     <app-user-form-dialog

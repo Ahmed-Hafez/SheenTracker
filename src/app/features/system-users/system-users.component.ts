@@ -1,4 +1,13 @@
-import { Component, DestroyRef, effect, inject, Injector, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SelectModule } from 'primeng/select';
@@ -36,15 +45,17 @@ export class SystemUsersComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly injector = inject(Injector);
   userDialogVisible = signal(false);
-  
+
   readonly loading = signal(true);
   users = this.systemUsersService.users$;
-  
+
   searchTerm = '';
   usersFilterForm!: FormGroup;
-  
+
+  tableChild = viewChild<SystemUsersTableComponent>('tableRef');
+
   departments = Departments;
-  
+
   squads = this.metaDataService.metaDataSquads$;
   isSquadsLoading = this.metaDataService.isSquadsLoading;
 
@@ -90,6 +101,7 @@ export class SystemUsersComponent implements OnInit {
   onFilterChange(): void {
     const { searchTerm, department, userType, squad } = this.usersFilterForm.value;
     this.systemUsersService.filterUsers(searchTerm, squad, department, userType);
+    this.tableChild()?.resetToFirstPage();
   }
 
   private loadUsers(): void {
