@@ -112,8 +112,8 @@ export class DateService {
 
   private createDefaultRange(): DateRange {
     const end = this.toDateOnly(new Date());
-    const start = this.toDateOnly(new Date());
-    start.setDate(end.getDate() - 29);
+    const today = this.toDateOnly(new Date());
+    const start = new Date(today.getFullYear(), today.getMonth(), 1);
     return { start, end };
   }
 

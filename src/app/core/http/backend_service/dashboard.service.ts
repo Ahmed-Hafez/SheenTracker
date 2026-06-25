@@ -23,6 +23,6 @@ export class DashboardService {
   getTopPerformers(): Observable<User[]> {
     return this.apiService
       .get<TopPerformersResponse>(this.topPerformersEndpoint)
-      .pipe(map((response) => response.users));
+      .pipe(map((response) => response.users.reverse()));
   }
 }
