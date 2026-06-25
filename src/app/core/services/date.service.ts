@@ -27,7 +27,7 @@ export class DateService {
   readonly targetHoursCount = computed(() => {
     const weekdaysCount = this.weekdaysCount();
     const holidaysCount = this.holidaysCount();
-    return weekdaysCount ? (weekdaysCount * 6.5) - (holidaysCount * 6.5) : 0;
+    return weekdaysCount ? (weekdaysCount * 6) - (holidaysCount * 6) : 0;
   });
 
    getWeekdaysCount(startDate: Date, endDate: Date): number {
