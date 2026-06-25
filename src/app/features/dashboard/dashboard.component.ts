@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   // });
   readonly loading = signal(true);
 
-  azureUsersKpis = this.metaDataService.usersKpis$
+  azureUsersKpis = this.metaDataService.usersKpis$;
 
   ngOnInit(): void {
     effect(
@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
       title: {
         text: 'Top Contributors',
         left: 'start',
-        subtext: 'Based on total hours contributed',
+        subtext: 'Based on total closed tasks',
         subtextStyle: {
           fontStyle: 'italic',
           color: '#888888',
@@ -104,12 +104,12 @@ export class DashboardComponent implements OnInit {
         },
       },
       legend: { show: false },
-      xAxis: { type: 'value' }, // numbers on X
+      xAxis: { type: 'value', name: 'Closed Tasks', nameLocation: 'middle', nameGap: 30 }, // numbers on X
       yAxis: {
         type: 'category',
         data: data.map((user) => user.displayName),
       }, // names on Y
-      series: [{ type: 'bar', data: data.map((user) => user.totalHours) }],
+      series: [{ type: 'bar', data: data.map((user) => user.closedTasksCount) }],
     };
   });
 
