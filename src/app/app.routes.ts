@@ -5,6 +5,7 @@ import { AzureUsersComponent } from './features/azure-users/azure-users.componen
 import { SystemUsersComponent } from './features/system-users/system-users.component';
 import { SquadsComponent } from './features/squads/squads.component';
 import { SquadDetailsComponent } from './features/squad-details/squad-details.component';
+import { ProjectUtilizationReportComponent } from './features/project-utilization-report/project-utilization-report.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,14 @@ export const routes: Routes = [
             component: SquadDetailsComponent,
           },
         ],
+      },
+      {
+        path: 'reports',
+        title: 'Reports - SheenTrack 360°',
+        loadComponent: () =>
+          import('./features/project-utilization-report/project-utilization-report.component').then(
+            (m) => m.ProjectUtilizationReportComponent,
+          ),
       },
     ],
   },

@@ -61,7 +61,7 @@ export class SideBarComponent {
       },
       {
         icon: 'pi pi-chart-line',
-        label: 'Reports',
+        label: 'Projects Utilization Report',
         routerLink: '/reports',
       },
     ]);

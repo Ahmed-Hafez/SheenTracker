@@ -1,0 +1,74 @@
+<div class="flex flex-col h-screen">
+  <h2>Projects Utilization</h2>
+  <p>Aggregated analytics for the selected period</p>
+  <!-- two horizontal charts -->
+  <div class="flex flex-col mt-2 mb-6 gap-4 md:flex-row">
+    <div
+      class="card md:w-2/3"
+      echarts
+      [options]="hoursPerProject()"
+      style="height: 550px"
+      [initOpts]="{ renderer: 'svg' }"
+    ></div>
+    <div
+      class="card md:w-1/3"
+      echarts
+      [options]="projectsWorkloadOptions()"
+      style="height: 550px"
+      [initOpts]="{ renderer: 'svg' }"
+    ></div>
+
+  </div>
+  <!-- table with cols: ProjectName Hours %OfTotal HeadCount TotalTasks TopContributer -->
+  <!-- prime ng's table -->
+  <p-table
+  [value]="projectsMock()"
+  [tableStyle]="{
+    'min-width': '50rem',
+    'border-radius': '8px 8px 0 0',
+    border: '1px solid #ebe9e7',
+    'border-bottom': 'none',
+    'box-shadow': '0px 4px 4px rgba(0, 0, 0, 1)',
+  }"
+>
+  <ng-template #header>
+    <tr class="">
+      @for (col of columns; track col) {
+        <th>
+          <span class="mono-small">{{ col.header }}</span>
+        </th>
+      }
+    </tr>
+  </ng-template>
+  <ng-template #body let-project let-rowIndex="rowIndex">
+    <tr>
+      <td pFrozenColumn>
+        <div class="flex items-center gap-3 font-bold">
+          <span>{{(project.projectName) }}</span>
+        </div>
+      </td>
+      <td>{{ project.hours | number:'1.1-1' }}</td>
+      <td>
+        {{ project.headCount }}
+      </td>
+      <td>
+        {{ project.totalTasks }}
+      </td>
+      <td>
+        {{ project.topContributer }}
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td [attr.colspan]="columns.length + 1">
+        <div class="flex md:justify-center items-center p-10">
+          <p class="block mono-metric" style="font-weight: 400">
+            No Projects Yet.
+          </p>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+</div>
