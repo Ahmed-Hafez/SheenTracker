@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, input, computed } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { KpiCardComponent } from '../../../../../../shared/kpi-card/kpi-card.component';
-import { AchievementResponse } from '../../../../../../core/models/reponse/achievemetsResponse.model';
+import { AchievementResponse } from '../../../../../../core/models/reponse/azure-user-details/user-achievemets.model';
 
 import { Skeleton } from 'primeng/skeleton';
 

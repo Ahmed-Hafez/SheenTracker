@@ -11,17 +11,15 @@ import {
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { TabbarComponent } from './components/tabbar/tabbar.component';
-import { ProjectGroup } from './components/work-items-table/work-items-table.component';
 import { UserDetailsService } from '../../core/http/backend_service/user-detials-service.service';
-import { UserDetailsResponse } from '../../core/models/reponse/user-details.response.model';
 import { finalize, of } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
-import { AchievementResponse } from '../../core/models/reponse/achievemetsResponse.model';
 import { SystemUser } from '../../core/models/reponse/system-users.response.model';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 import { DateService } from '../../core/services/date.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AzureUsersSkeletonComponent } from "../azure-users/components/azure-users-skeleton/azure-users-skeleton.component";
+import { AzureUsersSkeletonComponent } from '../azure-users/components/azure-users-skeleton/azure-users-skeleton.component';
+import { AzureUserDetail } from '../../core/models/reponse/azure-user-details/user-details.response.model';
 
 @Component({
   selector: 'app-user-details',
@@ -31,15 +29,14 @@ import { AzureUsersSkeletonComponent } from "../azure-users/components/azure-use
   styles: ``,
 })
 export class UserDetailsComponent {
-  private userDetailsService = inject(UserDetailsService);
+  private readonly userDetailsService = inject(UserDetailsService);
   private readonly refreshService = inject(RefreshService);
   private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
   private readonly metaDataService = inject(MetaDataService);
-    private readonly appUsersService = inject(SystemUsersService);
-    private readonly dateService = inject(DateService);
-    isAzureConnectedToSystemUser = signal(false);
-
+  private readonly appUsersService = inject(SystemUsersService);
+  private readonly dateService = inject(DateService);
+  isAzureConnectedToSystemUser = signal(false);
 
   readonly userId = signal<string | null>(null);
 
@@ -53,8 +50,8 @@ export class UserDetailsComponent {
   });
   isSearchingForMatchingAzureUser = signal(false);
 
-  userDetails = signal<UserDetailsResponse | null>(null);
-  systemUser = signal<SystemUser | null>(null);
+  azureUserDetails = signal<AzureUserDetail | null>(null);
+  systemUserDetails = signal<SystemUser | null>(null);
   // Holds the azure user key found from system user details or metadata lookup
   resolvedAzureUserKey = signal<string | null>(null);
   // Holds a matched azure key from metadata (for showing "link to azure user" button)
@@ -89,8 +86,8 @@ export class UserDetailsComponent {
           .join(''),
         avatarUrl: details.user.avatarUrl,
         email1: details.user.email,
-        email2:  this.systemUser()?.title || details.user.principalName,
-        totalHours: details.totalHours??-1,
+        email2: this.systemUser()?.title || details.user.principalName,
+        totalHours: details.totalHours ?? -1,
       };
     } else {
       // System user mode: user card from systemUser details
@@ -113,173 +110,90 @@ export class UserDetailsComponent {
     }
   });
 
-
-
-  summary = computed(() => {
-    const details = this.userDetails();
-    if (!details) return null;
-    return {
-      projects: details.projectsCount,
-      workItems: details.workItemsCount,
-      dateRange: {
-        days: Math.floor(
-          (new Date(details.toDate).getTime() - new Date(details.fromDate).getTime()) /
-            (1000 * 3600 * 24),
-        ),
-        start: details.fromDate,
-        end: details.toDate,
-      },
-    };
-  });
-
-  workItems = computed<ProjectGroup[]>(() => {
-    const details = this.userDetails();
-    if (!details) return [];
-    return details.projects.map((p) => ({
-      projectName: p.projectName,
-      totalWorkItems: p.workItems.length,
-      totalHours: p.hours.toFixed(1).toString(),
-      items: p.workItems.map((wi) => ({
-        id: `#${wi.id}`,
-        title: wi.title,
-        type: wi.workItemType,
-        status: wi.state,
-        deltaHours: `${wi.deltaHours > 0 ? '+' : ''}${wi.deltaHours.toFixed(1)}h`,
-        before: `${wi.previousCompletedWork.toFixed(1)}h`,
-        atEnd: `${wi.currentCompletedWork.toFixed(1)}h`,
-        snapshot: details.toDate,
-        isPositiveDelta: wi.deltaHours > 0,
-      })),
-    }));
-  });
-
-  achievements = signal<AchievementResponse | null>(null);
-  isAchievementsLoading = signal(false);
-
-
   queryParams = toSignal(this.route.queryParamMap);
   constructor() {
     const state = history.state;
     if (state?.from) this.previousURL.set(state.from);
-  effect(
-    () => {
-      this.refreshService.refreshTick();// re-run effect on manual refresh trigger
-      this.dateService.selectedDateRange(); // re-run effect on date range change
+    effect(
+      () => {
+        this.refreshService.refreshTick(); // re-run effect on manual refresh trigger
+        this.dateService.selectedDateRange(); // re-run effect on date range change
 
-      const params = this.queryParams();
-      const userKey = params?.get('userKey');
-      const userID = params?.get('userId');
+        const params = this.queryParams();
+        const userKey = params?.get('userKey');
+        const userID = params?.get('userId');
 
-      this.reset();
+        this.reset();
 
-      if (userKey) {
-        this.loadAzureUserDetailsAndWorkItems(userKey);
-      } else if (userID) {
-        this.loadSystemUserDetails(+userID);
-      }
-    },
-    { injector: this.injector }
-  );
-}
-
-    private reset(){
-      this.userId.set(null);
-      this.userDetails.set(null);
-      this.systemUser.set(null);
-      this.resolvedAzureUserKey.set(null);
-      this.foundAzureUserKey.set(null);
-      this.foundAzureUserEmail.set(null);
-      this.isAzureLoading.set(false);
-      this.isSystemUserLoading.set(false);
-      this.isError.set(false);
+        if (userKey) {
+          this.loadAzureUserDetails(userKey);
+        } else if (userID) {
+          this.loadSystemUserDetails(+userID);
+        }
+      },
+      { injector: this.injector },
+    );
   }
 
-  loadAzureUserDetailsAndWorkItems(userId: string) {
+  private reset() {
+    this.userId.set(null);
+    this.azureUserDetails.set(null);
+    this.systemUserDetails.set(null);
+    this.resolvedAzureUserKey.set(null);
+    this.foundAzureUserKey.set(null);
+    this.foundAzureUserEmail.set(null);
+    this.isAzureLoading.set(false);
+    this.isSystemUserLoading.set(false);
+    this.isError.set(false);
+  }
+
+  loadAzureUserDetails(userId: string) {
     this.isAzureLoading.set(true);
-    this.userDetailsService
-      .getUserDetails(userId)
-      .pipe(finalize(() => {
-        //delay by 100 ms to prevent loading spinner flash on fast responses
-        setTimeout(() => {
-          this.isAzureLoading.set(false);
-        }, 100);
-      }))
-      .subscribe({
-        next: (response) => {
-          this.userDetails.set(response);
-          this.isError.set(false);
-          if (response?.user?.key) {
-            this.loadAzureUserAchievements(response.user.key);
-            if(this.systemUser() === null){
-             this.loadSystemUserDetails(response.user.key);
+    this.userDetailsService.getUserDetails(userId).subscribe({
+      next: (response) => {
+        this.azureUserDetails.set(response);
+        this.isError.set(false);
+        if (response.isLinked) {
+          if (this.systemUserDetails() === null) {
+            this.loadSystemUserDetails(response.azureUserKey);
           }
-          }
-
-
-
-        },
-        error: (error) => {
-          this.isAzureLoading.set(false);
-          console.error('Error fetching user details:', error);
-          this.userDetails.set(null);
-          this.isError.set(true);
-
-        },
-      });
+        }
+      },
+      error: (error) => {
+        this.isAzureLoading.set(false);
+        console.error('Error fetching user details:', error);
+        this.azureUserDetails.set(null);
+        this.isError.set(true);
+      },
+    });
   }
 
-  loadAzureUserAchievements(userKey: string) {
-    this.isAchievementsLoading.set(true);
-    this.userDetailsService
-      .getAzureUserAchievements(userKey)
-      .pipe(finalize(() => this.isAchievementsLoading.set(false)))
-      .subscribe({
-        next: (response) => {
-          this.achievements.set(response);
-        },
-        error: (error) => {
-          console.error('Error fetching user achievements:', error);
-        },
-      });
-  }
-
-  loadSystemUserDetails(userId: number| string) {
+  loadSystemUserDetails(userId: number | string) {
     this.isSystemUserLoading.set(true);
-    this.userDetailsService
-      .getSystemUserDetails(userId)
-      .pipe(finalize(() => {
-        //delay by 100 ms to prevent loading spinner flash on fast responses
-        setTimeout(() => {
-          this.isSystemUserLoading.set(false);
-        }, 100);
-      }))
-      .subscribe({
-        next: (response) => {
-          this.systemUser.set(response);
-
-          this.isError.set(false);
-
-          if(this.userDetails() === null){
-            if (response.azureUserKey) {
-              this.isAzureConnectedToSystemUser.set(true);
+    this.userDetailsService.getSystemUserDetails(userId).subscribe({
+      next: (response) => {
+        this.systemUserDetails.set(response);
+        this.isError.set(false);
+        if (this.azureUserDetails() === null) {
+          if (response.azureUserKey) {
+            this.isAzureConnectedToSystemUser.set(true);
             // System user has an azure key → load work items & achievements
             this.resolvedAzureUserKey.set(response.azureUserKey);
-            this.loadAzureUserDetailsAndWorkItems(response.azureUserKey);
+            this.loadAzureUserDetails(response.azureUserKey);
           } else {
             this.isSearchingForMatchingAzureUser.set(true);
             this.checkAndFindAzureUserKey(response.email);
           }
-          }
-
-
-        },
-        error: (error) => {
-          console.error('Error fetching system user details:', error);
-          this.systemUser.set(null);
-          if(error.status !== 404){this.isError.set(true);}
-
-        },
-      });
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching system user details:', error);
+        this.systemUserDetails.set(null);
+        if (error.status !== 404) {
+          this.isError.set(true);
+        }
+      },
+    });
   }
 
   private checkAndFindAzureUserKey(email: string) {
@@ -290,7 +204,6 @@ export class UserDetailsComponent {
           this.matchEmailToUserKey(email);
         },
         error: (err) => {
-
           console.error('Error loading metadata users:', err);
         },
       });
@@ -315,12 +228,10 @@ export class UserDetailsComponent {
   }
 
   linkAzureUser() {
-    console.log('system user:', this.systemUser());
-    console.log('found azure key:', this.foundAzureUserKey());
-    const sUser = this.systemUser();
+    const systemUser = this.systemUserDetails();
     const azureKey = this.foundAzureUserKey();
-    if (sUser && azureKey) {
-      this.userDetailsService.linkAzureUser(sUser.id, azureKey).subscribe({
+    if (systemUser && azureKey) {
+      this.userDetailsService.linkAzureUser(systemUser.id, azureKey).subscribe({
         next: () => {
           window.location.reload();
         },
@@ -331,18 +242,16 @@ export class UserDetailsComponent {
     }
   }
   showLinkSystemToAzureButton(): boolean {
-    let show: boolean = !this.systemUser()?.azureUserKey && this.foundAzureUserKey() ? true : false;
+    let show: boolean =
+      !this.systemUserDetails()?.azureUserKey && this.foundAzureUserKey() ? true : false;
     return show;
   }
 
-
   deleteUser(userKey: number | undefined) {
-      if (!userKey) {
-        return of(null);
-      }
-      // Implement the actual API call to delete the user
-      return this.appUsersService.deleteAppUser(userKey);
+    if (!userKey) {
+      return of(null);
     }
-
-
+    // Implement the actual API call to delete the user
+    return this.appUsersService.deleteAppUser(userKey);
+  }
 }

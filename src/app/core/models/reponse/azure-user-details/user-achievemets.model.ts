@@ -1,10 +1,11 @@
 
 
-interface AchievementTasks{
+interface AchievementTasks {
   workItemId: number;
   title: string;
   projectName: string;
   state: string;
+  workItemType: string;
   startedAt: string;
   completedAt: string;
   durationDays: number;
@@ -12,16 +13,9 @@ interface AchievementTasks{
   originalEstimateHours: number;
   completedWorkHours: number;
   hoursPerWorkingDay: number;
-  workItemType: string;
 }
 
-export interface AchievementResponse{
-  userKey: string;
-  displayName: string;
-  email: string;
-  avatarUrl: string;
-  fromDate: string;
-  toDate: string;
+export interface Achievements{
   completedTasksCount: number;
   totalCompletedWorkHours: number;
   tasks:AchievementTasks[];
