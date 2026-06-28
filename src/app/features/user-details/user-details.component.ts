@@ -4,14 +4,11 @@ import {
   ChangeDetectionStrategy,
   signal,
   inject,
-  OnInit,
   computed,
   Injector,
   effect,
-  viewChild,
 } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
-import { Skeleton } from 'primeng/skeleton';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { TabbarComponent } from './components/tabbar/tabbar.component';
 import { ProjectGroup } from './components/work-items-table/work-items-table.component';
@@ -24,11 +21,12 @@ import { SystemUser } from '../../core/models/reponse/system-users.response.mode
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 import { DateService } from '../../core/services/date.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { AzureUsersSkeletonComponent } from "../azure-users/components/azure-users-skeleton/azure-users-skeleton.component";
 
 @Component({
   selector: 'app-user-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, UserCardComponent, TabbarComponent, Skeleton],
+  imports: [RouterLink, UserCardComponent, TabbarComponent, AzureUsersSkeletonComponent],
   templateUrl: './user-details.component.html',
   styles: ``,
 })
@@ -48,6 +46,10 @@ export class UserDetailsComponent {
   // Azure user mode: userKey present, userID absent
   isAzureUser = computed(() => {
     return !!this.route.snapshot.queryParamMap.get('userKey');
+  });
+  previousURL = signal<string | null>(null);
+  breadcrumbText = computed(() => {
+    return !!this.previousURL()?.includes('system') ? 'System Users' : 'Azure Users';
   });
   isSearchingForMatchingAzureUser = signal(false);
 
@@ -72,6 +74,7 @@ export class UserDetailsComponent {
     if (this.isAzureUser()) {
       // Azure mode: user card populated from work-items API response
       const details = this.userDetails();
+      console.log(details);
       if (!details) return null;
 
       const displayName = details.user.displayName
@@ -86,8 +89,8 @@ export class UserDetailsComponent {
           .join(''),
         avatarUrl: details.user.avatarUrl,
         email1: details.user.email,
-        email2: details.user.principalName,
-        totalHours: details.totalHours,
+        email2:  this.systemUser()?.title || details.user.principalName,
+        totalHours: details.totalHours??-1,
       };
     } else {
       // System user mode: user card from systemUser details
@@ -105,7 +108,7 @@ export class UserDetailsComponent {
         avatarUrl: this.userDetails()?.user?.avatarUrl || '',
         email1: sUser.email,
         email2: sUser.title,
-        totalHours: this.userDetails()?.totalHours || 0,
+        totalHours: this.userDetails()?.totalHours || -1,
       };
     }
   });
@@ -156,6 +159,8 @@ export class UserDetailsComponent {
 
   queryParams = toSignal(this.route.queryParamMap);
   constructor() {
+    const state = history.state;
+    if (state?.from) this.previousURL.set(state.from);
   effect(
     () => {
       this.refreshService.refreshTick();// re-run effect on manual refresh trigger
@@ -188,6 +193,7 @@ export class UserDetailsComponent {
       this.isSystemUserLoading.set(false);
       this.isError.set(false);
   }
+
   loadAzureUserDetailsAndWorkItems(userId: string) {
     this.isAzureLoading.set(true);
     this.userDetailsService

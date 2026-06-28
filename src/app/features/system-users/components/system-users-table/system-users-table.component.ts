@@ -86,6 +86,7 @@ export class SystemUsersTableComponent implements OnInit {
     switch (index) {
       case 0:
         this.router.navigate(['users'], {
+          state: { from: this.router.url },
           queryParams: this.selectedUser()?.azureUserKey
             ? { userKey: this.selectedUser()?.azureUserKey }
             : { userId: this.selectedUser()?.id },

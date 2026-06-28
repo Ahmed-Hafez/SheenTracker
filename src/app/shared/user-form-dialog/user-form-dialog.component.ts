@@ -46,6 +46,8 @@ export class UserFormDialogComponent implements OnInit {
 
   teamLeads = signal<SystemUser[]>([]);
   isTeamLeadLoading = signal(false);
+  isTeamLead = signal(false);
+  isManager = signal(false);
 
   visible = false;
 
@@ -194,20 +196,32 @@ export class UserFormDialogComponent implements OnInit {
   disableTeamleadSelection() {
     let seniority = this.userForm.get('seniority');
     if (this.isEditMode()) {
-      if (seniority?.value === Seniority.Lead || seniority?.value === Seniority.Manager) {
+      if (seniority?.value === Seniority.Lead) {
         this.userForm.get('teamleadId')?.reset();
-        this.userForm.get('teamleadId')?.disable();
+        this.isTeamLead.set(true);
+        this.isManager.set(false);
+      } else if (seniority?.value === Seniority.Manager) {
+        this.userForm.get('teamleadId')?.reset();
+        this.isManager.set(true);
+        this.isTeamLead.set(false);
       } else {
-        this.userForm.get('teamleadId')?.enable();
+        this.isManager.set(false);
+        this.isTeamLead.set(false);
       }
     }
     this.userForm.get('seniority')?.valueChanges.subscribe((seniority) => {
       console.log(this.userForm.get('seniority')?.value);
-      if (seniority === Seniority.Lead || seniority === Seniority.Manager) {
+      if (seniority === Seniority.Lead) {
         this.userForm.get('teamleadId')?.reset();
-        this.userForm.get('teamleadId')?.disable();
+        this.isTeamLead.set(true);
+        this.isManager.set(false);
+      } else if (seniority === Seniority.Manager) {
+        this.userForm.get('teamleadId')?.reset();
+        this.isManager.set(true);
+        this.isTeamLead.set(false);
       } else {
-        this.userForm.get('teamleadId')?.enable();
+        this.isManager.set(false);
+        this.isTeamLead.set(false);
       }
     });
   }

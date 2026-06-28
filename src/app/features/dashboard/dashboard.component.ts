@@ -142,7 +142,7 @@ export class DashboardComponent implements OnInit {
 
         formatter: (name: string) => {
           const project = data.projects.find((p) => p.projectName === name);
-          return `{name|${name}}{value|${project?.totalHours.toFixed(2) ?? 0}h}`;
+          return `{name|${name}}{value|${Math.ceil(project?.totalHours || 0) ?? 0}h}`;
         },
         textStyle: {
           rich: {
