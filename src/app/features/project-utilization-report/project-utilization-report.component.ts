@@ -28,15 +28,18 @@ export class ProjectUtilizationReportComponent implements OnInit {
   loadProjectUtilizationData() {
     this.isLoading.set(true);
     this.projectsUtilReportService.getProjectUtilizationData().subscribe((data) => {
+      //sort projects by total work items in descending order
+      data.projects.sort((a, b) => b.totalWorkItems - a.totalWorkItems);
       this.projectsMock.set(data);
       this.isLoading.set(false);
     });
   }
 
 
-  hoursPerProject = computed<EChartsOption>(() => {
+  tasksPerProject = computed<EChartsOption>(() => {
     const data = this.projectsMock();
     if (!data) return {};
+    const reversedProjects = [...data.projects].reverse(); // Reverse the order of projects for better visualization
     return {
       title: {
         text: 'Tasks Per Project',
@@ -58,26 +61,26 @@ export class ProjectUtilizationReportComponent implements OnInit {
       xAxis: { type: 'value', nameLocation: 'middle', nameGap: 30 }, // numbers on X
       yAxis: {
         type: 'category',
-        data: data.projects.map((project) => project.projectName),
+        data: reversedProjects.map((project) => project.projectName),
       }, // names on Y
       series: [
         {
           name: 'Active',
           type: 'bar',
           stack: 'tasks',
-          data: data.projects.map((project) => project.activeTasks),
+          data: reversedProjects.map((project) => project.activeTasks),
         },
         {
           name: 'Resolved',
           type: 'bar',
           stack: 'tasks',
-          data: data.projects.map((project) => project.resolvedTasks),
+          data: reversedProjects.map((project) => project.resolvedTasks),
         },
         {
           name: 'Closed',
           type: 'bar',
           stack: 'tasks',
-          data: data.projects.map((project) => project.closedTasks),
+          data: reversedProjects.map((project) => project.closedTasks),
         },
       ],
     };
