@@ -7,6 +7,7 @@ import { DecimalPipe } from '@angular/common';
 import { ProjectsUtilizationReportService } from '../../core/http/backend_service/projects-utilization-report.service';
 import { Router } from '@angular/router';
 import { ProjectUtilizationSkeletonComponent } from './components/loading shimmer component/project-utilization-skeleton.component';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
 
 @Component({
   selector: 'app-project-utilization-report',
@@ -38,7 +39,7 @@ export class ProjectUtilizationReportComponent implements OnInit {
     if (!data) return {};
     return {
       title: {
-        text: 'Hours Per Project',
+        text: 'Tasks Per Project',
         left: 'start',
         subtext: ' ',
         subtextStyle: {
@@ -85,11 +86,12 @@ export class ProjectUtilizationReportComponent implements OnInit {
   projectsWorkloadOptions = computed<EChartsOption>(() => {
     const data = this.projectsMock();
     if (!data) return {};
+    const totalHours = Math.ceil(data.projects.reduce((sum, project) => sum + project.totalHours, 0));
     return {
       title: {
         text: 'Workload by project',
         left: 'start',
-        subtext: 'Hours distribution',
+        subtext: `${totalHours}h total hours`,
         textStyle: {
           fontWeight: 'bold',
         },
@@ -153,6 +155,7 @@ export class ProjectUtilizationReportComponent implements OnInit {
   columns = [
     { field: 'projectName', header: 'PROJECT' },
     { field: 'totalHours', header: 'TOTAL HOURS' },
+    { field: 'percentage', header: 'PERCENTAGE' },
     { field: 'totalWorkItems', header: 'WORK ITEMS' },
     { field: 'topDeveloperName', header: 'TOP DEVELOPER' },
     { field: 'topDeveloperHours', header: 'TOP DEVELOPER HOURS' },
@@ -164,5 +167,54 @@ export class ProjectUtilizationReportComponent implements OnInit {
       // Implementation for navigating to Azure user
       this.router.navigate(['users'], { queryParams: { userKey: azureUserKey } });
     }
+  }
+
+  exportToCSV() {
+    const data = this.projectsMock();
+    if (!data) return;
+
+    const totalHours = data.projects.reduce((sum, p) => sum + p.totalHours, 0);
+
+    const rows = data.projects.map((p) => ({
+      projectName: p.projectName,
+      totalHours: p.totalHours.toFixed(1),
+      percentage: totalHours > 0 ? ((p.totalHours / totalHours) * 100).toFixed(1) + '%' : '0%',
+      totalWorkItems: p.totalWorkItems,
+      activeTasks: p.activeTasks,
+      resolvedTasks: p.resolvedTasks,
+      closedTasks: p.closedTasks,
+      topDeveloperName: p.topDeveloperName || 'N/A',
+      topDeveloperHours: p.topDeveloperHours,
+    }));
+
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      showTitle: false,
+      useTextFile: false,
+      useBom: true,
+      headers: [
+        'Project',
+        'Total Hours',
+        '% of Total',
+        'Work Items',
+        'Active Tasks',
+        'Resolved Tasks',
+        'Closed Tasks',
+        'Top Developer',
+        'Top Developer Hours',
+      ],
+    };
+
+    const filename = `Projects_Utilization_${data.fromDate}_to_${data.toDate}`;
+    new ngxCsv(rows, filename, options);
+  }
+  percentageOfTotalHours(projectHours: number): number {
+    const data = this.projectsMock();
+    if (!data) return 0;
+    const totalHours = data.projects.reduce((sum, project) => sum + project.totalHours, 0);
+    return totalHours > 0 ? (projectHours / totalHours) * 100 : 0;
   }
 }
