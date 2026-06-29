@@ -6,6 +6,12 @@ import { inject } from '@angular/core';
 import { Departments } from '../../../../../../core/enums/departments.enum';
 import { Seniorities } from '../../../../../../core/enums/seniority.enum';
 import { EnumLabelPipe } from '../../../../../../core/pipes/enum-label-pipe';
+import { DateRange } from '../../../../../../core/services/date.service';
+
+export interface UserSummary {
+  projects: number;
+  workItems: number;
+}
 @Component({
   selector: 'app-overview',
   standalone: true,
@@ -15,7 +21,7 @@ import { EnumLabelPipe } from '../../../../../../core/pipes/enum-label-pipe';
 })
 export class OverviewComponent {
   router = inject(Router);
-  summary = input.required<any>();
+  summary = input.required<UserSummary>();
   systemUser = input.required<SystemUser | null>();
   departments = Departments;
   seniorities = Seniorities;

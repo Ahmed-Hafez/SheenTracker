@@ -12,7 +12,7 @@ export class UserDetailsService {
   private systemUsersEndpoint = 'AppUsers/';
   private linkSystemUserEndpoint = 'AppUsers/link-azure-user';
   private azureUsersEndpoint(userId: string) {
-    return `AzureDevOps/users/${userId}/work-items`;
+    return `AzureDevOps/users/${userId}/performance`;
   }
 
   getUserDetails(userId: string): Observable<AzureUserDetail> {

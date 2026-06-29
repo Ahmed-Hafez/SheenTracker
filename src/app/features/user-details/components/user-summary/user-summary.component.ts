@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core
 import { DatePipe } from '@angular/common';
 import { KpiCardComponent } from '../../../../shared/kpi-card/kpi-card.component';
 import { DateService } from '../../../../core/services/date.service';
+import { UserSummary } from '../tabbar/components/overview/overview.component';
 
 @Component({
   selector: 'app-user-summary',
@@ -11,10 +12,7 @@ import { DateService } from '../../../../core/services/date.service';
   styles: ``,
 })
 export class UserSummaryComponent {
-  dateService= inject(DateService);
-  summary = input.required<{
-    projects: number;
-    workItems: number;
-    dateRange: { days: number; start: string; end: string };
-  }>();
+  dateService = inject(DateService);
+  dateRange = this.dateService.selectedDateRange;
+  summary = input.required<UserSummary>();
 }

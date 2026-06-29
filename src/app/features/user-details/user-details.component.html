@@ -14,25 +14,21 @@
         <span class="text-gray-800">{{ user()?.name }}</span>
       </div>
 
-        <app-user-card
-          [user]="user()!"
-          [isSearchingForAzureUser]="isSearchingForMatchingAzureUser()"
-          [foundAzureUserEmail]="foundAzureUserEmail()"
-          [showLinkSystemToAzureButton]="showLinkSystemToAzureButton()"
-          [linkAzureUser]="linkAzureUser.bind(this)"
-          [isAzureConnectedToSystemUser]="isAzureConnectedToSystemUser()"
-          [systemUserId]="systemUser()?.id"
-          [deleteUser]="deleteUser.bind(this)"
-          [systemUser]="systemUser()"
-        ></app-user-card>
-
+      <app-user-card
+        [user]="user()!"
+        [isSearchingForAzureUser]="isSearchingForMatchingAzureUser()"
+        [foundAzureUserEmail]="foundAzureUserEmail()"
+        [showLinkSystemToAzureButton]="showLinkSystemToAzureButton()"
+        [linkAzureUser]="linkAzureUser.bind(this)"
+        [isAzureConnectedToSystemUser]="isAzureConnectedToSystemUser()"
+        [systemUserId]="systemUserDetails()?.id"
+        [deleteUser]="deleteUser.bind(this)"
+        [systemUser]="systemUserDetails()"
+      ></app-user-card>
 
       <app-tabbar
-        [summary]="summary()"
-        [systemUser]="systemUser()"
-        [workItems]="workItems()"
-        [achievements]="achievements()"
-        [isAchievementsLoading]="isAchievementsLoading()"
+        [systemUser]="systemUserDetails()"
+        [azureUser]="azureUserDetails()"
         [disableAzureTabs]="disableAzureTabs()"
       ></app-tabbar>
     </div>
@@ -42,5 +38,3 @@
     </div>
   }
 </div>
-
-

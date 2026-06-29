@@ -18,14 +18,11 @@
 
     @if (!disableAzureTabs()) {
       <p-tabpanel value="work-items">
-        <app-work-items [workItems]="workItems()"></app-work-items>
+        <app-work-items [workItems]="azureUser()?.workItems?.projects ?? []"></app-work-items>
       </p-tabpanel>
 
       <p-tabpanel value="achievements">
-        <app-achievements
-          [data]="achievements()"
-          [isLoading]="isAchievementsLoading()"
-        ></app-achievements>
+        <app-achievements [achievements]="azureUser()?.achievements ?? null"></app-achievements>
       </p-tabpanel>
     }
   </p-tabpanels>

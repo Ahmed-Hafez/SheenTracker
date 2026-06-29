@@ -1,6 +1,4 @@
-
-
-interface AchievementTasks {
+export interface AchievementTasks {
   workItemId: number;
   title: string;
   projectName: string;
@@ -15,8 +13,8 @@ interface AchievementTasks {
   hoursPerWorkingDay: number;
 }
 
-export interface Achievements{
+export interface Achievements {
   completedTasksCount: number;
   totalCompletedWorkHours: number;
-  tasks:AchievementTasks[];
+  tasks: AchievementTasks[];
 }

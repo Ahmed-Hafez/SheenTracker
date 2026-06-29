@@ -12,7 +12,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { TabbarComponent } from './components/tabbar/tabbar.component';
 import { UserDetailsService } from '../../core/http/backend_service/user-detials-service.service';
-import { finalize, of } from 'rxjs';
+import { of } from 'rxjs';
 import { RefreshService } from '../../core/services/refresh.service';
 import { SystemUser } from '../../core/models/reponse/system-users.response.model';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
@@ -70,11 +70,11 @@ export class UserDetailsComponent {
   user = computed(() => {
     if (this.isAzureUser()) {
       // Azure mode: user card populated from work-items API response
-      const details = this.userDetails();
+      const details = this.azureUserDetails();
       console.log(details);
       if (!details) return null;
 
-      const displayName = details.user.displayName
+      const displayName = details.displayName
         .replace(/@?(?:tildetech.ae|shuratech.com)/gi, '')
         .trim();
 
@@ -84,14 +84,14 @@ export class UserDetailsComponent {
           .split(' ')
           .map((n) => n[0])
           .join(''),
-        avatarUrl: details.user.avatarUrl,
-        email1: details.user.email,
-        email2: this.systemUser()?.title || details.user.principalName,
-        totalHours: details.totalHours ?? -1,
+        avatarUrl: details.avatarUrl,
+        email1: details.email,
+        email2: this.systemUserDetails()?.title || '',
+        totalHours: details.workItems.totalHours ?? -1,
       };
     } else {
       // System user mode: user card from systemUser details
-      const sUser = this.systemUser();
+      const sUser = this.systemUserDetails();
       if (!sUser) return null;
 
       const displayName = sUser.fullName.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
@@ -102,10 +102,10 @@ export class UserDetailsComponent {
           .split(' ')
           .map((n) => n[0])
           .join(''),
-        avatarUrl: this.userDetails()?.user?.avatarUrl || '',
+        avatarUrl: this.azureUserDetails()?.avatarUrl || '',
         email1: sUser.email,
         email2: sUser.title,
-        totalHours: this.userDetails()?.totalHours || -1,
+        totalHours: this.azureUserDetails()?.workItems.totalHours || -1,
       };
     }
   });
@@ -152,6 +152,8 @@ export class UserDetailsComponent {
     this.userDetailsService.getUserDetails(userId).subscribe({
       next: (response) => {
         this.azureUserDetails.set(response);
+        this.isAzureLoading.set(false);
+        console.log('Azure user details:', this.azureUserDetails);
         this.isError.set(false);
         if (response.isLinked) {
           if (this.systemUserDetails() === null) {
