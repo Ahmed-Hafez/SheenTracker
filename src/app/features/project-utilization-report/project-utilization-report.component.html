@@ -1,9 +1,12 @@
-<div class="flex flex-col h-screen">
-  <h2>Projects Utilization</h2>
-  <p>Aggregated analytics for the selected period</p>
-  <!-- two horizontal charts -->
-  <div class="flex flex-col mt-2 mb-6 gap-4 md:flex-row">
-    <div
+@if(isLoading()) {
+  <p>Loading...</p>
+} @else {
+  <div class="flex flex-col h-screen">
+    <h2>Projects Utilization</h2>
+    <p>Aggregated analytics for the selected period</p>
+    <!-- two horizontal charts -->
+    <div class="flex flex-col mt-2 mb-6 gap-4 md:flex-row">
+      <div
       class="card md:w-2/3"
       echarts
       [options]="hoursPerProject()"
@@ -22,7 +25,7 @@
   <!-- table with cols: ProjectName Hours %OfTotal HeadCount TotalTasks TopContributer -->
   <!-- prime ng's table -->
   <p-table
-  [value]="projectsMock()"
+  [value]="projectsMock()?.projects??[]"
   [tableStyle]="{
     'min-width': '50rem',
     'border-radius': '8px 8px 0 0',
@@ -47,16 +50,35 @@
           <span>{{(project.projectName) }}</span>
         </div>
       </td>
-      <td>{{ project.hours | number:'1.1-1' }}</td>
+      <td>{{ project.totalHours | number:'1.1-1' }}</td>
       <td>
-        {{ project.headCount }}
+        {{ project.totalWorkItems }}
       </td>
-      <td>
-        {{ project.totalTasks }}
+      <!-- orange color change mouse on hover -->
+      <td class="text-orange-400 underline hover:text-orange-900 cursor-pointer" (click)="navigateToAzureUser(project.topDeveloperKey)">
+        @if(project.topDeveloperName && project.topDeveloperKey){
+          {{ project.topDeveloperName }}
+        <!-- open link icon -->
+         <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 inline-block ml-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+          />
+        </svg>
+        }@else{
+          N/A
+        } 
+        
       </td>
-      <td>
-        {{ project.topContributer }}
-      </td>
+      <td>{{ project.topDeveloperHours }} h</td>
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">
@@ -72,3 +94,4 @@
   </ng-template>
 </p-table>
 </div>
+}

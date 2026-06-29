@@ -1,13 +1,20 @@
 
 
-export interface ProjectUtilization{
+export interface ProjectUtilizationItem{
     projectName:string,
+    totalHours: number,
+    totalWorkItems: number,
+    topDeveloperName: string,
+    topDeveloperKey:number,
+    topDeveloperHours: number,
     activeTasks:number,
     resolvedTasks:number,
     closedTasks:number,
-    totalTasks: number,
-    hours: number,
-    headCount:number,
-    topContributer: string,
-    topContributerSystemID:number,
+}
+
+export interface ProjectUtilizationResponse{
+  fromDate: string;
+  toDate: string;
+  totalProjects: number;
+  projects: ProjectUtilizationItem[];
 }
