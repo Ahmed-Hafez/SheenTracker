@@ -64,11 +64,13 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
-        title: 'Reports - SheenTrack 360°',
-        loadComponent: () =>
-          import('./features/project-utilization-report/project-utilization-report.component').then(
-            (m) => m.ProjectUtilizationReportComponent,
-          ),
+        children: [
+          {
+            path: 'project-utilization',
+            title: 'Project Utilization - SheenTrack 360°',
+            component: ProjectUtilizationReportComponent,
+          },
+        ],
       },
     ],
   },

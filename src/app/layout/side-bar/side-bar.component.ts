@@ -4,10 +4,10 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { RippleModule } from 'primeng/ripple';
 
-import {PanelMenuModule } from 'primeng/panelmenu';
+import { PanelMenuModule } from 'primeng/panelmenu';
 
 import { SidebarService } from '../../core/services/sidebar.service';
-import { MenuItem, MenuItemComponent } from "./menu-item/menu-item.component";
+import { MenuItem, MenuItemComponent } from './menu-item/menu-item.component';
 
 @Component({
   selector: 'app-side-bar',
@@ -26,56 +26,55 @@ export class SideBarComponent {
 
   bottomMenuItems: MenuItem[] = [];
 
-
   constructor() {
     effect(() => {
       this.mainMenuItems.set([
-      {
-        icon: 'pi pi-objects-column',
-        label: 'Dashboard',
-        routerLink: '/dashboard',
-      },
-      {
-        label: 'Users',
-        icon: 'pi pi-users',
-        action: () => {
-          this.router.navigate(['/users/azure']);
+        {
+          icon: 'pi pi-objects-column',
+          label: 'Dashboard',
+          routerLink: '/dashboard',
         },
-        items: this.isCollapsed()
-          ? []
-          : [
-              {
-                label: 'Azure Users',
-                routerLink: '/users/azure',
-              },
-              {
-                label: 'System Users',
-                routerLink: '/users/system',
-              },
-            ],
-      },
-      {
-        label: 'Squads',
-        icon: 'pi pi-sitemap',
-        routerLink: '/squads',
-      },
-      {
-        icon: 'pi pi-chart-line',
-        label: 'Projects Utilization Report',
-        routerLink: '/reports',
-      },
-    ]);
+        {
+          label: 'Users',
+          icon: 'pi pi-users',
+          action: () => {
+            this.router.navigate(['/users/azure']);
+          },
+          items: this.isCollapsed()
+            ? []
+            : [
+                {
+                  label: 'Azure Users',
+                  routerLink: '/users/azure',
+                },
+                {
+                  label: 'System Users',
+                  routerLink: '/users/system',
+                },
+              ],
+        },
+        {
+          label: 'Squads',
+          icon: 'pi pi-sitemap',
+          routerLink: '/squads',
+        },
+        {
+          label: 'Reports',
+          icon: 'pi pi-chart-bar',
+          items: this.isCollapsed()
+            ? []
+            : [
+                {
+                  label: 'Projects Utilization',
+                  routerLink: '/reports/project-utilization',
+                },
+              ],
+        },
+      ]);
     });
-
 
     this.bottomMenuItems = [
       { icon: 'fa-solid fa-gear', label: 'Settings', routerLink: '/settings' },
     ];
   }
-
-
-
-
-
-
 }
