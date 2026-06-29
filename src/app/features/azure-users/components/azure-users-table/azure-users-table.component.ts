@@ -1,4 +1,13 @@
-import { Component, computed, inject, input, OnInit, output, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { User } from '../../../../core/models/reponse/azure-users.response.model';
 import { Table, TableModule } from 'primeng/table';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
@@ -68,7 +77,10 @@ export class AzureUsersTableComponent implements OnInit {
   }
 
   showDetails(userKey: string) {
-    this.router.navigate(['/users'], { queryParams: { userKey: userKey } });
+    this.router.navigate(['/users'], {
+      state: { from: this.router.url },
+      queryParams: { userKey: userKey },
+    });
   }
 
   onImageError(event: Event, userkey: string) {

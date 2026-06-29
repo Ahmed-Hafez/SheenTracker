@@ -1,0 +1,35 @@
+@if (isSearching()) {
+  <div class="azure-banner azure-banner--searching">
+    <i class="fa-solid fa-circle-notch fa-spin" style="color: #475569"></i>
+    <div class="banner-text">
+      <p class="banner-title">Looking for an Azure match…</p>
+      <p class="banner-sub">Searching for {{ email() }} in Azure Active Directory</p>
+    </div>
+  </div>
+}
+
+@if (isFound()) {
+  <div class="azure-banner azure-banner--found">
+    <i class="pi pi-check-circle banner-icon" aria-hidden="true"></i>
+    <div class="banner-text">
+      <p class="banner-title">Azure account found</p>
+      <p class="banner-sub">Ready to link with {{ email() }}</p>
+    </div>
+    <button
+      class="btn btn-secondry"
+      severity="success"
+      size="small"
+      (click)="connect.emit()"
+    > Connect</button>
+  </div>
+}
+
+@if (isNotFound()) {
+  <div class="azure-banner azure-banner--not-found">
+    <i class="pi pi-link-break banner-icon" aria-hidden="true"></i>
+    <div class="banner-text">
+      <p class="banner-title">No Azure account found</p>
+      <p class="banner-sub">No match for {{ email() }} in your Azure directory</p>
+    </div>
+  </div>
+}

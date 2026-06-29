@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, signal, viewChild, output, inject, effect, Injector } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, signal, viewChild, inject, effect, Injector } from '@angular/core';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Popover } from "primeng/popover";
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
@@ -8,12 +8,13 @@ import { SystemUsersService } from '../../../../core/http/backend_service/system
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
-import { Skeleton } from "primeng/skeleton";
+import { Tag } from "primeng/tag";
+import { AzureStatusComponent } from "../azure-status/azure-status.component";
 
 @Component({
   selector: 'app-user-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HoursBadgeComponent, Popover, UserFormDialogComponent, DeletePopupComponent, Skeleton],
+  imports: [HoursBadgeComponent, Popover, UserFormDialogComponent, DeletePopupComponent, Tag, AzureStatusComponent],
   templateUrl: './user-card.component.html',
   styles: ``,
 })
@@ -36,7 +37,6 @@ export class UserCardComponent {
   popupMenu = viewChild<Popover>('op');
   userDialogVisible = signal(false);
   deleteRequestVisible = signal(false);
-  // actionTaken = output<void>();
   systemUsersService = inject(SystemUsersService);
   systemUsersList = this.systemUsersService.users$;
   deleteUser = input.required<(userKey: number | undefined) => any>();

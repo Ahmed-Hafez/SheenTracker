@@ -1,0 +1,6 @@
+<div class="badge-wrap">
+  <span class="badge" [class.achieved]="isAchieved()" [class.missed]="!isAchieved()">
+    <i [class]="isAchieved() ? 'pi pi-check' : 'pi pi-times'"></i>
+    {{ isAchieved() ? 'Achieved' : 'Missed' }} {{ formattedDelta() }}
+  </span>
+</div>

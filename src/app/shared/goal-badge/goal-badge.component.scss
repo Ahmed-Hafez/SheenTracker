@@ -1,0 +1,36 @@
+.badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px solid;
+  white-space: nowrap;
+}
+.badge.achieved {
+  background: #eaf3de;
+  border-color: #639922;
+  color: #27500a;
+}
+.badge.missed {
+  background: #f9d6d6;
+  border-color: #cb2424;
+  color: #cb2424;
+}
+.delta {
+  font-size: 14px;
+  font-weight: 500;
+}
+.delta.positive {
+  color: #3b6d11;
+}
+.delta.negative {
+  color: red;
+}

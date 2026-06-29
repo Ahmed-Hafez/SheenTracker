@@ -1,0 +1,64 @@
+.azure-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid;
+
+  &--searching {
+    background-color: var(--info-bg);
+    border-color: var(--info);
+    .banner-title {
+      color: var(--info);
+    }
+  }
+
+  &--found {
+    background-color: var(--success-bg);
+    border-color: var(--success);
+    .banner-icon,
+    .banner-title {
+      color: var(--success);
+    }
+
+    button {
+      background: white;
+      border: 1px solid #2d8a6e;
+      color: #2d8a6e;
+
+      &:hover {
+        background: #2d8a6e;
+        color: white;
+      }
+    }
+  }
+
+  &--not-found {
+    background-color: var(--charcoal-50);
+    border-color: var(--charcoal-100);
+    .banner-icon {
+      color: var(--charcoal-400);
+    }
+    .banner-title {
+      color: var(--text-color);
+    }
+  }
+}
+
+.banner-text {
+  flex: 1;
+}
+
+.banner-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+
+.banner-sub {
+  font-size: 12px;
+  color: var(--charcoal-600);
+  margin: 0;
+}
