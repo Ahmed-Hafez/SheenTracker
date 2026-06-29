@@ -6,10 +6,11 @@ import { TableModule } from 'primeng/table';
 import { DecimalPipe } from '@angular/common';
 import { ProjectsUtilizationReportService } from '../../core/http/backend_service/projects-utilization-report.service';
 import { Router } from '@angular/router';
+import { ProjectUtilizationSkeletonComponent } from './components/loading shimmer component/project-utilization-skeleton.component';
 
 @Component({
   selector: 'app-project-utilization-report',
-  imports: [NgxEchartsDirective, TableModule, DecimalPipe],
+  imports: [NgxEchartsDirective, TableModule, DecimalPipe, ProjectUtilizationSkeletonComponent],
   templateUrl: './project-utilization-report.component.html',
   styleUrl: './project-utilization-report.component.scss',
 })
