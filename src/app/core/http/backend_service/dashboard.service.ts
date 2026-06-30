@@ -18,6 +18,15 @@ export class DashboardService {
   getProjectsHours(): Observable<ProjectsHours> {
     return this.apiService
       .get<ProjectsHours>(this.projectsKpisEndpoint)
+      .pipe(map((response) => { 
+        return {
+          fromDate: response.fromDate,
+          toDate: response.toDate,
+          projectsCount: response.projectsCount,
+          totalHours: Math.ceil(response.totalHours),
+          projects: response.projects
+        }
+      }))
   }
 
   getTopPerformers(): Observable<User[]> {
