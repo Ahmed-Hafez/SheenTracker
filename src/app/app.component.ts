@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MetaDataService } from './core/http/backend_service/meta-data.service';
+import { AuthService } from './core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
@@ -11,11 +12,14 @@ import { ToastModule } from 'primeng/toast';
 })
 export class App implements OnInit {
   private readonly metaDataService = inject(MetaDataService);
+  private readonly authService = inject(AuthService);
   messageService = inject(MessageService);
 
   ngOnInit(): void {
-    this.getMetaData();
-    this.getSquads();
+    if (this.authService.isAuthenticated()) {
+      this.getMetaData();
+      this.getSquads();
+    }
   }
 
   getMetaData() {

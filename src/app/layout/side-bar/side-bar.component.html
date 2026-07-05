@@ -27,29 +27,26 @@
     </ul>
   </div>
 
-  <div class="px-0 py-2">
-    @if (!isCollapsed()) {
-      <p class="sidebar-section-label">Settings</p>
-    }
-
-    <ul class="m-0 list-none px-0 py-0">
-      @for (item of bottomMenuItems; track $index) {
-        <li>
-          <a
-            pRipple
-            #rla="routerLinkActive"
-            [routerLink]="item.routerLink"
-            class="sidebar-link"
-            [class.justify-center]="isCollapsed()"
-            routerLinkActive="active"
-          >
-            <i class="sidebar-link-icon shrink-0 {{ item.icon }}"></i>
-            @if (!isCollapsed()) {
-              <span class="truncate min-w-0">{{ item.label }}</span>
-            }
-          </a>
-        </li>
+  <div class="sidebar-bottom">
+    <hr class="m-0 border-(--charcoal-800)" />
+    <div class="sidebar-user" [class.sidebar-user--collapsed]="isCollapsed()">
+      <div class="sidebar-user-avatar">
+        <span>HA</span>
+      </div>
+      @if (!isCollapsed()) {
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">Hana Ali</span>
+          <span class="sidebar-user-role">HR Analyst</span>
+        </div>
+        <button
+          class="sidebar-logout-btn"
+          (click)="onLogout()"
+          title="Sign out"
+          aria-label="Sign out"
+        >
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
       }
-    </ul>
+    </div>
   </div>
 </div>

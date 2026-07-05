@@ -7,6 +7,7 @@ import { RippleModule } from 'primeng/ripple';
 import { PanelMenuModule } from 'primeng/panelmenu';
 
 import { SidebarService } from '../../core/services/sidebar.service';
+import { AuthService } from '../../core/services/auth.service';
 import { MenuItem, MenuItemComponent } from './menu-item/menu-item.component';
 
 @Component({
@@ -17,14 +18,13 @@ import { MenuItem, MenuItemComponent } from './menu-item/menu-item.component';
 })
 export class SideBarComponent {
   private readonly sidebarService = inject(SidebarService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   readonly isCollapsed = this.sidebarService.isCollapsed;
 
   isSubmenuOpen = signal(false);
 
   mainMenuItems = signal<MenuItem[]>([]);
-
-  bottomMenuItems: MenuItem[] = [];
 
   constructor() {
     effect(() => {
@@ -73,8 +73,9 @@ export class SideBarComponent {
       ]);
     });
 
-    this.bottomMenuItems = [
-      { icon: 'fa-solid fa-gear', label: 'Settings', routerLink: '/settings' },
-    ];
+  }
+
+  onLogout(): void {
+    this.authService.logout();
   }
 }
