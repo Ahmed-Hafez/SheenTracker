@@ -1,0 +1,76 @@
+<div class="login-page">
+  <div class="login-container">
+    <!-- Logo & Branding -->
+    <div class="login-header">
+      <div class="logo-wrapper">
+        <img src="logo/Logo.png" alt="Sheen Information Technology" class="login-logo" />
+      </div>
+      <h1 class="login-title">SheenTrack 360°</h1>
+      <p class="login-subtitle">Sign in to access your workforce intelligence workspace</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <form (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-wrapper">
+            <input
+              id="email"
+              type="email"
+              class="form-input"
+              placeholder="admin&#64;sheentrack.com"
+              [ngModel]="email()"
+              (ngModelChange)="email.set($event)"
+              name="email"
+              autocomplete="email"
+            />
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-wrapper">
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              class="form-input has-toggle"
+              placeholder="••••••••"
+              [ngModel]="password()"
+              (ngModelChange)="password.set($event)"
+              name="password"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            >
+              <i [class]="showPassword() ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ errorMessage() }}
+          </p-message>
+        }
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+          @if (isLoading()) {
+            <i class="fa-solid fa-circle-notch fa-spin" style="color: #ffffff"></i>
+            <span>Signing in...</span>
+          } @else {
+            <span>Sign in</span>
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

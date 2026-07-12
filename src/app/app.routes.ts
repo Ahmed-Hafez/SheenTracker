@@ -6,11 +6,20 @@ import { SystemUsersComponent } from './features/system-users/system-users.compo
 import { SquadsComponent } from './features/squads/squads.component';
 import { SquadDetailsComponent } from './features/squad-details/squad-details.component';
 import { ProjectUtilizationReportComponent } from './features/project-utilization-report/project-utilization-report.component';
+import { LoginComponent } from './features/login/login.component';
+import { authGuard, guestGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    title: 'Sign In - SheenTrack 360°',
+    component: LoginComponent,
+    canActivate: [guestGuard],
+  },
+  {
     path: '',
     component: LayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '',

@@ -1,0 +1,168 @@
+/* ============================================
+   LOGIN PAGE STYLES
+   ============================================ */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--page-bg);
+  padding: var(--space-lg);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── Header / Branding ─────────────────────── */
+
+.login-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+}
+
+.login-logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+.login-title {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--charcoal-900);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--charcoal-600);
+  line-height: 1.5;
+}
+
+/* ─── Login Card ────────────────────────────── */
+
+.login-card {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--charcoal-100);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.04),
+    0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* ─── Form ──────────────────────────────────── */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--charcoal-900);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 14px 0 14px;
+  border: 1.5px solid var(--charcoal-100);
+  border-radius: var(--radius-md);
+  background: var(--page-bg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--charcoal-900);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-input.has-toggle {
+  padding-right: 44px;
+}
+
+.form-input::placeholder {
+  color: var(--charcoal-400);
+}
+
+.form-input:focus {
+  border-color: var(--orange-500);
+  box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.12);
+}
+
+/* ─── Password Toggle ───────────────────────── */
+
+.password-toggle {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--charcoal-400);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.password-toggle:hover {
+  color: var(--charcoal-800);
+  background-color: var(--charcoal-100);
+}
+
+/* ─── Responsive ────────────────────────────── */
+
+@media (max-width: 480px) {
+  .login-container {
+    max-width: 100%;
+  }
+
+  .login-card {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+  }
+
+  .login-logo {
+    height: 64px;
+  }
+
+  .login-title {
+    font-size: 22px;
+  }
+}
