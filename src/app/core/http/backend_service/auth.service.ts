@@ -1,50 +1,37 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of, throwError, delay } from 'rxjs';
-import { LoginRequest } from '../models/request/login.request.model';
-import { LoginResponse } from '../models/reponse/login.response.model';
-
-// Static credentials for development — will be replaced with real API calls
-const STATIC_EMAIL = 'admin@sheentrack.com';
-const STATIC_PASSWORD = 'sheen360';
-const STATIC_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.sheentrack360.dev-token';
+import { Observable, of, throwError, delay, catchError } from 'rxjs';
+import { LoginRequest } from '../../models/request/login.request.model';
+import { LoginResponse } from '../../models/reponse/login.response.model';
+import { ApiService } from '../api_services/api.service';
 
 const TOKEN_KEY = 'auth_token';
+const USER_DATA_KEY = 'auth_user_data';
 const REFRESH_TOKEN_KEY = 'auth_refresh_token';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly router = inject(Router);
+  private readonly apiService = inject(ApiService);
+
   /** Reactive signal indicating whether the user is authenticated */
   isAuthenticated = signal<boolean>(this.hasToken());
 
   /** Reactive signal indicating a login request is in progress */
   isLoading = signal<boolean>(false);
+  authEndpoint = 'auth/login';
 
-  constructor(private readonly router: Router) {}
-
-  /**
-   * Authenticates the user with the provided credentials.
-   * Currently uses static validation — ready to be swapped with an HTTP call.
-   */
+  /* Authenticates the user with the provided credentials. */
   login(request: LoginRequest): Observable<LoginResponse> {
     this.isLoading.set(true);
-
-    // TODO: Replace with real API call → this.apiService.post<LoginResponse>('Auth/login', request)
-    if (request.email === STATIC_EMAIL && request.password === STATIC_PASSWORD) {
-      const response: LoginResponse = {
-        token: STATIC_TOKEN,
-        refreshToken: 'refresh-token-placeholder',
-        expiresIn: 3600,
-      };
-      return of(response).pipe(delay(600)); // Simulate network latency
-    }
-
-    return throwError(() => ({
-      status: 401,
-      error: { message: 'Invalid email or password' },
-    }));
+    return this.apiService.post<LoginResponse>(this.authEndpoint, request).pipe(
+      catchError((error) => {
+        this.isLoading.set(false);
+        return throwError(() => error);
+      }),
+    );
   }
 
   /**
@@ -52,9 +39,11 @@ export class AuthService {
    */
   handleLoginSuccess(response: LoginResponse): void {
     this.cacheToken(response.token);
-    if (response.refreshToken) {
-      this.cacheRefreshToken(response.refreshToken);
-    }
+    this.cacheuserData({
+      roles: response.roles,
+      email: response.email,
+      fullName: response.fullName,
+    });
     this.isAuthenticated.set(true);
     this.isLoading.set(false);
   }
@@ -63,7 +52,6 @@ export class AuthService {
    * Logs out the user: clears cached tokens and redirects to login.
    */
   logout(): void {
-    // TODO: Replace with real API call → this.apiService.post('Auth/logout', {})
     this.clearTokens();
     this.isAuthenticated.set(false);
     this.router.navigate(['/login']);
@@ -75,6 +63,10 @@ export class AuthService {
   private cacheToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
   }
+  /** Stores the user data in localStorage */
+  private cacheuserData(userData: { roles: string[]; email: string; fullName: string }): void {
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
+  }
 
   /** Stores the refresh token in localStorage */
   private cacheRefreshToken(refreshToken: string): void {
@@ -84,6 +76,12 @@ export class AuthService {
   /** Retrieves the cached auth token */
   getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
+  }
+
+  /** Retrieves the cached user data */
+  getUserData(): { roles: string[]; email: string; fullName: string } | null {
+    const userData = localStorage.getItem(USER_DATA_KEY);
+    return userData ? JSON.parse(userData) : null;
   }
 
   /** Retrieves the cached refresh token */
@@ -100,5 +98,6 @@ export class AuthService {
   private clearTokens(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(USER_DATA_KEY);
   }
 }

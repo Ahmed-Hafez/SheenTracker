@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MetaDataService } from './core/http/backend_service/meta-data.service';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from './core/http/backend_service/auth.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 

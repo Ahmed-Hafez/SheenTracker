@@ -7,24 +7,36 @@ import { RippleModule } from 'primeng/ripple';
 import { PanelMenuModule } from 'primeng/panelmenu';
 
 import { SidebarService } from '../../core/services/sidebar.service';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../core/http/backend_service/auth.service';
 import { MenuItem, MenuItemComponent } from './menu-item/menu-item.component';
+
+interface UserData {
+  roles: string[];
+  email: string;
+  fullName: string;
+}
 
 @Component({
   selector: 'app-side-bar',
   templateUrl: './side-bar.component.html',
   styleUrls: ['./side-bar.component.scss'],
-  imports: [RippleModule, RouterLink, RouterLinkActive, PanelMenuModule, MenuItemComponent],
+  imports: [RippleModule, RouterLink, PanelMenuModule, MenuItemComponent],
 })
-export class SideBarComponent {
+export class SideBarComponent implements OnInit {
   private readonly sidebarService = inject(SidebarService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   readonly isCollapsed = this.sidebarService.isCollapsed;
 
+  userData = signal<UserData | null>(null);
+
   isSubmenuOpen = signal(false);
 
   mainMenuItems = signal<MenuItem[]>([]);
+
+  ngOnInit(): void {
+    this.getUserData(); // Fetch user data on component initialization
+  }
 
   constructor() {
     effect(() => {
@@ -72,7 +84,11 @@ export class SideBarComponent {
         },
       ]);
     });
+  }
 
+  getUserData() {
+    const userData = this.authService.getUserData();
+    this.userData.set(userData);
   }
 
   onLogout(): void {
