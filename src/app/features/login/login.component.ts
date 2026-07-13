@@ -49,6 +49,12 @@ export class LoginComponent {
           detail: 'You have been logged in successfully.',
           life: 5000,
         });
+        if(response.roles.includes('Coordination')){
+          this.router.navigate(['/users/system']);
+        }else{
+          this.router.navigate(['/dashboard']);
+        }
+
       },
       error: () => {
         this.authService.isLoading.set(false);

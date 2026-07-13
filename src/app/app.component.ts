@@ -18,7 +18,11 @@ export class App implements OnInit {
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       this.getMetaData();
-      this.getSquads();
+      const isCoordination = this.authService.getUserData()?.roles.includes('coordination');
+      if(isCoordination){
+        this.getSquads();
+      }
+
     }
   }
 
