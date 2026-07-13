@@ -23,7 +23,7 @@ export class UserDetailsService {
     return this.apiService.get<SystemUser>(`${this.systemUsersEndpoint}${userId}`);
   }
 
-  linkAzureUser(appUserId: number, azureUserKey: string): Observable<any> {
-    return this.apiService.post<any>(this.linkSystemUserEndpoint, { appUserId, azureUserKey });
+  linkAzureUser(systemUserId: number, azureUserKey: string): Observable<any> {
+    return this.apiService.post<any>(this.linkSystemUserEndpoint, { systemUserId, azureUserKey });
   }
 }
