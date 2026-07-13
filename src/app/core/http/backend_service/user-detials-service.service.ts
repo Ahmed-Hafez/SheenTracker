@@ -9,8 +9,8 @@ import { AzureUserDetail } from '../../models/reponse/azure-user-details/user-de
 })
 export class UserDetailsService {
   private readonly apiService = inject(ApiService);
-  private systemUsersEndpoint = 'AppUsers/';
-  private linkSystemUserEndpoint = 'AppUsers/link-azure-user';
+  private systemUsersEndpoint = 'SystemUsers/';
+  private linkSystemUserEndpoint = 'SystemUsers/link-azure-user';
   private azureUsersEndpoint(userId: string) {
     return `AzureDevOps/users/${userId}/performance`;
   }

@@ -43,7 +43,6 @@ export class LoginComponent {
     this.authService.login(request).subscribe({
       next: (response) => {
         this.authService.handleLoginSuccess(response);
-        this.router.navigate(['/dashboard']);
         this.messageService.add({
           severity: 'success',
           summary: 'Login Successful',

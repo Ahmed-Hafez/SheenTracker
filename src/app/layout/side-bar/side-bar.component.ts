@@ -28,6 +28,9 @@ export class SideBarComponent implements OnInit {
   private readonly router = inject(Router);
   readonly isCollapsed = this.sidebarService.isCollapsed;
 
+  private readonly coordinationHiddenLabels = new Set(['Dashboard', 'Reports', 'Azure Users']);
+  private readonly hrHiddenLabels = new Set(['Squads', 'System Users']);
+
   userData = signal<UserData | null>(null);
 
   isSubmenuOpen = signal(false);
@@ -40,50 +43,74 @@ export class SideBarComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      this.mainMenuItems.set([
-        {
-          icon: 'pi pi-objects-column',
-          label: 'Dashboard',
-          routerLink: '/dashboard',
-        },
-        {
-          label: 'Users',
-          icon: 'pi pi-users',
-          action: () => {
-            this.router.navigate(['/users/azure']);
-          },
-          items: this.isCollapsed()
-            ? []
-            : [
-                {
-                  label: 'Azure Users',
-                  routerLink: '/users/azure',
-                },
-                {
-                  label: 'System Users',
-                  routerLink: '/users/system',
-                },
-              ],
-        },
-        {
-          label: 'Squads',
-          icon: 'pi pi-sitemap',
-          routerLink: '/squads',
-        },
-        {
-          label: 'Reports',
-          icon: 'pi pi-chart-bar',
-          items: this.isCollapsed()
-            ? []
-            : [
-                {
-                  label: 'Projects Utilization',
-                  routerLink: '/reports/project-utilization',
-                },
-              ],
-        },
-      ]);
+      this.mainMenuItems.set(this.getMenuItemsBasedOnRoles(this.userData()?.roles || null));
     });
+  }
+
+  allMenuItems = [
+    {
+      icon: 'pi pi-objects-column',
+      label: 'Dashboard',
+      routerLink: '/dashboard',
+    },
+    {
+      label: 'Users',
+      icon: 'pi pi-users',
+      action: () => {
+        this.router.navigate(['/users/azure']);
+      },
+      items: this.isCollapsed()
+        ? []
+        : [
+            {
+              label: 'Azure Users',
+              routerLink: '/users/azure',
+            },
+            {
+              label: 'System Users',
+              routerLink: '/users/system',
+            },
+          ],
+    },
+    {
+      label: 'Squads',
+      icon: 'pi pi-sitemap',
+      routerLink: '/squads',
+    },
+    {
+      label: 'Reports',
+      icon: 'pi pi-chart-bar',
+      items: this.isCollapsed()
+        ? []
+        : [
+            {
+              label: 'Projects Utilization',
+              routerLink: '/reports/project-utilization',
+            },
+          ],
+    },
+  ];
+
+  getMenuItemsBasedOnRoles(roles: string[] | null): MenuItem[] {
+    if (roles?.includes('HR') && roles?.includes('Coordination')) {
+      return this.allMenuItems;
+    } else if (roles?.includes('HR')) {
+      return this.filterMenuItems(this.hrHiddenLabels);
+    } else if (roles?.includes('Coordination')) {
+      return this.filterMenuItems(this.coordinationHiddenLabels);
+    }
+
+    return [];
+  }
+
+  private filterMenuItems(hiddenLabels: Set<string>): MenuItem[] {
+    return this.allMenuItems
+      .filter((item) => !hiddenLabels.has(item.label))
+      .map((item) => ({
+        ...item,
+        items: item.items?.filter((child) => !hiddenLabels.has(child.label)),
+      }))
+      .filter((item) => item.items === undefined || item.items.length > 0);
   }
 
   getUserData() {
