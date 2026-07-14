@@ -7,6 +7,7 @@ import { Departments } from '../../../../../../core/enums/departments.enum';
 import { Seniorities } from '../../../../../../core/enums/seniority.enum';
 import { EnumLabelPipe } from '../../../../../../core/pipes/enum-label-pipe';
 import { DateRange } from '../../../../../../core/services/date.service';
+import { AuthService } from '../../../../../../core/http/backend_service/auth.service';
 
 export interface UserSummary {
   projects: number;
@@ -25,6 +26,7 @@ export class OverviewComponent {
   systemUser = input.required<SystemUser | null>();
   departments = Departments;
   seniorities = Seniorities;
+  authService = inject(AuthService);
 
   navigateToUser(userId: number | null | undefined): void {
     console.log('Navigating to user details for userId:', userId);
@@ -46,6 +48,8 @@ export class OverviewComponent {
 
   navigateToSquad(squadId: number | null | undefined): void {
     console.log('Navigating to squad details for squadId:', squadId);
+    const userData = this.authService.getUserData();
+    if(userData?.roles.includes('HR')) return;
     if (squadId === null || squadId === undefined) {
       console.warn(
         'Squad ID is null or undefined in overview tab. Cannot navigate to squad details.',
