@@ -187,8 +187,10 @@ export class UserDetailsComponent {
             this.checkAndFindAzureUserKey(response.email);
           }
         }
+        this.isSystemUserLoading.set(false);
       },
       error: (error) => {
+        this.isSystemUserLoading.set(false);
         console.error('Error fetching system user details:', error);
         this.systemUserDetails.set(null);
         if (error.status !== 404) {

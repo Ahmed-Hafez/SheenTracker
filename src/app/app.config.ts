@@ -20,6 +20,7 @@ import {
   LegendComponent,
 } from 'echarts/components';
 import { CanvasRenderer, SVGRenderer } from 'echarts/renderers';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 echarts.use([
   BarChart,
@@ -35,7 +36,7 @@ echarts.use([
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([errorInterceptor])),
+    provideHttpClient(withInterceptors([errorInterceptor, authInterceptor])),
     provideEchartsCore({ echarts }),
 
     MessageService,

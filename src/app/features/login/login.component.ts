@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../core/http/backend_service/auth.service';
 import { LoginRequest } from '../../core/models/request/login.request.model';
 import { MessageService } from 'primeng/api';
 import { Message } from 'primeng/message';
@@ -43,7 +43,18 @@ export class LoginComponent {
     this.authService.login(request).subscribe({
       next: (response) => {
         this.authService.handleLoginSuccess(response);
-        this.router.navigate(['/dashboard']);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Login Successful',
+          detail: 'You have been logged in successfully.',
+          life: 5000,
+        });
+        if(response.roles.includes('Coordination')){
+          this.router.navigate(['/users/system']);
+        }else{
+          this.router.navigate(['/dashboard']);
+        }
+
       },
       error: () => {
         this.authService.isLoading.set(false);

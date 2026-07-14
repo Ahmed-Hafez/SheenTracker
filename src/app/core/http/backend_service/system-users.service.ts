@@ -10,8 +10,8 @@ import { Department } from '../../enums/departments.enum';
   providedIn: 'root',
 })
 export class SystemUsersService {
-  private usersEndpoint = 'AppUsers';
-  private teamLeadsEndpoint = 'AppUsers/team-leads/department/';
+  private usersEndpoint = 'SystemUsers';
+  private teamLeadsEndpoint = 'SystemUsers/team-leads/department/';
 
   private readonly apiService = inject(ApiService);
 
@@ -59,7 +59,8 @@ export class SystemUsersService {
   }
 
   getSystemTeamLeads(departmentId: number): Observable<SystemUser[]> {
-    return this.apiService.get<any>(`${this.teamLeadsEndpoint}${departmentId}`)
+    return this.apiService
+      .get<any>(`${this.teamLeadsEndpoint}${departmentId}`)
       .pipe(map((response) => response.data));
   }
 

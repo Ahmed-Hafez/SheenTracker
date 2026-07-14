@@ -1,6 +1,6 @@
 <div>
-  @if (isAzureLoading()) {
-    <app-azure-users-skeleton />
+  @if (isAzureLoading() || isSystemUserLoading()) {
+    <app-azure-users-skeleton></app-azure-users-skeleton>
   } @else if (isError() === false) {
     <div class="flex flex-col gap-6 w-full mx-auto">
       <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">

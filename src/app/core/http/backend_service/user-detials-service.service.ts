@@ -9,8 +9,8 @@ import { AzureUserDetail } from '../../models/reponse/azure-user-details/user-de
 })
 export class UserDetailsService {
   private readonly apiService = inject(ApiService);
-  private systemUsersEndpoint = 'AppUsers/';
-  private linkSystemUserEndpoint = 'AppUsers/link-azure-user';
+  private systemUsersEndpoint = 'SystemUsers/';
+  private linkSystemUserEndpoint = 'SystemUsers/link-azure-user';
   private azureUsersEndpoint(userId: string) {
     return `AzureDevOps/users/${userId}/performance`;
   }
@@ -23,7 +23,7 @@ export class UserDetailsService {
     return this.apiService.get<SystemUser>(`${this.systemUsersEndpoint}${userId}`);
   }
 
-  linkAzureUser(appUserId: number, azureUserKey: string): Observable<any> {
-    return this.apiService.post<any>(this.linkSystemUserEndpoint, { appUserId, azureUserKey });
+  linkAzureUser(systemUserId: number, azureUserKey: string): Observable<any> {
+    return this.apiService.post<any>(this.linkSystemUserEndpoint, { systemUserId, azureUserKey });
   }
 }
