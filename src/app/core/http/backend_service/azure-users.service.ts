@@ -1,7 +1,7 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { User, AzureUsers } from '../../models/reponse/azure-users.response.model';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
-import { map, Observable, of } from 'rxjs';
+import * as XLSX from 'xlsx';
+import { map, Observable } from 'rxjs';
 import { ApiService } from '../api_services/api.service';
 import { DateService } from '../../services/date.service';
 
@@ -97,47 +97,32 @@ export class UsersService {
   }
 
   exportUsersToCSV(users: User[]) {
-    let optimizedUsers = [];
-    const options = {
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalSeparator: '.',
-      showLabels: true,
-      showTitle: false,
-      title: 'User Report',
-      useTextFile: false,
-      useBom: true, // Ensures Excel compatibility
-      headers: [
-        'UserKey',
-        'Display Name',
-        'Email',
-        'Total Hours',
-        'Goal',
-        'Projects Count',
-        'WorkItems Count',
-        'Project Names',
-      ], // Custom column titles
-    };
-
-    optimizedUsers = users.map((user) => ({
-      userKey: user.userKey,
+    const optimizedUsers = users.map((user) => ({
       displayName: user.displayName,
       email: user.email,
-      totalHours: user.totalHours,
-      goal: this.isUserAchieved(user.totalHours) ? 'Achieved' : 'Not Achieved',
+      expectedHours: this.dateService.targetHoursCount(),
+      actualHours: user.totalHours,
+      missedHours: Math.max(0, this.dateService.targetHoursCount() - user.totalHours),
+      extraHours: Math.max(0, user.totalHours - this.dateService.targetHoursCount()),
+      compliancePercentage:
+        user.totalHours > 0
+          ? Math.round((user.totalHours / this.dateService.targetHoursCount()) * 100) + '%'
+          : '0%',
       projectsCount: user.projectsCount,
       workItemsCount: user.workItemsCount,
       projectNames: this.projectNameAndHours(user).join(' | '),
     }));
 
-    // Instantiate to trigger immediate browser download
-    new ngxCsv(optimizedUsers, 'User_Report_File', options);
+    const worksheet = XLSX.utils.json_to_sheet(optimizedUsers);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+    XLSX.writeFile(workbook, 'User_Report_File.xlsx');
   }
 
-  projectNameAndHours(user: User) : string[] {
+  projectNameAndHours(user: User): string[] {
     const projectNameAndHours = [];
     for (const [project, hours] of Object.entries(user.projectHoursMap)) {
-      projectNameAndHours.push(`${project} - ${(hours / user.totalHours * 100).toFixed(2)} %`);
+      projectNameAndHours.push(`${project} - ${((hours / user.totalHours) * 100).toFixed(2)} %`);
     }
     return projectNameAndHours;
   }

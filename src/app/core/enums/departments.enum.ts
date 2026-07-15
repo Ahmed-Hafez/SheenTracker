@@ -9,8 +9,8 @@ export enum Department {
 }
 
 export const Departments = [
-  { value: Department.Backend, label: 'Backend Developer' },
-  { value: Department.Frontend, label: 'Frontend Developer' },
+  { value: Department.Backend, label: 'Backend Development' },
+  { value: Department.Frontend, label: 'Frontend Development' },
   { value: Department.QualityAssurance, label: 'Quality Assurance' },
   { value: Department.ProductManagement, label: 'Product Management' },
   { value: Department.ScrumMaster, label: 'Scrum Master' },

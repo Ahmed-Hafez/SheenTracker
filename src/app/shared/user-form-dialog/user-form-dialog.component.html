@@ -42,19 +42,36 @@
           }
         </div>
       </div>
-      <div>
-        <label class="input-label" for="email">Email</label>
-        <input
-          class="field"
-          id="email"
-          formControlName="email"
-          placeholder="layla.johnson@example.com"
-        />
-        @if (getFieldErrorMessage('email') !== null) {
-          <p-message severity="error" size="small" class="mt-1">
-            {{ getFieldErrorMessage('email') }}
-          </p-message>
-        }
+      <div class="flex gap-4 flex-row">
+        <div class="flex-1">
+          <label class="input-label" for="email">Email</label>
+          <input
+            class="field"
+            id="email"
+            formControlName="email"
+            placeholder="layla.johnson@example.com"
+          />
+          @if (getFieldErrorMessage('email') !== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('email') }}
+            </p-message>
+          }
+        </div>
+        <div class="flex-1">
+          <label class="input-label" for="phoneNumber">Phone Number</label>
+          <input
+            class="field"
+            id="phoneNumber"
+            type="tel"
+            formControlName="phoneNumber"
+            placeholder="+1 (555) 123-4567"
+          />
+          @if (getFieldErrorMessage('phoneNumber') !== null) {
+            <p-message severity="error" size="small" class="mt-1">
+              {{ getFieldErrorMessage('phoneNumber') }}
+            </p-message>
+          }
+        </div>
       </div>
       <div>
         <label class="input-label" for="email">Job Title</label>

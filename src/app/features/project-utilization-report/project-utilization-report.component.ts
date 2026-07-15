@@ -1,13 +1,13 @@
 import { Component, computed, inject, OnInit, Pipe, signal } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { ProjectUtilizationResponse} from '../../core/models/reponse/project-utilization.model';
+import { ProjectUtilizationResponse } from '../../core/models/reponse/project-utilization.model';
 import { EChartsOption } from 'echarts/types/dist/shared';
 import { TableModule } from 'primeng/table';
 import { DecimalPipe } from '@angular/common';
 import { ProjectsUtilizationReportService } from '../../core/http/backend_service/projects-utilization-report.service';
 import { Router } from '@angular/router';
 import { ProjectUtilizationSkeletonComponent } from './components/loading shimmer component/project-utilization-skeleton.component';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-project-utilization-report',
@@ -16,10 +16,10 @@ import { ngxCsv } from 'ngx-csv/ngx-csv';
   styleUrl: './project-utilization-report.component.scss',
 })
 export class ProjectUtilizationReportComponent implements OnInit {
+  private readonly projectsUtilReportService = inject(ProjectsUtilizationReportService);
+  private readonly router = inject(Router);
   readonly projectsMock = signal<ProjectUtilizationResponse | null>(null);
   isLoading = signal(false);
-  projectsUtilReportService = inject(ProjectsUtilizationReportService);
-  router = inject(Router);
 
   ngOnInit() {
     this.loadProjectUtilizationData();
@@ -34,7 +34,6 @@ export class ProjectUtilizationReportComponent implements OnInit {
       this.isLoading.set(false);
     });
   }
-
 
   tasksPerProject = computed<EChartsOption>(() => {
     const data = this.projectsMock();
@@ -89,7 +88,9 @@ export class ProjectUtilizationReportComponent implements OnInit {
   projectsWorkloadOptions = computed<EChartsOption>(() => {
     const data = this.projectsMock();
     if (!data) return {};
-    const totalHours = Math.ceil(data.projects.reduce((sum, project) => sum + project.totalHours, 0));
+    const totalHours = Math.ceil(
+      data.projects.reduce((sum, project) => sum + project.totalHours, 0),
+    );
     return {
       title: {
         text: 'Workload by project',
@@ -166,7 +167,7 @@ export class ProjectUtilizationReportComponent implements OnInit {
 
   navigateToAzureUser(azureUserKey: string | null | undefined) {
     console.log(`Navigating to Azure user: ${azureUserKey}`);
-    if(azureUserKey){
+    if (azureUserKey) {
       // Implementation for navigating to Azure user
       this.router.navigate(['users'], { queryParams: { userKey: azureUserKey } });
     }
@@ -190,29 +191,11 @@ export class ProjectUtilizationReportComponent implements OnInit {
       topDeveloperHours: p.topDeveloperHours,
     }));
 
-    const options = {
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalSeparator: '.',
-      showLabels: true,
-      showTitle: false,
-      useTextFile: false,
-      useBom: true,
-      headers: [
-        'Project',
-        'Total Hours',
-        '% of Total',
-        'Work Items',
-        'Active Tasks',
-        'Resolved Tasks',
-        'Closed Tasks',
-        'Top Developer',
-        'Top Developer Hours',
-      ],
-    };
-
     const filename = `Projects_Utilization_${data.fromDate}_to_${data.toDate}`;
-    new ngxCsv(rows, filename, options);
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Projects');
+    XLSX.writeFile(workbook, `${filename}.xlsx`);
   }
   percentageOfTotalHours(projectHours: number): number {
     const data = this.projectsMock();

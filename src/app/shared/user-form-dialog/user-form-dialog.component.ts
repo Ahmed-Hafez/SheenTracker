@@ -81,6 +81,10 @@ export class UserFormDialogComponent implements OnInit {
           Validators.pattern('^[A-Za-z0-9._%+-]+@(tildetech\\.ae|shuratech\\.com)$'),
         ],
       ],
+      phoneNumber: [
+        this.isEditMode() ? this.userData()?.phoneNumber : null,
+        Validators.pattern('^(\\+20|0)?1[0125][0-9]{8}$'),
+      ],
       department: [this.isEditMode() ? this.userData()?.department : null, Validators.required],
       squadName: [this.isEditMode() ? this.userData()?.squadId : null],
       seniority: [
@@ -138,6 +142,8 @@ export class UserFormDialogComponent implements OnInit {
         return 'Last name must be one word';
       case 'email':
         return 'Email must end with @tildetech.ae or @shuratech.com.';
+      case 'phoneNumber':
+        return 'Phone number must be a valid Egyptian mobile number (e.g. 01012345678).';
       default:
         return 'Invalid format.';
     }
@@ -235,6 +241,7 @@ export class UserFormDialogComponent implements OnInit {
       let systemUserData: AddSystemUserRequest = {
         fullName: formData.firstName + ' ' + formData.lastName,
         email: formData.email,
+        phoneNumber: formData.phoneNumber,
         department: formData.department,
         azureUserKey: this.userData()?.azureUserKey || null,
         teamLeadId: formData.teamleadId,

@@ -32,12 +32,12 @@
     "@fortawesome/fontawesome-free": "^7.2.0",
     "@primeuix/themes": "^2.0.3",
     "echarts": "^6.0.0",
-    "ngx-csv": "^0.3.2",
     "ngx-echarts": "^21.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^21.1.7",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@angular/build": "^21.1.0",

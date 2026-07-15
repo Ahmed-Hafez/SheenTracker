@@ -31,7 +31,7 @@
     <hr class="m-0 border-(--charcoal-800)" />
     <div class="sidebar-user" [class.sidebar-user--collapsed]="isCollapsed()">
       <div class="sidebar-user-avatar">
-        <span>HA</span>
+        <span>{{ userData()?.fullName?.substring(0, 2)?.toUpperCase() }}</span>
       </div>
       @if (!isCollapsed()) {
         <div class="sidebar-user-info">

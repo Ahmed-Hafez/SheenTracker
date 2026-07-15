@@ -43,12 +43,6 @@ export class LoginComponent {
     this.authService.login(request).subscribe({
       next: (response) => {
         this.authService.handleLoginSuccess(response);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Login Successful',
-          detail: 'You have been logged in successfully.',
-          life: 5000,
-        });
         if(response.roles.includes('Coordination')){
           this.router.navigate(['/users/system']);
         }else{
