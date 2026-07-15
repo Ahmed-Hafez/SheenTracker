@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, signal, viewChild, inject, effect, Injector } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, signal, viewChild, inject, effect, Injector, computed } from '@angular/core';
 import { HoursBadgeComponent } from '../../../../shared/hours-badge/hours-badge.component';
 import { Popover } from "primeng/popover";
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
@@ -10,6 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
 import { Tag } from "primeng/tag";
 import { AzureStatusComponent } from "../azure-status/azure-status.component";
+import { AuthService } from '../../../../core/http/backend_service/auth.service';
 
 @Component({
   selector: 'app-user-card',
@@ -43,6 +44,7 @@ export class UserCardComponent {
   router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
+  private readonly authService = inject(AuthService);
 
   queryParams = toSignal(this.route.queryParamMap);
 
@@ -108,7 +110,9 @@ export class UserCardComponent {
     this.popupMenu()?.toggle(event);
   }
 
-
+  isActionsButtonVisible = computed(() => {
+    return this.isSystemUser() && this.authService.getUserData()?.roles.includes('Coordination');
+  });
   hasImageError = signal(false);
 
 }
