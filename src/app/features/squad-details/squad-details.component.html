@@ -1,3 +1,6 @@
+@if(isLoading()) {
+  <app-squad-details-skeleton />
+} @else {
 <div class="flex flex-col">
   <div class="flex flex-row justify-between items-end">
     <div class="space-y-1">
@@ -46,3 +49,4 @@
   (outputDeleteSignal)="actionTaken.emit()"
 >
 </app-delete-popup>
+}
