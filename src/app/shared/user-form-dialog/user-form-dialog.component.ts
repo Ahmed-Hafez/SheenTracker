@@ -158,6 +158,11 @@ export class UserFormDialogComponent implements OnInit {
     if (this.isEditMode()) {
       this.isTeamLeadLoading.set(true);
       let department = this.userData()?.department;
+      if (department === null) {
+        this.teamLeads.set([]);
+        this.isTeamLeadLoading.set(false);
+        return;
+      }
       this.appUsersService.getSystemTeamLeads(department ? department : 0).subscribe({
         next: (teamleads) => {
           this.teamLeads.set(teamleads);
