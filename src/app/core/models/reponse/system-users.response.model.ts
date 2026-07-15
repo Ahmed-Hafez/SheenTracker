@@ -2,6 +2,7 @@ export interface SystemUser {
   id: number;
   fullName: string;
   email: string;
+  phoneNumber: string | null;
   department: number;
   azureUserKey: string | null;
   teamLeadId: number | null;
