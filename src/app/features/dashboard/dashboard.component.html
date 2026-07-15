@@ -11,7 +11,7 @@
     <app-kpi-card
       [label]="'Users with Hours'"
       [icon]="'fa-solid fa-user-check fa-sm'"
-      [value]=" azureUsersKpis().usersWithHours "
+      [value]="azureUsersKpis().usersWithHours"
     ></app-kpi-card>
 
     <app-kpi-card
@@ -46,6 +46,15 @@
       echarts
       [options]="projectsWorkloadOptions()"
       style="height: 550px"
+      [initOpts]="{ renderer: 'svg' }"
+    ></div>
+  </div>
+
+  <div class="card mt-4 w-full">
+    <div
+      class="h-[440px] w-full"
+      echarts
+      [options]="logComplianceOptions()"
       [initOpts]="{ renderer: 'svg' }"
     ></div>
   </div>

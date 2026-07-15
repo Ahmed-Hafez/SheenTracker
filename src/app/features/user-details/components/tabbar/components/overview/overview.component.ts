@@ -49,7 +49,6 @@ export class OverviewComponent {
   navigateToSquad(squadId: number | null | undefined): void {
     console.log('Navigating to squad details for squadId:', squadId);
     const userData = this.authService.getUserData();
-    if(userData?.roles.includes('HR')) return;
     if (squadId === null || squadId === undefined) {
       console.warn(
         'Squad ID is null or undefined in overview tab. Cannot navigate to squad details.',
