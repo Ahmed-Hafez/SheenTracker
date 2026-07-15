@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
 
       const percentage = (user.totalHours / safeTargetHours) * 100;
 
-      if (percentage < 3) {
+      if (percentage < 50) {
         counts.lowCompliance += 1;
       } else if (percentage < 100) {
         counts.partialCompliance += 1;
@@ -66,10 +66,9 @@ export class DashboardComponent implements OnInit {
 
     return [
       { name: 'Zero log', value: counts.zeroLog },
-      { name: '0-3%', value: counts.lowCompliance },
-      { name: '3-99%', value: counts.partialCompliance },
-      //100 to infinity, because some users may log more than 100% of the target hours
-      { name: '100-∞%', value: counts.compliant },
+      { name: '1-49%', value: counts.lowCompliance },
+      { name: '50-100%', value: counts.partialCompliance },
+      { name: '100+%', value: counts.compliant },
     ];
   });
 
