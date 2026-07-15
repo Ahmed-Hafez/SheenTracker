@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MetaDataService } from './core/http/backend_service/meta-data.service';
 import { AuthService } from './core/http/backend_service/auth.service';
@@ -10,20 +10,27 @@ import { ToastModule } from 'primeng/toast';
   imports: [RouterOutlet, ToastModule],
   templateUrl: './app.component.html',
 })
-export class App implements OnInit {
+export class App {
   private readonly metaDataService = inject(MetaDataService);
   private readonly authService = inject(AuthService);
   messageService = inject(MessageService);
 
-  ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
-      this.getMetaData();
+
+  constructor() {
+    effect(() => {
+      if (this.authService.isAuthenticated()) {
+        this.initialize();
+      }
+    });
+  }
+  initialize(){
+    untracked(() => {
+    this.getMetaData();
       const isCoordination = this.authService.getUserData()?.roles.includes('Coordination');
       if(isCoordination){
         this.getSquads();
       }
-
-    }
+    });
   }
 
   getMetaData() {
