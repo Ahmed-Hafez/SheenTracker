@@ -85,7 +85,7 @@ export class UserFormDialogComponent implements OnInit {
         this.isEditMode() ? this.userData()?.phoneNumber : '',
         Validators.pattern('^(\\+20|0)?1[0125][0-9]{8}$'),
       ],
-      department: [this.isEditMode() ? this.userData()?.department : null, Validators.required],
+      department: [this.isEditMode() ? this.userData()?.department : null],
       squadName: [this.isEditMode() ? this.userData()?.squadId : null],
       seniority: [
         this.isEditMode() ? this.userData()?.seniority : Seniority.Junior,
