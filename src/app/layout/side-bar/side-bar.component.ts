@@ -28,7 +28,7 @@ export class SideBarComponent implements OnInit {
   private readonly router = inject(Router);
   readonly isCollapsed = this.sidebarService.isCollapsed;
 
-  private readonly coordinationHiddenLabels = new Set(['Dashboard', 'Reports', 'Azure Users']);
+  private readonly coordinationHiddenLabels = new Set([]);
   private readonly hrHiddenLabels = new Set(['Squads', 'System Users']);
 
   userData = signal<UserData | null>(null);

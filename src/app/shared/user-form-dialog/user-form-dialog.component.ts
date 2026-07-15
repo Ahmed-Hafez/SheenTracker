@@ -82,7 +82,7 @@ export class UserFormDialogComponent implements OnInit {
         ],
       ],
       phoneNumber: [
-        this.isEditMode() ? this.userData()?.phoneNumber : null,
+        this.isEditMode() ? this.userData()?.phoneNumber : '',
         Validators.pattern('^(\\+20|0)?1[0125][0-9]{8}$'),
       ],
       department: [this.isEditMode() ? this.userData()?.department : null, Validators.required],
