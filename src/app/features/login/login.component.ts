@@ -43,12 +43,7 @@ export class LoginComponent {
     this.authService.login(request).subscribe({
       next: (response) => {
         this.authService.handleLoginSuccess(response);
-        if(response.roles.includes('Coordination')){
-          this.router.navigate(['/users/system']);
-        }else{
-          this.router.navigate(['/dashboard']);
-        }
-
+        this.router.navigate(['/dashboard']);
       },
       error: () => {
         this.authService.isLoading.set(false);
