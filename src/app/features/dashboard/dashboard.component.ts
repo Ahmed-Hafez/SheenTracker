@@ -10,6 +10,7 @@ import { User } from '../../core/models/reponse/top-performers.response.model';
 import { MetaDataService } from '../../core/http/backend_service/meta-data.service';
 import { UsersService } from '../../core/http/backend_service/azure-users.service';
 import { DateService } from '../../core/services/date.service';
+import * as XLSX from 'xlsx';
 import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs';
 @Component({
@@ -34,6 +35,24 @@ export class DashboardComponent implements OnInit {
   azureUsers = this.usersService.usersResponse$;
 
   readonly logComplianceTotalUsers = computed(() => this.azureUsers()?.users.length ?? 0);
+  readonly selectedDateRangeLabel = computed(() => {
+    const range = this.dateService.selectedDateRange();
+
+    if (!range) {
+      return 'All available dates';
+    }
+
+    const formatter = new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    return `${formatter.format(range.start)} to ${formatter.format(range.end)}`;
+  });
+  readonly logComplianceSubtitle = computed(
+    () => `Distribution of ${this.logComplianceTotalUsers()} employees by logged hours vs. target (${this.dateService.targetHoursCount()}h)`,
+  );
 
   private readonly logComplianceChartData = computed(() => {
     const users = this.azureUsers()?.users ?? [];
@@ -77,18 +96,6 @@ export class DashboardComponent implements OnInit {
     const totalUsers = this.logComplianceTotalUsers();
 
     return {
-      title: {
-        text: 'Log compliance',
-        left: 'start',
-        subtext: `Distribution of ${totalUsers} employees by logged hours vs. target (${this.dateService.targetHoursCount()}h)`,
-        textStyle: {
-          fontWeight: 'bold',
-        },
-        subtextStyle: {
-          fontStyle: 'italic',
-          color: '#888888',
-        },
-      },
       tooltip: {
         trigger: 'axis',
         axisPointer: { type: 'shadow' },
@@ -143,6 +150,29 @@ export class DashboardComponent implements OnInit {
       ],
     };
   });
+
+  exportLogComplianceToXlsx(): void {
+    const data = this.logComplianceChartData();
+    const totalUsers = this.logComplianceTotalUsers();
+    const dateRangeLabel = this.selectedDateRangeLabel();
+
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      ['Log Compliance Report '+ `(${dateRangeLabel})`],
+      [],
+      ['Compliance', 'Users', 'Percentage of users'],
+      ...data.map((item) => [
+        item.name,
+        item.value,
+        totalUsers ? `${((item.value / totalUsers) * 100).toFixed(1)}%` : '0.0%',
+      ]),
+      [],
+      
+    ]);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Log Compliance');
+    XLSX.writeFile(workbook, 'Log_Compliance_Report.xlsx');
+  }
 
   ngOnInit(): void {
     effect(
