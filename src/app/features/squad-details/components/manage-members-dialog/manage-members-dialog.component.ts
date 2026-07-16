@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
@@ -20,17 +13,12 @@ import { SquadsService } from '../../../../core/http/backend_service/squads.serv
 import { SystemUsersService } from '../../../../core/http/backend_service/system-users.service';
 import { SystemUser } from '../../../../core/models/reponse/system-users.response.model';
 import { Squad } from '../../../../core/models/reponse/sqauds.response.model';
+import { getInitialsFromName } from '../../../../core/utils/get-initials.util';
+import { pickRandomColor as pickAvatarColorStyle } from '../../../../core/utils/pick-random-color.util';
 
 @Component({
   selector: 'app-manage-members-dialog',
-  imports: [
-    FormsModule,
-    Dialog,
-    Listbox,
-    Button,
-    ProgressSpinner,
-    Avatar,
-  ],
+  imports: [FormsModule, Dialog, Listbox, Button, ProgressSpinner, Avatar],
   templateUrl: './manage-members-dialog.component.html',
   styleUrl: './manage-members-dialog.component.scss',
 })
@@ -51,6 +39,8 @@ export class ManageMembersDialogComponent {
   selectedUserIds = signal<string[]>([]);
   isSaving = signal(false);
   isUsersLoading = signal(false);
+  readonly getInitials = getInitialsFromName;
+  readonly getAvatarStyle = (name: string) => pickAvatarColorStyle(name, '10px');
 
   lockedUserIds = computed(() => {
     const ids: string[] = [];
@@ -163,36 +153,16 @@ export class ManageMembersDialogComponent {
   }
 
   isUserLocked(user: SystemUser): boolean {
-    return user.id === this.squadDetails().productOwnerId || user.id === this.squadDetails().scrumMasterId;
+    return (
+      user.id === this.squadDetails().productOwnerId ||
+      user.id === this.squadDetails().scrumMasterId
+    );
   }
 
   getUserRoleBadge(user: SystemUser): string | null {
     if (user.id === this.squadDetails().productOwnerId) return 'PO';
     if (user.id === this.squadDetails().scrumMasterId) return 'Scrum Master';
     return null;
-  }
-
-  getInitials(name: string): string {
-    const parts = name.trim().split(/\s+/);
-    if (parts.length === 0) return '';
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-
-  getAvatarStyle(name: string): string {
-    const colors = [
-      'background-color: #F87171; color: white; font-size: 10px;',
-      'background-color: #60A5FA; color: white; font-size: 10px;',
-      'background-color: #34D399; color: white; font-size: 10px;',
-      'background-color: #FBBF24; color: white; font-size: 10px;',
-      'background-color: #A78BFA; color: white; font-size: 10px;',
-      'background-color: #F472B6; color: white; font-size: 10px;',
-    ];
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return colors[Math.abs(hash) % colors.length];
   }
 
   isUserDisabled = (user: SystemUser): boolean => this.isUserLocked(user);

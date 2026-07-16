@@ -17,6 +17,8 @@ import { Seniorities } from '../../../../core/enums/seniority.enum';
 import { Departments } from '../../../../core/enums/departments.enum';
 import { SquadsService } from '../../../../core/http/backend_service/squads.service';
 import { Squad } from '../../../../core/models/reponse/sqauds.response.model';
+import { getInitialsFromName } from '../../../../core/utils/get-initials.util';
+import { pickRandomColor as pickAvatarColorStyle } from '../../../../core/utils/pick-random-color.util';
 
 export interface Column {
   field: string;
@@ -53,32 +55,11 @@ export class SquadsTableComponent implements OnInit {
   columns!: Column[];
   seniorities = Seniorities;
   departments = Departments;
+  readonly getInitials = getInitialsFromName;
+  readonly pickRandomColor = (name: string) => pickAvatarColorStyle(name, '10px');
 
   ngOnInit(): void {
     this.initializeTableColumns();
-  }
-
-  getInitials(name: string) {
-    let splitedname = name.split(' ');
-    return splitedname[0][0] + splitedname[1][0];
-  }
-
-  pickRandomColor(name: string): string {
-    const colors = [
-      'background-color: #F87171; color: white; font-size: 10px;', // Red
-      'background-color: #60A5FA; color: white; font-size: 10px;', // Blue
-      'background-color: #34D399; color: white; font-size: 10px;', // Green
-      'background-color: #FBBF24; color: white; font-size: 10px;', // Yellow
-      'background-color: #A78BFA; color: white; font-size: 10px;', // Purple
-      'background-color: #F472B6; color: white; font-size: 10px;', // Pink
-    ];
-    // Simple hash function to get a consistent color for the same name
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const index = Math.abs(hash) % colors.length;
-    return colors[index];
   }
 
   initializeTableColumns() {
