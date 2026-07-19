@@ -20,7 +20,6 @@
     <div class="bg-white rounded-lg shadow-sm border border-[#E3E1DE] p-5 w-full">
       <h3 class="text-xs uppercase text-gray-500 font-semibold mb-4">Employee Details</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
         <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
           <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
             <i class="pi pi-phone"></i>
@@ -45,7 +44,6 @@
           </div>
         </div>
         <div
-          (click)="navigateToSquad(systemUser()?.squadId)"
           class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
         >
           <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
@@ -54,12 +52,10 @@
           <div class="flex flex-col">
             <span class="text-[10px] uppercase text-gray-500 font-semibold">Squad Name</span>
             <span class="text-sm font-medium text-gray-800">{{
-              systemUser()?.squadName || 'N/A'
+              getSqaudNames(systemUser()!) || 'N/A'
             }}</span>
           </div>
         </div>
-
-
 
         <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
           <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
@@ -73,34 +69,53 @@
           </div>
         </div>
 
-        <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
-          <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
-            <i class="pi pi-user text-sm"></i>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Seniority</span>
-            <span class="text-sm font-medium text-gray-800">{{
-              (systemUser()?.seniority ?? 0 | enumLabel: seniorities) || 'N/A'
-            }}</span>
-          </div>
-        </div>
-
-        <div
-          (click)="navigateToUser(systemUser()?.productOwnerId)"
-          class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
-        >
+        @if (
+          systemUser()?.userSquads!.length > 0 &&
+          systemUser()?.department != 3 &&
+          systemUser()?.department != 4
+        ) {
           <div
-            class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold"
+            (click)="navigateToUser(systemUser()?.userSquads![0]?.scrumMaster?.id)"
+            class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
           >
-            {{ systemUser()?.productOwnerName ? systemUser()?.productOwnerName?.charAt(0) : 'N/A' }}
+            <div
+              class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold"
+            >
+              {{
+                systemUser()?.userSquads![0]?.scrumMaster
+                  ? getInitials(systemUser()?.userSquads![0]?.scrumMaster?.fullName)
+                  : 'N/A'
+              }}
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] uppercase text-gray-500 font-semibold">Scrum Master</span>
+              <span class="text-sm font-medium text-gray-800">{{
+                systemUser()?.userSquads![0]?.scrumMaster?.fullName || 'N/A'
+              }}</span>
+            </div>
           </div>
-          <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Product Owner</span>
-            <span class="text-sm font-medium text-gray-800">{{
-              systemUser()?.productOwnerName || 'N/A'
-            }}</span>
+
+          <div
+            (click)="navigateToUser(systemUser()?.userSquads![0]?.id)"
+            class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
+          >
+            <div
+              class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold"
+            >
+              {{
+                systemUser()?.userSquads![0]?.productOwner
+                  ? getInitials(systemUser()?.userSquads![0]?.productOwner?.fullName)
+                  : 'N/A'
+              }}
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] uppercase text-gray-500 font-semibold">Product Owner</span>
+              <span class="text-sm font-medium text-gray-800">{{
+                systemUser()?.userSquads![0]?.productOwner?.fullName || 'N/A'
+              }}</span>
+            </div>
           </div>
-        </div>
+        }
 
         <div
           (click)="navigateToUser(systemUser()?.teamLeadId)"
@@ -119,19 +134,14 @@
           </div>
         </div>
 
-        <div
-          (click)="navigateToUser(systemUser()?.scrumMasterId)"
-          class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
-        >
-          <div
-            class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold"
-          >
-            {{ systemUser()?.scrumMasterName ? systemUser()?.scrumMasterName?.charAt(0) : 'N/A' }}
+        <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
+          <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
+            <i class="pi pi-user text-sm"></i>
           </div>
           <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Scrum Master</span>
+            <span class="text-[10px] uppercase text-gray-500 font-semibold">Seniority</span>
             <span class="text-sm font-medium text-gray-800">{{
-              systemUser()?.scrumMasterName || 'N/A'
+              (systemUser()?.seniority ?? 0 | enumLabel: seniorities) || 'N/A'
             }}</span>
           </div>
         </div>

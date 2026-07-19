@@ -68,8 +68,11 @@ export class SystemUsersTableComponent implements OnInit {
     ];
   }
 
-  fixDisplayName(name: string): string {
-    return name.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim();
+  getSquadNames(user: SystemUser): string {
+    if (!user.userSquads || user.userSquads.length === 0) {
+      return 'N/A';
+    }
+    return user.userSquads.map((squad) => squad.name).join(', ');
   }
 
   openMenuPopup(event: Event, user: SystemUser) {

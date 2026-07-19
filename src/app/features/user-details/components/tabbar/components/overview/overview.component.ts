@@ -8,6 +8,7 @@ import { Seniorities } from '../../../../../../core/enums/seniority.enum';
 import { EnumLabelPipe } from '../../../../../../core/pipes/enum-label-pipe';
 import { DateRange } from '../../../../../../core/services/date.service';
 import { AuthService } from '../../../../../../core/http/backend_service/auth.service';
+import { getInitialsFromName } from '../../../../../../core/utils/get-initials.util';
 
 export interface UserSummary {
   projects: number;
@@ -27,6 +28,15 @@ export class OverviewComponent {
   departments = Departments;
   seniorities = Seniorities;
   authService = inject(AuthService);
+
+  readonly getInitials = getInitialsFromName;
+
+  getSqaudNames(user: SystemUser): string {
+    if (!user.userSquads || user.userSquads.length === 0) {
+      return 'N/A';
+    }
+    return user.userSquads.map((squad) => squad.name).join(', ');
+  }
 
   navigateToUser(userId: number | null | undefined): void {
     console.log('Navigating to user details for userId:', userId);

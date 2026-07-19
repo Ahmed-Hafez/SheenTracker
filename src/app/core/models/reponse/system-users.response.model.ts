@@ -7,13 +7,21 @@ export interface SystemUser {
   azureUserKey: string | null;
   teamLeadId: number | null;
   teamLeadName: string | null;
-  scrumMasterId: number | null;
-  scrumMasterName: string | null;
-  productOwnerId: number | null;
-  productOwnerName: string | null;
-  squadId: number;
-
-  squadName: string;
+  userSquads: UserSquad[];
   seniority: number;
   title: string;
 }
+
+export interface UserSquad {
+  id: number;
+  name: string;
+  productOwner: SquadManger;
+  scrumMaster: SquadManger;
+}
+
+export interface SquadManger  {
+    id: number;
+    fullName: string;
+    email: string;
+    azureUserKey: string;
+  };

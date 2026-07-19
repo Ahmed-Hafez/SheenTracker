@@ -43,7 +43,7 @@ export class SystemUsersService {
       );
     }
     if (squad) {
-      filteredUsers = filteredUsers.filter((user) => user.squadId === squad);
+      filteredUsers = filteredUsers.filter((user) => user.userSquads?.some((s) => s.id === squad));
     }
     if (department) {
       filteredUsers = filteredUsers.filter((user) => user.department === department);
