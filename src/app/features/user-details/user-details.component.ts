@@ -20,6 +20,7 @@ import { DateService } from '../../core/services/date.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AzureUsersSkeletonComponent } from '../azure-users/components/azure-users-skeleton/azure-users-skeleton.component';
 import { AzureUserDetail } from '../../core/models/reponse/azure-user-details/user-details.response.model';
+import { getInitialsFromName } from '../../core/utils/get-initials.util';
 
 @Component({
   selector: 'app-user-details',
@@ -61,6 +62,8 @@ export class UserDetailsComponent {
   isSystemUserLoading = signal(false);
   isError = signal(false);
 
+  private readonly getInitials = getInitialsFromName;
+
   // For system user: azure tabs are disabled when we have no azure key at all
   disableAzureTabs = computed(() => {
     if (this.isAzureUser()) return false;
@@ -80,10 +83,7 @@ export class UserDetailsComponent {
 
       return {
         name: displayName,
-        initials: displayName
-          .split(' ')
-          .map((n) => n[0])
-          .join(''),
+        initials: getInitialsFromName(displayName),
         avatarUrl: details.avatarUrl,
         email1: details.email,
         email2: this.systemUserDetails()?.title || '',
@@ -98,10 +98,7 @@ export class UserDetailsComponent {
 
       return {
         name: displayName,
-        initials: displayName
-          .split(' ')
-          .map((n) => n[0])
-          .join(''),
+        initials: getInitialsFromName(displayName),
         avatarUrl: this.azureUserDetails()?.avatarUrl || '',
         email1: sUser.email,
         email2: sUser.title,

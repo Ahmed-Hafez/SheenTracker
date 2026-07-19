@@ -44,7 +44,7 @@ export class LayoutComponent implements OnInit {
     }
 
     if (this.dateService.isDefaultRangeSelected(range)) {
-      return `Last 30 days · ${suffix}`;
+      return `${this.formatRange(range)} · ${suffix}`;
     }
 
     return `${this.formatRange(range)} · ${suffix}`;
