@@ -67,11 +67,11 @@ export class SystemUsersComponent implements OnInit {
 
     this.items = [
       {
-        label: 'Export to CSV',
+        label: 'Export',
         icon: 'pi pi-file',
       },
       {
-        label: 'Import from CSV',
+        label: 'Import',
         icon: 'pi pi-file-import',
       },
     ];

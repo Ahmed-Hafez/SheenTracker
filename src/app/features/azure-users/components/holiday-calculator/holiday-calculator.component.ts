@@ -1,12 +1,13 @@
 import { Component, effect, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Dialog } from "primeng/dialog";
+import { Dialog } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DateService } from '../../../../core/services/date.service';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'app-holiday-calculator',
-  imports: [Dialog, InputTextModule, FormsModule],
+  imports: [Dialog, InputTextModule, FormsModule, Message],
   templateUrl: './holiday-calculator.component.html',
   styleUrl: './holiday-calculator.component.scss',
 })
@@ -31,14 +32,13 @@ export class HolidayCalculatorComponent {
   }
 
   onCalculateHoliday() {
-    if (!this.days) return;
+    if (this.days < 0) return;
     this.dateService.holidaysCount.set(Number(this.days));
     this.onClosePopup();
   }
 
   onClosePopup() {
-        this.outputVisibleSignal.emit(false);
-
+    this.outputVisibleSignal.emit(false);
   }
 
   onOpenPopup() {

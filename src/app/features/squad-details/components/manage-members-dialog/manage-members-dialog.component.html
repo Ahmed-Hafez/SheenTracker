@@ -20,7 +20,12 @@
   </ng-template>
 
   <div class="flex flex-col gap-3">
-    <input type="text" placeholder="Search squad name..." class="field w-full" />
+    <input
+      type="text"
+      placeholder="Search member name..."
+      [(ngModel)]="searchQuery"
+      class="field w-full"
+    />
 
     @if (isUsersLoading()) {
       <div class="flex justify-center py-8">
