@@ -86,7 +86,7 @@ export class UserFormDialogComponent implements OnInit {
         Validators.pattern('^(\\+20|0)?1[0125][0-9]{8}$'),
       ],
       department: [this.isEditMode() ? this.userData()?.department : null],
-      squadName: [this.isEditMode() ? this.userData()?.squadId : null],
+      squadName: [this.isEditMode() ? this.userData()?.userSquads?.[0]?.id : null],
       seniority: [
         this.isEditMode() ? this.userData()?.seniority : Seniority.Junior,
         Validators.required,
