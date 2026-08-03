@@ -10,6 +10,7 @@ export interface SystemUser {
   userSquads: UserSquad[];
   seniority: number;
   title: string;
+  expectedHours: number | null;
 }
 
 export interface UserSquad {

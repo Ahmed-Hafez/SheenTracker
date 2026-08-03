@@ -8,4 +8,5 @@ export interface AddSystemUserRequest {
   squadId: number;
   title: string;
   seniority: number;
+  expectedHours: number | null;
 }
