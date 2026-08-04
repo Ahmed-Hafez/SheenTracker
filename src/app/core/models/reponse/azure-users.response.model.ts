@@ -13,8 +13,11 @@ export interface User {
   descriptor: string;
   avatarUrl?: string;
   totalHours: number;
+  expectedHours: number | null;
   projectsCount: number;
   workItemsCount: number;
   projectNames: string[];
   projectHoursMap: { [key: string]: number };
+  productOwnerNames: string[];
+  scrumMasterNames: string[];
 }

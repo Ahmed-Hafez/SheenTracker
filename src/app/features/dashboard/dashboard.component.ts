@@ -20,7 +20,7 @@ import { finalize } from 'rxjs';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private readonly dashboardService = inject(DashboardService);
   private readonly refreshService = inject(RefreshService);
   private readonly metaDataService = inject(MetaDataService);
@@ -33,6 +33,9 @@ export class DashboardComponent implements OnInit {
 
   azureUsersKpis = this.metaDataService.usersKpis$;
   azureUsers = this.usersService.usersResponse$;
+  weekdays = this.dateService.weekdaysCount();
+
+  chartData = computed(() => this.dashboardService.getTargetAchievmentChartData());
 
   readonly logComplianceTotalUsers = computed(() => this.azureUsers()?.users.length ?? 0);
   readonly selectedDateRangeLabel = computed(() => {
@@ -51,7 +54,8 @@ export class DashboardComponent implements OnInit {
     return `${formatter.format(range.start)} to ${formatter.format(range.end)}`;
   });
   readonly logComplianceSubtitle = computed(
-    () => `Distribution of ${this.logComplianceTotalUsers()} employees by logged hours vs. target (${this.dateService.targetHoursCount()}h)`,
+    () =>
+      `Distribution of ${this.logComplianceTotalUsers()} employees by logged hours vs. target (${this.dateService.targetHoursCount()}h)`,
   );
 
   private readonly logComplianceChartData = computed(() => {
@@ -157,7 +161,7 @@ export class DashboardComponent implements OnInit {
     const dateRangeLabel = this.selectedDateRangeLabel();
 
     const worksheet = XLSX.utils.aoa_to_sheet([
-      ['Log Compliance Report '+ `(${dateRangeLabel})`],
+      ['Log Compliance Report ' + `(${dateRangeLabel})`],
       [],
       ['Compliance', 'Users', 'Percentage of users'],
       ...data.map((item) => [
@@ -166,7 +170,6 @@ export class DashboardComponent implements OnInit {
         totalUsers ? `${((item.value / totalUsers) * 100).toFixed(1)}%` : '0.0%',
       ]),
       [],
-      
     ]);
 
     const workbook = XLSX.utils.book_new();
@@ -309,6 +312,90 @@ export class DashboardComponent implements OnInit {
           emphasis: {
             itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.2)' },
           },
+        },
+      ],
+    };
+  });
+
+  targetHoursOptions = computed<EChartsOption>(() => {
+    const chartData = this.chartData();
+    const achieved = chartData.achievedHours;
+    const target = chartData.targetHours;
+    const percent = target > 0 ? +((achieved / target) * 100).toFixed(1) : 0;
+
+    return {
+      title: {
+        text: 'Target achievement',
+        left: 'start',
+        subtext: 'Logged vs expected hours for the selected range',
+        textStyle: {
+          fontWeight: 700,
+          fontSize: 15,
+          color: '#1D1D1B',
+        },
+        subtextStyle: {
+          fontStyle: 'normal',
+          color: '#9A9A9A',
+          fontSize: 12,
+        },
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}: {c}h ({d}%)',
+      },
+      series: [
+        {
+          type: 'gauge',
+          renderer: 'svg',
+          startAngle: 200,
+          endAngle: -20,
+          min: 0,
+          max: 100,
+          radius: '78%',
+          center: ['50%', '58%'],
+          progress: {
+            show: true,
+            width: 24,
+            roundCap: true, // <-- rounded ends, matches the image
+            itemStyle: {
+              color: '#E8821A', // Sheen Orange
+            },
+          },
+          axisLine: {
+            roundCap: true,
+            lineStyle: {
+              width: 24,
+              color: [[1, '#EFEDE8']], // light muted track
+            },
+          },
+          axisTick: { show: false },
+          splitLine: { show: false },
+          axisLabel: { show: false },
+          pointer: { show: false },
+          anchor: { show: false },
+          detail: {
+            valueAnimation: true,
+            offsetCenter: [0, '20%'],
+            formatter: () =>
+              `{percent|${this.chartData().percentage}%}\n{hours|${this.chartData().achievedHours.toFixed(1)}h / ${this.chartData().targetHours.toFixed(1)}h}`,
+            rich: {
+              percent: {
+                fontSize: 34,
+                fontWeight: 700,
+                fontFamily: 'DM Mono, monospace',
+                color: '#E8821A',
+                lineHeight: 38,
+              },
+              hours: {
+                fontSize: 14,
+                fontFamily: 'DM Mono, monospace',
+                color: '#9A9A9A',
+                lineHeight: 20,
+                padding: [4, 0, 0, 0],
+              },
+            },
+          },
+          data: [{ value: percent }],
         },
       ],
     };

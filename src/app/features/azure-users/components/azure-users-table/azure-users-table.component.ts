@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { GoalStatusBadgeComponent } from '../../../../shared/goal-badge/goal-badge.component';
 import { DateService } from '../../../../core/services/date.service';
+import { UsersService } from '../../../../core/http/backend_service/azure-users.service';
 
 interface Column {
   field: string;
@@ -30,6 +31,14 @@ interface Column {
 export class AzureUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dateService = inject(DateService);
+  private readonly userService = inject(UsersService);
+
+  getExpectedHoursOrDefault(user: User)  {
+    return this.userService.getExpectedHoursOrDefault(user)
+  };
+
+
+
 
   azureUsersTable = viewChild<Table<User>>('azureUsersTable');
   first = 0;
@@ -56,6 +65,7 @@ export class AzureUsersTableComponent implements OnInit {
       { field: 'displayName', header: 'Name', width: '20%' },
       { field: 'email', header: 'Email', width: '25%' },
       { field: 'totalHours', header: 'Total Hours', width: '15%' },
+      { field: 'expectedHours', header: 'Expected Hours', width: '15%' },
       { field: 'goal', header: 'Goal', width: '15%' },
       { field: 'projectsCount', header: 'Projects', width: '15%' },
       { field: 'workItemsCount', header: 'Work Items', width: '15%' },
