@@ -20,7 +20,7 @@ import { finalize } from 'rxjs';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private readonly dashboardService = inject(DashboardService);
   private readonly refreshService = inject(RefreshService);
   private readonly metaDataService = inject(MetaDataService);
@@ -34,6 +34,8 @@ export class DashboardComponent implements OnInit {
   azureUsersKpis = this.metaDataService.usersKpis$;
   azureUsers = this.usersService.usersResponse$;
   weekdays = this.dateService.weekdaysCount();
+
+  chartData = computed(() => this.dashboardService.getTargetAchievmentChartData());
 
   readonly logComplianceTotalUsers = computed(() => this.azureUsers()?.users.length ?? 0);
   readonly selectedDateRangeLabel = computed(() => {
@@ -316,8 +318,9 @@ export class DashboardComponent implements OnInit {
   });
 
   targetHoursOptions = computed<EChartsOption>(() => {
-    const achieved = 3463.3;
-    const target = 3927.0;
+    const chartData = this.chartData();
+    const achieved = chartData.achievedHours;
+    const target = chartData.targetHours;
     const percent = target > 0 ? +((achieved / target) * 100).toFixed(1) : 0;
 
     return {
@@ -374,7 +377,7 @@ export class DashboardComponent implements OnInit {
             valueAnimation: true,
             offsetCenter: [0, '20%'],
             formatter: () =>
-              `{percent|${percent}%}\n{hours|${achieved.toFixed(1)}h / ${target.toFixed(1)}h}`,
+              `{percent|${this.chartData().percentage}%}\n{hours|${this.chartData().achievedHours.toFixed(1)}h / ${this.chartData().targetHours.toFixed(1)}h}`,
             rich: {
               percent: {
                 fontSize: 34,

@@ -50,7 +50,16 @@
       <td>{{ user.email }}</td>
       <td><app-hours-badge [hours]="user.totalHours" [size]="'sm'"></app-hours-badge></td>
       <td>
-        <goal-status-badge [loggedHours]="user.totalHours" [targetHours]="targetHours$()" />
+        {{ getExpectedHoursOrDefault(user) }} hours
+        {{ user.expectedHours == null ? '(default)' : '' }}
+      </td>
+      <td>
+        <goal-status-badge
+          [loggedHours]="user.totalHours"
+          [targetHours]="
+            user.expectedHours == null ? targetHours$() : getExpectedHoursOrDefault(user)
+          "
+        />
       </td>
       <td>
         {{ user.projectsCount }}

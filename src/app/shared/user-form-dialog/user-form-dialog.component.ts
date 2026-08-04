@@ -251,11 +251,11 @@ export class UserFormDialogComponent implements OnInit {
     });
   }
 
-  getExpectedHoursOrDefault(): number|null {
+  getExpectedHoursOrDefault(): number {
     const expectedHours = this.userForm.get('expectedHours')?.value;
     //if is manager or lead return null else return expected hours or default to 6.5
-    if(this.isManager() || this.isTeamLead()) {
-      return null;
+    if (this.isManager() || this.isTeamLead()) {
+      return 0;
     }
     return expectedHours !== null && expectedHours !== undefined ? expectedHours : 6.5;
   }
