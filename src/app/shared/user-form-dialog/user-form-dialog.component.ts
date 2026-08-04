@@ -77,9 +77,7 @@ export class UserFormDialogComponent implements OnInit {
       ],
       email: [
         this.isEditMode() ? this.userData()?.email : '',
-        [
-          Validators.required,
-        ],
+        [Validators.required, Validators.email],
       ],
       phoneNumber: [
         this.isEditMode() ? this.userData()?.phoneNumber : '',
@@ -111,6 +109,10 @@ export class UserFormDialogComponent implements OnInit {
 
     if (field.hasError('required')) {
       return this.getRequiredFieldMessage(fieldName);
+    }
+
+    if (field.hasError('email')) {
+      return 'Invalid email format.';
     }
 
     if (field.hasError('pattern')) {
