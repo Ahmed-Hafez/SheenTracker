@@ -40,6 +40,7 @@ export class UserFormDialogComponent implements OnInit {
   inputVisibleSignal = input<boolean>(false);
   isEditMode = input<boolean>(false);
   userData = input<SystemUser | null>(null);
+
   users = input<SystemUser[] | null>(null);
   actionLoading = signal(false);
   userForm!: FormGroup;
@@ -93,6 +94,7 @@ export class UserFormDialogComponent implements OnInit {
       ],
       jobTitle: [this.isEditMode() ? this.userData()?.title : '', Validators.required],
       teamleadId: [this.isEditMode() ? this.userData()?.teamLeadId : null],
+      expectedHours: [this.isEditMode() ? this.userData()?.expectedHours : null, Validators.min(0)],
     });
   }
 
@@ -115,8 +117,20 @@ export class UserFormDialogComponent implements OnInit {
     if (field.hasError('pattern')) {
       return this.getPatternFieldMessage(fieldName);
     }
+    if (field.hasError('min')) {
+      return this.getMinFieldMessage(fieldName);
+    }
 
     return 'Invalid value.';
+  }
+
+  private getMinFieldMessage(fieldName: string): string {
+    switch (fieldName) {
+      case 'expectedHours':
+        return 'Expected hours must be a positive number or zero.';
+      default:
+        return 'Invalid value.';
+    }
   }
 
   private getRequiredFieldMessage(fieldName: string): string {
@@ -236,6 +250,16 @@ export class UserFormDialogComponent implements OnInit {
       }
     });
   }
+
+  getExpectedHoursOrDefault(): number {
+    const expectedHours = this.userForm.get('expectedHours')?.value;
+    //if is manager or lead return null else return expected hours or default to 6.5
+    if (this.isManager() || this.isTeamLead()) {
+      return 0;
+    }
+    return expectedHours !== null && expectedHours !== undefined ? expectedHours : 6.5;
+  }
+
   onSubmit() {
     this.userForm.markAllAsTouched();
     this.userForm.markAsDirty();
@@ -253,6 +277,7 @@ export class UserFormDialogComponent implements OnInit {
         squadId: formData.squadName,
         title: formData.jobTitle,
         seniority: formData.seniority,
+        expectedHours: this.getExpectedHoursOrDefault(),
       };
 
       console.log('systemUserData', systemUserData);

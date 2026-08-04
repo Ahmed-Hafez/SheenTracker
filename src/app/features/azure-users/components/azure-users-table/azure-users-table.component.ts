@@ -31,6 +31,14 @@ export class AzureUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dateService = inject(DateService);
 
+  getExpectedHoursOrDefault(user: User): number {
+    const workingDays = this.dateService.weekdaysCount();
+    if (user.expectedHours === null) {
+      return 6.5 * workingDays;
+    }
+    return user.expectedHours * workingDays;
+  }
+
   azureUsersTable = viewChild<Table<User>>('azureUsersTable');
   first = 0;
 
@@ -56,6 +64,7 @@ export class AzureUsersTableComponent implements OnInit {
       { field: 'displayName', header: 'Name', width: '20%' },
       { field: 'email', header: 'Email', width: '25%' },
       { field: 'totalHours', header: 'Total Hours', width: '15%' },
+      { field: 'expectedHours', header: 'Expected Hours', width: '15%' },
       { field: 'goal', header: 'Goal', width: '15%' },
       { field: 'projectsCount', header: 'Projects', width: '15%' },
       { field: 'workItemsCount', header: 'Work Items', width: '15%' },

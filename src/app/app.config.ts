@@ -12,7 +12,7 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 // Custom build — only import what you need (Angular 19+)
 import * as echarts from 'echarts/core';
 import { provideEchartsCore } from 'ngx-echarts';
-import { BarChart, PieChart } from 'echarts/charts';
+import { BarChart, GaugeChart, PieChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -25,6 +25,7 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 echarts.use([
   BarChart,
   PieChart,
+  GaugeChart,
   TitleComponent,
   TooltipComponent,
   GridComponent,
