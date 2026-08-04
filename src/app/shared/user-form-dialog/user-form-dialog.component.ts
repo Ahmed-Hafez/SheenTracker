@@ -77,10 +77,7 @@ export class UserFormDialogComponent implements OnInit {
       ],
       email: [
         this.isEditMode() ? this.userData()?.email : '',
-        [
-          Validators.required,
-          Validators.pattern('^[A-Za-z0-9._%+-]+@(tildetech\\.ae|shuratech\\.com)$'),
-        ],
+        [Validators.required, Validators.email],
       ],
       phoneNumber: [
         this.isEditMode() ? this.userData()?.phoneNumber : '',
@@ -112,6 +109,10 @@ export class UserFormDialogComponent implements OnInit {
 
     if (field.hasError('required')) {
       return this.getRequiredFieldMessage(fieldName);
+    }
+
+    if (field.hasError('email')) {
+      return 'Invalid email format.';
     }
 
     if (field.hasError('pattern')) {
@@ -154,8 +155,6 @@ export class UserFormDialogComponent implements OnInit {
         return 'First name must be one word';
       case 'lastName':
         return 'Last name must be one word';
-      case 'email':
-        return 'Email must end with @tildetech.ae or @shuratech.com.';
       case 'phoneNumber':
         return 'Phone number must be a valid Egyptian mobile number (e.g. 01012345678).';
       default:
