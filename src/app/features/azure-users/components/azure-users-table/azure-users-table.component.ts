@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { GoalStatusBadgeComponent } from '../../../../shared/goal-badge/goal-badge.component';
 import { DateService } from '../../../../core/services/date.service';
+import { UsersService } from '../../../../core/http/backend_service/azure-users.service';
 
 interface Column {
   field: string;
@@ -30,14 +31,14 @@ interface Column {
 export class AzureUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dateService = inject(DateService);
+  private readonly userService = inject(UsersService);
 
-  getExpectedHoursOrDefault(user: User): number {
-    const workingDays = this.dateService.weekdaysCount();
-    if (user.expectedHours === null) {
-      return 6.5 * workingDays;
-    }
-    return user.expectedHours * workingDays;
-  }
+  getExpectedHoursOrDefault(user: User)  {
+    return this.userService.getExpectedHoursOrDefault(user)
+  };
+
+
+
 
   azureUsersTable = viewChild<Table<User>>('azureUsersTable');
   first = 0;
