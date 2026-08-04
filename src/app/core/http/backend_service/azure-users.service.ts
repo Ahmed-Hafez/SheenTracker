@@ -95,22 +95,31 @@ export class UsersService {
 
     this.filteredUsers.set(filteredUsers);
   }
+  getExpectedHoursOrDefault(user: User): number {
+    const workingDays = this.dateService.weekdaysCount();
+    if (user.expectedHours === null) {
+      return 6.5 * workingDays;
+    }
+    return user.expectedHours * workingDays;
+  }
 
   exportUsersToCSV(users: User[]) {
     const optimizedUsers = users.map((user) => ({
       displayName: user.displayName,
       email: user.email,
-      expectedHours: this.dateService.targetHoursCount(),
+      expectedHours: this.getExpectedHoursOrDefault(user),
       actualHours: user.totalHours,
-      missedHours: Math.max(0, this.dateService.targetHoursCount() - user.totalHours),
-      extraHours: Math.max(0, user.totalHours - this.dateService.targetHoursCount()),
+      missedHours: Math.max(0, this.getExpectedHoursOrDefault(user) - user.totalHours),
+      extraHours: Math.max(0, user.totalHours - this.getExpectedHoursOrDefault(user)),
       compliancePercentage:
         user.totalHours > 0
-          ? Math.round((user.totalHours / this.dateService.targetHoursCount()) * 100) + '%'
+          ? Math.round((user.totalHours / this.getExpectedHoursOrDefault(user)) * 100) + '%'
           : '0%',
       projectsCount: user.projectsCount,
       workItemsCount: user.workItemsCount,
       projectNames: this.projectNameAndHours(user).join(' | '),
+      scrumMaster: user.scrumMasterNames.join(' | '),
+      productOwner: user.productOwnerNames.join(' | '),
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(optimizedUsers);
@@ -127,7 +136,4 @@ export class UsersService {
     return projectNameAndHours;
   }
 
-  isUserAchieved(totalHours: number): boolean {
-    return totalHours >= this.dateService.targetHoursCount();
-  }
 }

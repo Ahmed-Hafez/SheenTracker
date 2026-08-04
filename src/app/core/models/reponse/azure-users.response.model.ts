@@ -18,4 +18,6 @@ export interface User {
   workItemsCount: number;
   projectNames: string[];
   projectHoursMap: { [key: string]: number };
+  productOwnerNames: string[];
+  scrumMasterNames: string[];
 }
