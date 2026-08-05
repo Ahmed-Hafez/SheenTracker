@@ -34,10 +34,7 @@ export class AzureUsersTableComponent implements OnInit {
   private readonly dateService = inject(DateService);
   private readonly userService = inject(UsersService);
 
-  getExpectedHoursOrDefault(user: User)  {
-    const workingDays = this.dateService.weekdaysCount();
-    return this.userService.getExpectedHoursOrDefault(user, workingDays);
-  };
+  
 
 
 

@@ -96,7 +96,7 @@ export class UsersService {
     this.filteredUsers.set(filteredUsers);
   }
   getExpectedHoursOrDefault(user: User, workingDays?: number): number {
-    if(workingDays === undefined) workingDays = this.dateService.weekdaysCount();
+    if(workingDays === undefined) workingDays = this.dateService.weekdaysCount()-this.dateService.holidaysCount();
     if (user.expectedHours === null) {
       return 6.5 * (workingDays!);
     }
@@ -104,7 +104,6 @@ export class UsersService {
   }
 
   exportUsersToCSV(users: User[]) {
-    const workingDays = this.dateService.weekdaysCount();
     const optimizedUsers = users.map((user) => ({
       displayName: user.displayName,
       email: user.email,
