@@ -89,6 +89,11 @@ export class SideBarComponent implements OnInit {
             },
           ],
     },
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      routerLink: '/settings',
+    },
   ];
 
   getMenuItemsBasedOnRoles(roles: string[] | null): MenuItem[] {

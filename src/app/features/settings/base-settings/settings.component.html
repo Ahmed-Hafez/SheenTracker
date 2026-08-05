@@ -1,0 +1,39 @@
+<div class="settings-layout">
+  <aside class="settings-sidebar">
+    <div class="settings-sidebar__inner">
+      <p-menu [model]="settingsItems" styleClass="settings-menu" aria-label="Settings sections">
+        <ng-template #item let-item>
+          @if (item.disabled) {
+            <span class="settings-nav-item settings-nav-item--disabled" aria-disabled="true">
+              <span class="settings-nav-item__icon" [class]="item.icon"></span>
+
+              <span class="settings-nav-item__text">
+                <span class="settings-nav-item__title">{{ item.label }}</span>
+                <span class="settings-nav-item__subtitle">{{ item.description }}</span>
+              </span>
+            </span>
+          } @else {
+            <a
+              pRipple
+              class="settings-nav-item"
+              [routerLink]="item.route"
+              routerLinkActive="settings-nav-item--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <span class="settings-nav-item__icon" [class]="item.icon"></span>
+
+              <span class="settings-nav-item__text">
+                <span class="settings-nav-item__title">{{ item.label }}</span>
+                <span class="settings-nav-item__subtitle">{{ item.description }}</span>
+              </span>
+            </a>
+          }
+        </ng-template>
+      </p-menu>
+    </div>
+  </aside>
+
+  <section class="settings-content">
+    <router-outlet />
+  </section>
+</div>

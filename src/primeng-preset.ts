@@ -220,11 +220,23 @@ export const PrimeNG_Preset = definePreset(Aura, {
             disabledBackground: 'transparent',
             disabledColor: 'var(--charcoal-400)',
           },
-          list: {
-
-          },
+          list: {},
           option: {
             selectedBackground: 'transparent',
+          },
+        },
+      },
+    },
+    menu: {
+      colorScheme: {
+        light: {
+          root: {
+            background: 'var(--page-bg)',
+            borderColor: 'var(--page-bg)',
+            borderRadius: '14px',
+          },
+          item: {
+            focusBackground: 'transparent',
           },
         },
       },

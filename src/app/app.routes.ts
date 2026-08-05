@@ -7,6 +7,7 @@ import { SquadsComponent } from './features/squads/squads.component';
 import { SquadDetailsComponent } from './features/squad-details/squad-details.component';
 import { ProjectUtilizationReportComponent } from './features/project-utilization-report/project-utilization-report.component';
 import { LoginComponent } from './features/login/login.component';
+import { SettingsComponent } from './features/settings/base-settings/settings.component';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -78,6 +79,33 @@ export const routes: Routes = [
             path: 'project-utilization',
             title: 'Project Utilization - SheenTrack 360°',
             component: ProjectUtilizationReportComponent,
+          },
+        ],
+      },
+      {
+        path: 'settings',
+        component: SettingsComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'users-permisions',
+            pathMatch: 'full',
+          },
+          {
+            path: 'general',
+            title: 'General Settings - SheenTrack 360°',
+            loadComponent: () =>
+              import('./features/settings/general/general.component').then(
+                (m) => m.GeneralComponent,
+              ),
+          },
+          {
+            path: 'users-permisions',
+            title: 'Users & Permissions - SheenTrack 360°',
+            loadComponent: () =>
+              import('./features/settings/users-permisions/users-permisions.component').then(
+                (m) => m.UsersPermisionsComponent,
+              ),
           },
         ],
       },
