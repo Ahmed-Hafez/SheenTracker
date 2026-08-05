@@ -27,6 +27,7 @@ export class HolidayCalculatorComponent {
   inputVisibleSignal = input<boolean>(false);
 
   constructor() {
+    this.days = this.dateService.holidaysCount();
     effect(() => {
       this.visible = this.inputVisibleSignal();
     });
