@@ -178,6 +178,31 @@ export class DashboardComponent {
     XLSX.writeFile(workbook, 'Log_Compliance_Report.xlsx');
   }
 
+  exportTargetAchievementToXlsx(): void {
+    const chartData = this.chartData();
+    const dateRangeLabel = this.selectedDateRangeLabel();
+    const workingDays = this.weekdays;
+    const activeUsers = this.azureUsersKpis().usersWithHours;
+
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      ['Target Achievement Report ' + `(${dateRangeLabel})`],
+      [],
+      ['Metric', 'Value'],
+      ['Achieved Hours', `${chartData.achievedHours.toFixed(1)}h`],
+      ['Target Hours', `${chartData.targetHours.toFixed(1)}h`],
+      ['Achievement Percentage', `${chartData.percentage}%`],
+      [],
+      ['Additional Information', ''],
+      ['Working Days', workingDays],
+      ['Active Users', activeUsers],
+      [],
+    ]);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Target Achievement');
+    XLSX.writeFile(workbook, 'Target_Achievement_Report.xlsx');
+  }
+
   ngOnInit(): void {
     effect(
       () => {
@@ -326,9 +351,9 @@ export class DashboardComponent {
 
     return {
       title: {
-        text: 'Target achievement',
+        text: '',
         left: 'start',
-        subtext: 'Logged vs expected hours for the selected range',
+        subtext: '',
         textStyle: {
           fontWeight: 700,
           fontSize: 15,
