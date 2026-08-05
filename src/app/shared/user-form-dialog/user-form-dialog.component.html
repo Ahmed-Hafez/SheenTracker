@@ -109,13 +109,14 @@
       <div class="flex gap-4 flex-row" [class.hidden]="isManager() || isTeamLead()">
         <div class="flex-1">
           <label class="input-label" for="expectedHours">Expected Hours per Day</label>
-          <input
-            class="field"
-            id="expectedHours"
-            formControlName="expectedHours"
-            type="number"
-            placeholder="6.5 ( global default )"
-          />
+          <p-inputnumber
+          class="field !p-0"
+          id="expectedHours"
+          formControlName="expectedHours"
+          placeholder="6.5 ( global default )"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="1">
+        </p-inputnumber>
           <p-message severity="secondary" variant="simple" size="small" class="mt-1 ml-1">
             Leave empty to use the global default of 6.5h per working day.
           </p-message>
