@@ -16,6 +16,7 @@ import { Popover, PopoverModule } from 'primeng/popover';
 import { GoalStatusBadgeComponent } from '../../../../shared/goal-badge/goal-badge.component';
 import { DateService } from '../../../../core/services/date.service';
 import { UsersService } from '../../../../core/http/backend_service/azure-users.service';
+import { ExpectedHoursTdComponent } from '../expected-hours-td/expected-hours-td.component';
 
 interface Column {
   field: string;
@@ -25,7 +26,7 @@ interface Column {
 
 @Component({
   selector: 'app-azure-users-table',
-  imports: [TableModule, HoursBadgeComponent, PopoverModule, GoalStatusBadgeComponent],
+  imports: [TableModule, HoursBadgeComponent, PopoverModule, GoalStatusBadgeComponent, ExpectedHoursTdComponent],
   templateUrl: './azure-users-table.component.html',
 })
 export class AzureUsersTableComponent implements OnInit {
@@ -34,7 +35,8 @@ export class AzureUsersTableComponent implements OnInit {
   private readonly userService = inject(UsersService);
 
   getExpectedHoursOrDefault(user: User)  {
-    return this.userService.getExpectedHoursOrDefault(user)
+    const workingDays = this.dateService.weekdaysCount();
+    return this.userService.getExpectedHoursOrDefault(user, workingDays);
   };
 
 

@@ -95,15 +95,16 @@ export class UsersService {
 
     this.filteredUsers.set(filteredUsers);
   }
-  getExpectedHoursOrDefault(user: User): number {
-    const workingDays = this.dateService.weekdaysCount();
+  getExpectedHoursOrDefault(user: User, workingDays?: number): number {
+    if(workingDays === undefined) workingDays = this.dateService.weekdaysCount();
     if (user.expectedHours === null) {
-      return 6.5 * workingDays;
+      return 6.5 * (workingDays!);
     }
-    return user.expectedHours * workingDays;
+    return user.expectedHours * (workingDays!);
   }
 
   exportUsersToCSV(users: User[]) {
+    const workingDays = this.dateService.weekdaysCount();
     const optimizedUsers = users.map((user) => ({
       displayName: user.displayName,
       email: user.email,

@@ -19,7 +19,8 @@
 
   <div class="flex flex-col gap-1">
     <span class="input-label">Number of holiday days</span>
-    <input type="number" pInputText class="field" [(ngModel)]="days" />
+    <p-inputNumber [(ngModel)]="days"></p-inputNumber>
+
     @if (days < 0) {
       <p-message severity="error" size="small" class="mt-1">
         Number of holiday days cannot be negative.
