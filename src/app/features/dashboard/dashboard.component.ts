@@ -59,9 +59,7 @@ export class DashboardComponent {
   );
 
   private readonly logComplianceChartData = computed(() => {
-    const users = this.azureUsers()?.users ?? [];
-    const targetHours = this.dateService.targetHoursCount();
-    const safeTargetHours = targetHours > 0 ? targetHours : 1;
+    const users = this.azureUsers()?.users ?? [];    
 
     const counts = {
       zeroLog: 0,
@@ -71,12 +69,15 @@ export class DashboardComponent {
     };
 
     users.forEach((user) => {
+      const workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount();
+      const expectedHoursPerDay = user.expectedHours !== null ? user.expectedHours : 6.5;
+      const TotalExpectedHoursForUser = expectedHoursPerDay * workingDays;
       if (user.totalHours <= 0) {
         counts.zeroLog += 1;
         return;
       }
 
-      const percentage = (user.totalHours / safeTargetHours) * 100;
+      const percentage = (user.totalHours / TotalExpectedHoursForUser) * 100;
 
       if (percentage < 50) {
         counts.lowCompliance += 1;
