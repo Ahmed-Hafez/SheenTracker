@@ -59,9 +59,7 @@ export class DashboardComponent {
   );
 
   private readonly logComplianceChartData = computed(() => {
-    const users = this.azureUsers()?.users ?? [];
-    const targetHours = this.dateService.targetHoursCount();
-    const safeTargetHours = targetHours > 0 ? targetHours : 1;
+    const users = this.azureUsers()?.users ?? [];    
 
     const counts = {
       zeroLog: 0,
@@ -71,12 +69,15 @@ export class DashboardComponent {
     };
 
     users.forEach((user) => {
+      const workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount();
+      const expectedHoursPerDay = user.expectedHours !== null ? user.expectedHours : 6.5;
+      const TotalExpectedHoursForUser = expectedHoursPerDay * workingDays;
       if (user.totalHours <= 0) {
         counts.zeroLog += 1;
         return;
       }
 
-      const percentage = (user.totalHours / safeTargetHours) * 100;
+      const percentage = (user.totalHours / TotalExpectedHoursForUser) * 100;
 
       if (percentage < 50) {
         counts.lowCompliance += 1;
@@ -175,6 +176,31 @@ export class DashboardComponent {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Log Compliance');
     XLSX.writeFile(workbook, 'Log_Compliance_Report.xlsx');
+  }
+
+  exportTargetAchievementToXlsx(): void {
+    const chartData = this.chartData();
+    const dateRangeLabel = this.selectedDateRangeLabel();
+    const workingDays = this.weekdays;
+    const activeUsers = this.azureUsersKpis().usersWithHours;
+
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      ['Target Achievement Report ' + `(${dateRangeLabel})`],
+      [],
+      ['Metric', 'Value'],
+      ['Achieved Hours', `${chartData.achievedHours.toFixed(1)}h`],
+      ['Target Hours', `${chartData.targetHours.toFixed(1)}h`],
+      ['Achievement Percentage', `${chartData.percentage}%`],
+      [],
+      ['Additional Information', ''],
+      ['Working Days', workingDays],
+      ['Active Users', activeUsers],
+      [],
+    ]);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Target Achievement');
+    XLSX.writeFile(workbook, 'Target_Achievement_Report.xlsx');
   }
 
   ngOnInit(): void {
@@ -325,9 +351,9 @@ export class DashboardComponent {
 
     return {
       title: {
-        text: 'Target achievement',
+        text: '',
         left: 'start',
-        subtext: 'Logged vs expected hours for the selected range',
+        subtext: '',
         textStyle: {
           fontWeight: 700,
           fontSize: 15,
