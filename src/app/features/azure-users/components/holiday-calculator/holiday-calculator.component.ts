@@ -4,10 +4,11 @@ import { Dialog } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DateService } from '../../../../core/services/date.service';
 import { Message } from 'primeng/message';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-holiday-calculator',
-  imports: [Dialog, InputTextModule, FormsModule, Message],
+  imports: [Dialog, InputTextModule, FormsModule, Message, InputNumberModule],
   templateUrl: './holiday-calculator.component.html',
   styleUrl: './holiday-calculator.component.scss',
 })
@@ -26,6 +27,7 @@ export class HolidayCalculatorComponent {
   inputVisibleSignal = input<boolean>(false);
 
   constructor() {
+    this.days = this.dateService.holidaysCount();
     effect(() => {
       this.visible = this.inputVisibleSignal();
     });
