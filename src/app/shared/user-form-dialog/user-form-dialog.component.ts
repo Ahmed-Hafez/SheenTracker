@@ -6,6 +6,7 @@ import { Select } from 'primeng/select';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { SystemUsersService } from '../../core/http/backend_service/system-users.service';
 import { RefreshService } from '../../core/services/refresh.service';
@@ -26,6 +27,7 @@ import { AddSystemUserRequest } from '../../core/models/request/add-system-user.
     InputGroupAddon,
     InputGroup,
     InputText,
+    InputNumberModule,
   ],
   templateUrl: './user-form-dialog.component.html',
 })
