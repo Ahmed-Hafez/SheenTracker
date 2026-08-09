@@ -96,7 +96,7 @@ export class UsersService {
     this.filteredUsers.set(filteredUsers);
   }
   getExpectedHoursOrDefault(user: User, workingDays?: number): number {
-    if(workingDays === undefined) workingDays = this.dateService.weekdaysCount()-this.dateService.holidaysCount();
+    if (workingDays === undefined) workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount();
     if (user.expectedHours === null) {
       return 6.5 * (workingDays!);
     }
@@ -106,6 +106,8 @@ export class UsersService {
   exportUsersToCSV(users: User[]) {
     const optimizedUsers = users.map((user) => ({
       displayName: user.displayName,
+      scrumMaster: user.scrumMasterNames.join(' | '),
+      productOwner: user.productOwnerNames.join(' | '),
       email: user.email,
       expectedHours: this.getExpectedHoursOrDefault(user),
       actualHours: user.totalHours,
@@ -118,9 +120,24 @@ export class UsersService {
       projectsCount: user.projectsCount,
       workItemsCount: user.workItemsCount,
       projectNames: this.projectNameAndHours(user).join(' | '),
-      scrumMaster: user.scrumMasterNames.join(' | '),
-      productOwner: user.productOwnerNames.join(' | '),
+
     }));
+    /*
+    
+    Scrum Master 
+    Product owner
+    Email 
+    Expected hours
+    Actual hours
+    Missed hours
+    Extra hours
+    Compliance percentage 
+    Projects Count
+    Work items
+    Project names
+    
+    
+    */
 
     const worksheet = XLSX.utils.json_to_sheet(optimizedUsers);
     const workbook = XLSX.utils.book_new();
