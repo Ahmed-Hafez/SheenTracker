@@ -188,7 +188,7 @@ export class DashboardComponent {
       ['Target Achievement Report ' + `(${dateRangeLabel})`],
       [],
       ['Metric', 'Value'],
-      ['Achieved Hours', `${chartData.achievedHours.toFixed(1)}h`],
+      ['Achieved Hours Without Extra Hours', `${chartData.achievedHours.toFixed(1)}h`],
       ['Target Hours', `${chartData.targetHours.toFixed(1)}h`],
       ['Achievement Percentage', `${chartData.percentage}%`],
       [],
