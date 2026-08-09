@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { map, Observable } from 'rxjs';
 import { ApiService } from '../api_services/api.service';
 import { DateService } from '../../services/date.service';
+import { Department } from '../../enums/departments.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -106,6 +107,8 @@ export class UsersService {
   exportUsersToCSV(users: User[]) {
     const optimizedUsers = users.map((user) => ({
       'Display Name': user.displayName,
+      'Direct Manager': user.teamLead,
+      'Department': Department[user.department],
       'Scrum Master': user.scrumMasterNames.join(' | '),
       'Product Owner': user.productOwnerNames.join(' | '),
       'Email': user.email,
