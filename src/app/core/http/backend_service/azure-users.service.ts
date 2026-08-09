@@ -105,21 +105,21 @@ export class UsersService {
 
   exportUsersToCSV(users: User[]) {
     const optimizedUsers = users.map((user) => ({
-      displayName: user.displayName,
-      scrumMaster: user.scrumMasterNames.join(' | '),
-      productOwner: user.productOwnerNames.join(' | '),
-      email: user.email,
-      expectedHours: this.getExpectedHoursOrDefault(user),
-      actualHours: user.totalHours,
-      missedHours: Math.max(0, this.getExpectedHoursOrDefault(user) - user.totalHours),
-      extraHours: Math.max(0, user.totalHours - this.getExpectedHoursOrDefault(user)),
-      compliancePercentage:
+      'Display Name': user.displayName,
+      'Scrum Master': user.scrumMasterNames.join(' | '),
+      'Product Owner': user.productOwnerNames.join(' | '),
+      'Email': user.email,
+      'Expected Hours': this.getExpectedHoursOrDefault(user),
+      'Actual Hours': user.totalHours,
+      'Missed Hours': Math.max(0, this.getExpectedHoursOrDefault(user) - user.totalHours),
+      'Extra Hours': Math.max(0, user.totalHours - this.getExpectedHoursOrDefault(user)),
+      'Compliance Percentage':
         user.totalHours > 0
           ? Math.round((user.totalHours / this.getExpectedHoursOrDefault(user)) * 100) + '%'
           : '0%',
-      projectsCount: user.projectsCount,
-      workItemsCount: user.workItemsCount,
-      projectNames: this.projectNameAndHours(user).join(' | '),
+      'Projects Count': user.projectsCount,
+      'Work Items Count': user.workItemsCount,
+      'Project Names': this.projectNameAndHours(user).join(' | '),
 
     }));
     /*
