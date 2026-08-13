@@ -1,0 +1,6 @@
+<div class="space-y-4 flex flex-col gap-6.5">
+  <app-schedule-progress-chart
+    [effortCompletedPercent]="quarterPlans.completionPercentEffort"
+  ></app-schedule-progress-chart>
+  <app-hours-effort-tracking [quarterPlans]="quarterPlans"></app-hours-effort-tracking>
+</div>
