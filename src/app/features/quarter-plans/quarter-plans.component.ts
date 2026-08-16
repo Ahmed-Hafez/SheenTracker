@@ -3,11 +3,12 @@ import { QuarterPlansDashboardResponse } from '../../core/models/reponse/quarter
 import { quarterPlansMock } from '../../core/mock/quarter-plans.mock';
 import { ScheduleProgressChartComponent } from './components/schedule-progress-chart/schedule-progress-chart.component';
 import { HoursEffortTrackingComponent } from './components/hours-effort-tracking/hours-effort-tracking.component';
+import { EpicsByAreaComponent } from './components/epics-by-area/epics-by-area.component';
 
 @Component({
   selector: 'app-quarter-plans',
   standalone: true,
-  imports: [ScheduleProgressChartComponent, HoursEffortTrackingComponent],
+  imports: [ScheduleProgressChartComponent, HoursEffortTrackingComponent, EpicsByAreaComponent],
   templateUrl: './quarter-plans.component.html',
   styleUrl: './quarter-plans.component.scss',
 })
