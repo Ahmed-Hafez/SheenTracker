@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { distinctUntilChanged, filter, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -35,20 +35,7 @@ export class LayoutComponent implements OnInit {
   readonly mainOffsetPx = this.sidebarService.mainOffsetPx;
 
   readonly pageTitle = signal('Dashboard');
-  readonly pageSubtitle = computed(() => {
-    const range = this.dateService.selectedDateRange();
-    const suffix = 'Azure DevOps activity';
-
-    if (!range) {
-      return suffix;
-    }
-
-    if (this.dateService.isDefaultRangeSelected(range)) {
-      return `${this.formatRange(range)} · ${suffix}`;
-    }
-
-    return `${this.formatRange(range)} · ${suffix}`;
-  });
+  readonly pageSubtitle = signal(this.getDefaultSubtitle());
 
   ngOnInit(): void {
     this.sidebarService.init(this.destroyRef);
@@ -63,8 +50,29 @@ export class LayoutComponent implements OnInit {
       )
       .subscribe((url) => {
         const title = this.getTitleFromUrl(url);
+        const subtitle = this.getsubtitleFromUrl(url);
         this.pageTitle.set(title);
+        this.pageSubtitle.set(subtitle || this.getDefaultSubtitle());
       });
+  }
+
+  private getsubtitleFromUrl(url: string): string {
+    const quarter = this.dateService.getCurrentQuarter();
+    if (url.startsWith('/quarter-plans')) {
+      return `${quarter.dateRange.start.getFullYear()} ${quarter.quarter} Plan Dashboard · ${this.formatRange(quarter.dateRange)}`;
+    }
+    return '';
+  }
+
+  private getDefaultSubtitle(): string {
+    const range = this.dateService.selectedDateRange();
+    const suffix = 'Azure DevOps activity';
+
+    if (!range) {
+      return suffix;
+    }
+
+    return `${this.formatRange(range)} · ${suffix}`;
   }
 
   private getTitleFromUrl(url: string): string {
@@ -75,19 +83,18 @@ export class LayoutComponent implements OnInit {
     if (url.startsWith('/squads')) return 'Squads';
     if (url.startsWith('/reports')) return 'Reports';
     if (url.startsWith('/settings')) return 'Settings';
+    if (url.startsWith('/quarter-plans')) return 'Enterprise Quarterly Planning';
     if (url === '/' || url.startsWith('/dashboard')) return 'Dashboard';
 
     return 'Overview';
   }
 
   private formatRange(range: DateRange): string {
-    const formatter = new Intl.DateTimeFormat('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
+    return `${this.formatShortDate(range.start)} - ${this.formatShortDate(range.end)}`;
+  }
 
-    return `${formatter.format(range.start)} - ${formatter.format(range.end)}`;
+  private formatShortDate(date: Date): string {
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   }
 
   toggleSidebarMobile(): void {

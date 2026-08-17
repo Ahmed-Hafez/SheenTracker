@@ -81,6 +81,14 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'quarter-plans',
+        title: 'Enterprise Quarterly Planning - SheenTrack 360°',
+        loadComponent: () =>
+          import('./features/quarter-plans/quarter-plans.component').then(
+            (m) => m.QuarterPlansComponent,
+          ),
+      },
     ],
   },
 ];

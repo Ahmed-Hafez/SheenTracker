@@ -5,6 +5,13 @@ export interface DateRange {
   end: Date;
 }
 
+export type QuarterLabel = 'Q1' | 'Q2' | 'Q3' | 'Q4';
+
+export interface QuarterDateRange {
+  quarter: QuarterLabel;
+  dateRange: DateRange;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -27,35 +34,50 @@ export class DateService {
   readonly targetHoursCount = computed(() => {
     const weekdaysCount = this.weekdaysCount();
     const holidaysCount = this.holidaysCount();
-    return weekdaysCount ? (weekdaysCount * 6.5) - (holidaysCount * 6.5) : 0;
+    return weekdaysCount ? weekdaysCount * 6.5 - holidaysCount * 6.5 : 0;
   });
 
-   getWeekdaysCount(startDate: Date, endDate: Date): number {
+  getCurrentQuarter(): QuarterDateRange {
+    const normalizedDate = this.toDateOnly(new Date());
+    const quarterIndex = Math.floor(normalizedDate.getMonth() / 3);
+    const quarter = `Q${quarterIndex + 1}` as QuarterLabel;
+    const start = new Date(normalizedDate.getFullYear(), quarterIndex * 3, 1);
+    const end = new Date(normalizedDate.getFullYear(), quarterIndex * 3 + 3, 0);
+
+    return {
+      quarter,
+      dateRange: {
+        start: this.toDateOnly(start),
+        end: this.toDateOnly(end),
+      },
+    };
+  }
+
+  getWeekdaysCount(startDate: Date, endDate: Date): number {
     // Clone dates to avoid mutating original inputs
     const current = new Date(startDate.getTime());
     const target = new Date(endDate.getTime());
-    
+
     // Ensure start date is before or equal to end date
     if (current > target) return 0;
-    
+
     let count = 0;
-    
+
     // Loop through each day from start to end (inclusive)
     while (current <= target) {
-        const dayOfWeek = current.getDay();
-        
-        // 5 = Friday, 6 = Saturday
-        if (dayOfWeek !== 5 && dayOfWeek !== 6) {
-            count++;
-        }
-        
-        // Move to the next day
-        current.setDate(current.getDate() + 1);
-    }
-    
-    return count;
-}
+      const dayOfWeek = current.getDay();
 
+      // 5 = Friday, 6 = Saturday
+      if (dayOfWeek !== 5 && dayOfWeek !== 6) {
+        count++;
+      }
+
+      // Move to the next day
+      current.setDate(current.getDate() + 1);
+    }
+
+    return count;
+  }
 
   setDateRange(start: Date, end: Date): void {
     this.selectedDateRangeSignal.set({

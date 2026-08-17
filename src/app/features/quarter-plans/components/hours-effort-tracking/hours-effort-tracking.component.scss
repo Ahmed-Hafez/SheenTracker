@@ -1,0 +1,167 @@
+:host {
+  display: block;
+}
+
+.hours-effort-tracking {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: #111827;
+}
+
+.section-rule {
+  height: 1px;
+  background: #ebe9e7;
+  width: 100%;
+}
+
+.top-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.projects-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.stats-card {
+  min-height: 100%;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.card-subtitle {
+  font-size: 0.5rem;
+  color: #6b7280;
+  margin-top: -2px;
+}
+
+.card-rule {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 10px 0 14px;
+}
+
+.metric-stack {
+  display: grid;
+  gap: 14px;
+  margin-top: 0;
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fbfaf8;
+  border: 1px solid #e7e2db;
+  border-radius: 10px;
+  padding: 18px 18px 16px;
+  min-height: 72px;
+}
+
+.label,
+.execution-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #374151;
+  font-weight: 400;
+}
+
+.execution-label {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.98rem;
+  color: #111827;
+}
+
+.execution-label--completion {
+  color: #f97316;
+}
+
+.stat,
+.execution-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat--blue,
+.execution-value--blue {
+  color: #1d6fbf;
+}
+
+.stat--green,
+.execution-value--green {
+  color: #1f9d6e;
+}
+
+.stat--orange,
+.execution-value--orange {
+  color: #f97316;
+}
+
+.execution-value--dark {
+  color: #111827;
+}
+
+.execution-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 4px;
+}
+
+.execution-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.execution-row--completion {
+  margin-top: 4px;
+}
+
+.execution-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin-top: 1px;
+}
+
+@media (max-width: 1200px) {
+  .top-stats-row,
+  .projects-row {
+    grid-template-columns: 1fr;
+  }
+}

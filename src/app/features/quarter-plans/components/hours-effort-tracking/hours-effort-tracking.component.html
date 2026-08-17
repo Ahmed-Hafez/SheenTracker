@@ -1,0 +1,120 @@
+<section class="hours-effort-tracking">
+  <header class="section-header">
+    <h2 class="section-title">Hours / Effort Tracking</h2>
+    <div class="section-rule"></div>
+  </header>
+
+  <!-- Hours Row -->
+  <div class="top-stats-row">
+    <app-stat-card
+      label="Total Effort"
+      [value]="quarterPlans().totalEffort"
+      subtitle="Estimated Hours"
+    />
+
+    <app-stat-card
+      label="Logged / Closed Work"
+      [value]="quarterPlans().totalCompleted"
+      subtitle="Completed Hours"
+      color="green"
+    />
+
+    <app-stat-card
+      label="Remaining Work"
+      [value]="quarterPlans().totalRemaining"
+      subtitle="Hours to go"
+      color="orange"
+    />
+
+    <app-stat-card
+      label="Effort Completion"
+      [value]="quarterPlans().completionPercentEffort + '%'"
+      color="orange"
+      [progressValue]="quarterPlans().completionPercentEffort"
+    />
+  </div>
+
+  <!-- Projects Row -->
+  <section class="projects-row">
+    <!-- Left Column (Q Plan) -->
+    <article class="stats-card">
+      <h3 class="card-title">Q Plan Project</h3>
+      <div class="card-rule"></div>
+
+      <div class="metric-stack">
+        <div class="metric-row">
+          <span class="label">Total Epics</span>
+          <span class="stat stat--orange" id="stat-epics">{{ quarterPlans().epicsCount }}</span>
+        </div>
+
+        <div class="metric-row">
+          <span class="label">Total Features</span>
+          <span class="stat stat--blue" id="stat-features">{{ quarterPlans().featuresCount }}</span>
+        </div>
+      </div>
+    </article>
+    <!-- middle Column (Connected Projects) -->
+    <article class="stats-card">
+      <h3 class="card-title">Connected Projects</h3>
+      <div class="card-rule"></div>
+
+      <div class="metric-stack">
+        <div class="metric-row">
+          <span class="label">Stories</span>
+          <span class="stat stat--blue" id="stat-stories">{{ quarterPlans().storiesCount }}</span>
+        </div>
+
+        <div class="metric-row">
+          <span class="label">Story-linked Items</span>
+          <span class="stat stat--green" id="stat-linked-items">{{
+            quarterPlans().childrenOfFeaturesCount
+          }}</span>
+        </div>
+      </div>
+    </article>
+    <!-- Right Column (Execution Status) -->
+    <article class="stats-card">
+      <h3 class="card-title">Execution Status</h3>
+      <div class="card-rule"></div>
+
+      <div class="execution-stack">
+        <div class="execution-row">
+          <span class="execution-label">Total Children</span>
+          <span class="execution-value execution-value--dark" id="stat-execution-total">
+            {{ quarterPlans().childrenOfFeaturesCount }}
+          </span>
+        </div>
+
+        <div class="execution-row">
+          <span class="execution-label">New</span>
+          <span class="execution-value execution-value--orange" id="stat-execution-new">
+            {{ quarterPlans().executionNewCount }}
+          </span>
+        </div>
+
+        <div class="execution-row">
+          <span class="execution-label">Active</span>
+          <span class="execution-value execution-value--blue" id="stat-execution-active">
+            {{ quarterPlans().executionActiveCount }}
+          </span>
+        </div>
+
+        <div class="execution-row">
+          <span class="execution-label">Closed</span>
+          <span class="execution-value execution-value--green" id="stat-execution-closed">
+            {{ quarterPlans().executionClosedCount }}
+          </span>
+        </div>
+
+        <div class="execution-divider"></div>
+
+        <div class="execution-row execution-row--completion">
+          <span class="execution-label execution-label--completion">Completion</span>
+          <span class="execution-value execution-value--orange" id="stat-execution-percent">
+            {{ quarterPlans().completionPercentEffort }}%
+          </span>
+        </div>
+      </div>
+    </article>
+  </section>
+</section>
