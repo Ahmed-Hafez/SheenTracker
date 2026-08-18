@@ -2,31 +2,22 @@ import { Component, computed, inject, input } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { EChartsOption } from 'echarts/types/dist/shared';
 import { DateService } from '../../../../core/services/date.service';
+import { QuarterPlansService } from '../../../../core/http/backend_service/quarter-plans.service';
+import { ScheduleProgressChartSkeletonComponent } from './schedule-progress-chart-skeleton/schedule-progress-chart-skeleton.component';
 
 @Component({
   selector: 'app-schedule-progress-chart',
-  imports: [NgxEchartsDirective],
+  imports: [NgxEchartsDirective, ScheduleProgressChartSkeletonComponent],
   templateUrl: './schedule-progress-chart.component.html',
   styleUrl: './schedule-progress-chart.component.scss',
 })
 export class ScheduleProgressChartComponent {
-  private readonly dateService = inject(DateService);
-  readonly effortCompletedPercent = input.required<number>();
-
-  readonly currentQuarter = computed(() => this.dateService.getCurrentQuarter());
-
-  readonly calendarElapsedPercent = computed(() => {
-    const { start, end } = this.currentQuarter().dateRange;
-    const today = this.dateService['toDateOnly'](new Date());
-    const elapsedDays = Math.max(0, Math.round((today.getTime() - start.getTime()) / 86_400_000));
-    const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / 86_400_000));
-
-    return Math.ceil((elapsedDays / totalDays) * 100);
-  });
+  private readonly qPlansDashboardService = inject(QuarterPlansService);
+  readonly isLoading = this.qPlansDashboardService.isLoading;
 
   readonly scheduleStatus = computed(() => {
-    const elapsed = this.calendarElapsedPercent();
-    const completed = this.effortCompletedPercent();
+    const elapsed = this.qPlansDashboardService.calendarElapsedPercent();
+    const completed = this.qPlansDashboardService.qplansDashboardData().completionPercentEffort;
 
     if (completed < elapsed - 1) {
       return 'Behind Schedule';
@@ -54,8 +45,9 @@ export class ScheduleProgressChartComponent {
   });
 
   readonly scheduleProgress = computed<EChartsOption>(() => {
-    const calendarElapsed = this.calendarElapsedPercent();
-    const effortCompleted = this.effortCompletedPercent();
+    const calendarElapsed = this.qPlansDashboardService.calendarElapsedPercent();
+    const effortCompleted =
+      this.qPlansDashboardService.qplansDashboardData().completionPercentEffort;
 
     return {
       animation: true,

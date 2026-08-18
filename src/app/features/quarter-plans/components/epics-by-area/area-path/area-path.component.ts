@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { EpicsByArea } from '../../../../../core/models/reponse/quarter-plans-dashboard.response';
 
 @Component({
   selector: 'app-area-path',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './area-path.component.scss',
 })
 export class AreaPathComponent {
-
+  areaPath = input.required<EpicsByArea>();
 }

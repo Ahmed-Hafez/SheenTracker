@@ -2,24 +2,28 @@
   <h2 style="font-size: 1.25 rem; font-weight: 600; margin: 0">Schedule Progress</h2>
   <div class="grow border-t border-[#ebe9e7]"></div>
 </div>
-<section class="schedule-progress-card">
-  <div class="schedule-progress-header">
-    <h3 class="schedule-progress-title">Current Actual Status</h3>
+@if (isLoading()) {
+  <app-schedule-progress-chart-skeleton></app-schedule-progress-chart-skeleton>
+} @else {
+  <section class="schedule-progress-card">
+    <div class="schedule-progress-header">
+      <h3 class="schedule-progress-title">Current Actual Status</h3>
 
-    <span
-      class="status-badge"
-      [class.status-badge--behind]="scheduleStatus() === 'Behind Schedule'"
-      [class.status-badge--ahead]="scheduleStatus() === 'Ahead of Schedule'"
-      [class.status-badge--on-track]="scheduleStatus() === 'On Schedule'"
-    >
-      {{ scheduleStatus() }}
-    </span>
-  </div>
+      <span
+        class="status-badge"
+        [class.status-badge--behind]="scheduleStatus() === 'Behind Schedule'"
+        [class.status-badge--ahead]="scheduleStatus() === 'Ahead of Schedule'"
+        [class.status-badge--on-track]="scheduleStatus() === 'On Schedule'"
+      >
+        {{ scheduleStatus() }}
+      </span>
+    </div>
 
-  <div
-    class="schedule-progress-chart"
-    echarts
-    [options]="scheduleProgress()"
-    [initOpts]="{ renderer: 'svg' }"
-  ></div>
-</section>
+    <div
+      class="schedule-progress-chart"
+      echarts
+      [options]="scheduleProgress()"
+      [initOpts]="{ renderer: 'svg' }"
+    ></div>
+  </section>
+}
