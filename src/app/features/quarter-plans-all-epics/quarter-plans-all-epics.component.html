@@ -1,1 +1,282 @@
-<p>quarter-plans-all-epics works!</p>
+<div class="flex flex-col gap-6 px-1 pb-8">
+
+  <!-- ── Breadcrumb ─────────────────────────────────────────────────────── -->
+  <p-breadcrumb [home]="breadcrumbHome" [model]="breadcrumbItems" />
+
+  <!-- ── Search + Filter toolbar ────────────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+
+    <p-iconfield class="flex-1 min-w-48">
+      <p-inputicon styleClass="pi pi-search" />
+      <input
+        pInputText
+        type="text"
+        placeholder="Search epics by title"
+        class="w-full"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+      />
+
+
+    </p-iconfield>
+
+    <div class="h-8 w-px bg-charcoal-100 hidden sm:block"></div>
+
+    <div class="flex flex-wrap gap-2">
+      @for (filter of filterOptions; track filter) {
+        <button
+          pButton
+          type="button"
+          [label]="filter"
+          [severity]="isFilterActive(filter) ? 'primary' : 'secondary'"
+          size="small"
+          (click)="toggleFilter(filter)"
+          class="transition-all duration-200"
+        ></button>
+      }
+    </div>
+  </div>
+
+  <!-- ── Stat Cards ─────────────────────────────────────────────────────── -->
+  @if (isLoading()) {
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      @for (_ of [1, 2, 3]; track $index) {
+        <p-skeleton height="90px" borderRadius="12px" />
+      }
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <app-stat-card label="EFFORT"    [value]="summary.totalEffort"    color="default" />
+      <app-stat-card label="COMPLETED" [value]="summary.totalCompleted" color="green"   />
+      <app-stat-card label="REMAINING" [value]="summary.totalRemaining" color="orange"  />
+    </div>
+  }
+
+  <!-- ── Epic Effort Roll-Up ────────────────────────────────────────────── -->
+  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+
+    <!-- Section header -->
+    <div class="px-6 py-5 flex items-center justify-between">
+      <div>
+        <h2 class="text-base font-semibold text-charcoal-900">Epic effort roll-up</h2>
+        <p class="text-sm text-charcoal-400 mt-0.5">
+          All epics in the quarter plan with logged and remaining effort
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <p-button label="Expand All"   icon="pi pi-plus"  [text]="true" severity="secondary" size="small" (onClick)="expandAll()"   />
+        <p-button label="Collapse All" icon="pi pi-minus" [text]="true" severity="secondary" size="small" (onClick)="collapseAll()" />
+      </div>
+    </div>
+
+    <!-- ── Loading skeleton ──────────────────────────────────────────────── -->
+    @if (isLoading()) {
+      <p-table [value]="[1, 2, 3, 4, 5]" [tableStyle]="{ 'min-width': '54rem' }">
+        <ng-template #header>
+          <tr>
+            <th class="w-[4rem] min-w-[4rem]"></th>
+            <th class="w-full text-left text-xs font-semibold uppercase tracking-wide text-charcoal-400">Epic</th>
+            <th class="w-[100px] min-w-[100px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">Effort</th>
+            <th class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">Completed</th>
+            <th class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">Remaining</th>
+            <th class="w-[140px] min-w-[140px] text-center text-xs font-semibold uppercase tracking-wide text-charcoal-400">Status</th>
+          </tr>
+        </ng-template>
+        <ng-template #body>
+          <tr>
+            <td>
+              <p-skeleton shape="circle" size="2rem" />
+            </td>
+            <td>
+              <div class="flex items-center gap-2">
+                <p-skeleton width="48px" height="22px" borderRadius="999px" />
+                <p-skeleton width="200px" height="16px" />
+              </div>
+            </td>
+            <td>
+              <div class="flex justify-end"><p-skeleton width="40px" height="16px" /></div>
+            </td>
+            <td>
+              <div class="flex justify-end"><p-skeleton width="40px" height="16px" /></div>
+            </td>
+            <td>
+              <div class="flex justify-end"><p-skeleton width="40px" height="16px" /></div>
+            </td>
+            <td>
+              <div class="flex justify-center"><p-skeleton width="80px" height="24px" borderRadius="999px" /></div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+    } @else {
+
+      <!-- ── Outer p-table: one row per epic ──────────────────────────────── -->
+      <p-table
+        [value]="filteredEpics()"
+        dataKey="id"
+        [expandedRowKeys]="expandedRows"
+        (onRowExpand)="onRowExpand($event)"
+        (onRowCollapse)="onRowCollapse($event)"
+        [tableStyle]="{ 'min-width': '54rem' }"
+      >
+
+
+
+        <!-- Outer header -->
+        <ng-template #header>
+          <tr>
+            <th class="w-[4rem] min-w-[4rem]"></th>
+            <th class="w-full text-left text-xs font-semibold uppercase tracking-wide text-charcoal-400">Epic</th>
+            <th class="w-[100px] min-w-[100px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">Effort</th>
+            <th class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">Completed</th>
+            <th class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">Remaining</th>
+            <th class="w-[140px] min-w-[140px] text-center text-xs font-semibold uppercase tracking-wide text-charcoal-400">Status</th>
+          </tr>
+        </ng-template>
+
+        <!-- Outer body: one tr per epic -->
+        <ng-template #body let-epic let-expanded="expanded">
+          <tr class="cursor-pointer hover:bg-charcoal-50 transition-colors duration-150">
+
+            <!-- Row toggler -->
+            <td>
+              <p-button
+                type="button"
+                [pRowToggler]="epic"
+                [text]="true"
+                severity="secondary"
+                [rounded]="true"
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                size="small"
+              />
+            </td>
+
+            <!-- Epic badge + title -->
+            <td>
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="inline-flex items-center rounded-full border border-primary text-primary px-2.5 py-0.5 text-xs font-medium flex-shrink-0">
+                  Epic
+                </span>
+                <span class="text-sm font-medium text-charcoal-900 truncate">{{ epic.title }}</span>
+              </div>
+            </td>
+
+            <!-- Effort -->
+            <td class="text-right">
+              <span class="text-sm font-semibold text-charcoal-900">{{ epic.effort }}</span>
+            </td>
+
+            <!-- Completed -->
+            <td class="text-right">
+              <span class="text-sm font-semibold text-success">
+                {{ epic.completed > 0 ? epic.completed : '-' }}
+              </span>
+            </td>
+
+            <!-- Remaining -->
+            <td class="text-right">
+              <span class="text-sm font-semibold text-orange-500">{{ epic.remaining }}</span>
+            </td>
+
+            <!-- Status -->
+            <td class="text-center">
+              <p-tag
+                class="w-[100px]"
+                [value]="epic.status"
+                [severity]="statusSeverity(epic.status)"
+                [rounded]="true"
+              />
+            </td>
+          </tr>
+        </ng-template>
+
+        <!-- Expanded row: nested p-table of features ───────────────────── -->
+        <ng-template #expandedrow let-epic>
+          <tr>
+            <td colspan="6" class="!p-0 bg-charcoal-50">
+              <div class="py-0">
+
+                <p-table
+                  [value]="epic.features"
+                  dataKey="id"
+                  [tableStyle]="{ 'min-width': '100%', 'padding': '0'}"
+                >
+
+
+                  <!-- Inner body: one tr per feature -->
+                  <ng-template #body let-feature>
+                    <tr class="hover:bg-charcoal-100 transition-colors duration-150">
+
+                      <td class="w-[4rem] min-w-[4rem]"></td>
+
+                      <!-- Feature badge + title -->
+                      <td class="w-full pl-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="inline-flex items-center rounded-full border border-charcoal-400 text-charcoal-600 px-2.5 py-0.5 text-xs font-medium flex-shrink-0">
+                            Feature
+                          </span>
+                          <span class="text-sm text-charcoal-800 truncate">{{ feature.title }}</span>
+                        </div>
+                      </td>
+
+                      <!-- Effort -->
+                      <td class="w-[100px] min-w-[100px] text-right">
+                        <span class="text-sm text-charcoal-700">{{ feature.effort }}</span>
+                      </td>
+
+                      <!-- Completed -->
+                      <td class="w-[120px] min-w-[120px] text-right">
+                        <span class="text-sm text-success">
+                          {{ feature.completed > 0 ? feature.completed : '-' }}
+                        </span>
+                      </td>
+
+                      <!-- Remaining -->
+                      <td class="w-[120px] min-w-[120px] text-right">
+                        <span class="text-sm text-orange-500">{{ feature.remaining }}</span>
+                      </td>
+
+                      <!-- Status -->
+                      <td class="w-[140px] min-w-[140px] text-center">
+                        <p-tag
+                          class="w-[100px]"
+                          [value]="feature.status"
+                          [severity]="statusSeverity(feature.status)"
+                          [rounded]="true"
+                        />
+                      </td>
+                    </tr>
+                  </ng-template>
+
+                  <!-- Empty features -->
+                  <ng-template #emptymessage>
+                    <tr>
+                      <td colspan="5" class="text-center text-sm text-charcoal-400 py-4">
+                        No features found for this epic.
+                      </td>
+                    </tr>
+                  </ng-template>
+
+                </p-table>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <!-- Empty epics state -->
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="6">
+              <div class="flex flex-col items-center justify-center py-16 text-charcoal-400 gap-3">
+                <i class="pi pi-inbox text-4xl"></i>
+                <p class="text-sm">No epics match your current filters.</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    }
+  </div>
+</div>
