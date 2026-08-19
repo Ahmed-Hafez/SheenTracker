@@ -1,16 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-
-export interface DateRange {
-  start: Date;
-  end: Date;
-}
-
-export type QuarterLabel = 'Q1' | 'Q2' | 'Q3' | 'Q4';
-
-export interface QuarterDateRange {
-  quarter: QuarterLabel;
-  dateRange: DateRange;
-}
+import { DateHelpers, DateRange } from '../utils/date-helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -36,22 +25,6 @@ export class DateService {
     const holidaysCount = this.holidaysCount();
     return weekdaysCount ? weekdaysCount * 6.5 - holidaysCount * 6.5 : 0;
   });
-
-  getCurrentQuarter(): QuarterDateRange {
-    const normalizedDate = this.toDateOnly(new Date());
-    const quarterIndex = Math.floor(normalizedDate.getMonth() / 3);
-    const quarter = `Q${quarterIndex + 1}` as QuarterLabel;
-    const start = new Date(normalizedDate.getFullYear(), quarterIndex * 3, 1);
-    const end = new Date(normalizedDate.getFullYear(), quarterIndex * 3 + 3, 0);
-
-    return {
-      quarter,
-      dateRange: {
-        start: this.toDateOnly(start),
-        end: this.toDateOnly(end),
-      },
-    };
-  }
 
   getWeekdaysCount(startDate: Date, endDate: Date): number {
     // Clone dates to avoid mutating original inputs
@@ -81,8 +54,8 @@ export class DateService {
 
   setDateRange(start: Date, end: Date): void {
     this.selectedDateRangeSignal.set({
-      start: this.toDateOnly(start),
-      end: this.toDateOnly(end),
+      start: DateHelpers.toDateOnly(start),
+      end: DateHelpers.toDateOnly(end),
     });
   }
 
@@ -91,8 +64,8 @@ export class DateService {
       return 0;
     }
 
-    const start = this.toDateOnly(range.start);
-    const end = this.toDateOnly(range.end);
+    const start = DateHelpers.toDateOnly(range.start);
+    const end = DateHelpers.toDateOnly(range.end);
     const diffMs = end.getTime() - start.getTime();
 
     if (diffMs < 0) {
@@ -133,14 +106,10 @@ export class DateService {
   }
 
   private createDefaultRange(): DateRange {
-    const end = this.toDateOnly(new Date());
-    const today = this.toDateOnly(new Date());
+    const end = DateHelpers.toDateOnly(new Date());
+    const today = DateHelpers.toDateOnly(new Date());
     const start = new Date(today.getFullYear(), today.getMonth(), 1);
     return { start, end };
-  }
-
-  private toDateOnly(date: Date): Date {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
   private isSameDay(first: Date, second: Date): boolean {

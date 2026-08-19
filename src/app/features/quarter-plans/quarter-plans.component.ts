@@ -5,6 +5,7 @@ import { ScheduleProgressChartComponent } from './components/schedule-progress-c
 import { HoursEffortTrackingComponent } from './components/hours-effort-tracking/hours-effort-tracking.component';
 import { EpicsByAreaComponent } from './components/epics-by-area/epics-by-area.component';
 import { QuarterPlansService } from '../../core/http/backend_service/quarter-plans.service';
+import { QuarterYearService } from '../../core/services/quarter-year.service';
 
 @Component({
   selector: 'app-quarter-plans',
@@ -15,10 +16,12 @@ import { QuarterPlansService } from '../../core/http/backend_service/quarter-pla
 })
 export class QuarterPlansComponent implements OnInit {
   private readonly quarterPlansService = inject(QuarterPlansService);
+  private readonly quarterDateService = inject(QuarterYearService);
   readonly qPlansDashboardData = this.quarterPlansService.qplansDashboardData;
 
   ngOnInit() {
     this.getQPlansDashboardData();
+    console.log(this.quarterDateService.getAvailableQuarters());
   }
 
   getQPlansDashboardData() {

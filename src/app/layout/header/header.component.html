@@ -28,20 +28,44 @@
   </div>
 
   <div class="flex items-center gap-2">
-    <p-datepicker
-      [ngModel]="rangeDates()"
-      (ngModelChange)="onRangeChange($event)"
-      selectionMode="range"
-      [readonlyInput]="true"
-      [numberOfMonths]="2"
-      [variant]="'filled'"
-      [showIcon]="true"
-      [minDate]="minDate"
-      [maxDate]="maxDate"
-      [dateFormat]="'dd M yy'"
-      inputId="icondisplay"
-      [iconDisplay]="'input'"
-    />
+    @if (isQplanRoute()) {
+      <p-select
+        [options]="availableQuarters"
+        [(ngModel)]="selectedQuarter"
+        (onChange)="onQuarterChange($event.value)"
+        placeholder="Select Quarter"
+        optionLabel="quarter"
+        optionValue="quarter"
+        [style]="{ minWidth: '12rem' }"
+      >
+        <ng-template #item let-quarter>
+          <div class="flex flex-col items-start justify-between">
+            <span
+              class="font-semibold text-white"
+              [class.text-white]="isQuarterSelected(quarter)"
+              [class.text-black]="!isQuarterSelected(quarter)"
+              >{{ quarter.quarter }}</span
+            >
+            <span class="text-sm font-light">{{ formatDate(quarter.dateRange) }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+    } @else {
+      <p-datepicker
+        [ngModel]="rangeDates()"
+        (ngModelChange)="onRangeChange($event)"
+        selectionMode="range"
+        [readonlyInput]="true"
+        [numberOfMonths]="2"
+        [variant]="'filled'"
+        [showIcon]="true"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        [dateFormat]="'dd M yy'"
+        inputId="icondisplay"
+        [iconDisplay]="'input'"
+      />
+    }
     <button type="button" class="btn btn-secondary" (click)="onRefreshClick()">
       <i class="pi pi-refresh"></i> Refresh
     </button>
