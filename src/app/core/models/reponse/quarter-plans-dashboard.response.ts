@@ -29,4 +29,13 @@ export interface QuarterPlansDashboardResponse {
 
   completionPercentEffort: number;
   completionPercentSP: number;
+
+  epicsByArea: EpicsByArea[];
+}
+
+export interface EpicsByArea {
+  area: string;
+  total: number;
+  open: number;
+  closed: number;
 }

@@ -1,20 +1,24 @@
-<div class="card">
-  <div class="flex justify-between items-center">
-    <div>
-      <h3>Epics by Area</h3>
-      <p class="text-sm text-gray-500">Select an area path to open its epics</p>
-    </div>
-    <button class="btn btn-secondary" style="font-size: 12px">
-      View All Epics <i class="pi pi-arrow-right" style="font-size: 10px"></i>
-    </button>
-  </div>
-  <div class="card-rule"></div>
-
-  <div class="mt-2 area-path-list">
-    @for (item of [1, 2, 3, 4]; track $index) {
-      <div class="area-path-item">
-        <app-area-path></app-area-path>
+@if (isLoading()) {
+  <app-epics-by-area-skeleton></app-epics-by-area-skeleton>
+} @else {
+  <div class="card">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3>Epics by Area</h3>
+        <p class="text-sm text-gray-500">Select an area path to open its epics</p>
       </div>
-    }
+      <button class="btn btn-secondary" style="font-size: 12px">
+        View All Epics <i class="pi pi-arrow-right" style="font-size: 10px"></i>
+      </button>
+    </div>
+    <div class="card-rule"></div>
+
+    <div class="mt-2 area-path-list">
+      @for (item of epicsByArea(); track $index) {
+        <div class="area-path-item">
+          <app-area-path [areaPath]="item"></app-area-path>
+        </div>
+      }
+    </div>
   </div>
-</div>
+}

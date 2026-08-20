@@ -1,9 +1,13 @@
 <div class="stat-card">
   <div class="stat-card__label">{{ label() }}</div>
 
-  <div class="stat-card__value" [ngClass]="'stat-card__value--' + color()">
-    {{ formattedValue() }}
-  </div>
+  <div
+    class="stat-card__value"
+    [ngClass]="'stat-card__value--' + color()"
+    [appAnimateNumber]="value()"
+    suffix="{{ progressValue() ? '%' : '' }}"
+    [ready]="isReady()"
+  ></div>
 
   <div class="stat-card__subtitle">{{ subtitle() }}</div>
 

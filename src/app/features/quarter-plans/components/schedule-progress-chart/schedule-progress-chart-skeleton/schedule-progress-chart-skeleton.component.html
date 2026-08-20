@@ -1,0 +1,29 @@
+<div class="status-card">
+  <div class="status-card__header">
+    <div class="skeleton skeleton--title"></div>
+    <div class="skeleton skeleton--badge"></div>
+  </div>
+
+  <div class="status-card__bars">
+    @for (w of barWidths; track w) {
+      <div class="bar-row">
+        <div class="skeleton skeleton--bar" [style.width.%]="w"></div>
+      </div>
+    }
+  </div>
+
+  <div class="status-card__axis">
+    @for (t of ticks; track $index) {
+      <div class="skeleton skeleton--tick"></div>
+    }
+  </div>
+
+  <div class="status-card__legend">
+    @for (l of legendItems; track l) {
+      <div class="legend-item">
+        <div class="skeleton skeleton--swatch"></div>
+        <div class="skeleton skeleton--label"></div>
+      </div>
+    }
+  </div>
+</div>

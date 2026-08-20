@@ -6,8 +6,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { SidebarService } from '../core/services/sidebar.service';
-import { DateRange, DateService } from '../core/services/date.service';
+import { DateService } from '../core/services/date.service';
 import { RefreshService } from '../core/services/refresh.service';
+import { QuarterYearService } from '../core/services/quarter-year.service';
+import { DateHelpers } from '../core/utils/date-helpers';
 
 @Component({
   selector: 'app-layout',
@@ -19,6 +21,7 @@ export class LayoutComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly sidebarService = inject(SidebarService);
   private readonly dateService = inject(DateService);
+  private readonly quarterDateService = inject(QuarterYearService);
   private readonly refreshService = inject(RefreshService);
   private readonly router = inject(Router);
 
@@ -36,6 +39,10 @@ export class LayoutComponent implements OnInit {
 
   readonly pageTitle = signal('Dashboard');
   readonly pageSubtitle = signal(this.getDefaultSubtitle());
+
+  isQplansRoute(): boolean {
+    return this.router.url.startsWith('/quarter-plans');
+  }
 
   ngOnInit(): void {
     this.sidebarService.init(this.destroyRef);
@@ -57,9 +64,9 @@ export class LayoutComponent implements OnInit {
   }
 
   private getsubtitleFromUrl(url: string): string {
-    const quarter = this.dateService.getCurrentQuarter();
+    const quarter = this.quarterDateService.getCurrentQuarter();
     if (url.startsWith('/quarter-plans')) {
-      return `${quarter.dateRange.start.getFullYear()} ${quarter.quarter} Plan Dashboard · ${this.formatRange(quarter.dateRange)}`;
+      return `${quarter.quarter} Plan Dashboard · ${DateHelpers.formatRange(quarter.dateRange)}`;
     }
     return '';
   }
@@ -72,7 +79,7 @@ export class LayoutComponent implements OnInit {
       return suffix;
     }
 
-    return `${this.formatRange(range)} · ${suffix}`;
+    return `${DateHelpers.formatRange(range)} · ${suffix}`;
   }
 
   private getTitleFromUrl(url: string): string {
@@ -87,14 +94,6 @@ export class LayoutComponent implements OnInit {
     if (url === '/' || url.startsWith('/dashboard')) return 'Dashboard';
 
     return 'Overview';
-  }
-
-  private formatRange(range: DateRange): string {
-    return `${this.formatShortDate(range.start)} - ${this.formatShortDate(range.end)}`;
-  }
-
-  private formatShortDate(date: Date): string {
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   }
 
   toggleSidebarMobile(): void {

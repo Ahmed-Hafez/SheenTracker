@@ -1,10 +1,16 @@
 <div class="area-path">
   <label for="area-path" class="area-path-label"
-    ><i class="fa-solid fa-layer-group mr-1" style="color: #666463"></i> Area Path</label
+    ><i class="fa-solid fa-layer-group mr-1" style="color: #666463"></i>{{ areaPath().area }}</label
   >
   <div class="area-path-metrics">
-    <span class="area-path-value total">Total: <strong>27</strong></span>
-    <span class="area-path-value open">Open: <strong>16</strong></span>
-    <span class="area-path-value closed">Closed: <strong>11</strong></span>
+    <span class="area-path-value total"
+      >Total: <strong>{{ areaPath().total }}</strong></span
+    >
+    <span class="area-path-value open"
+      >Open: <strong>{{ areaPath().open }}</strong></span
+    >
+    <span class="area-path-value closed"
+      >Closed: <strong>{{ areaPath().closed }}</strong></span
+    >
   </div>
 </div>
