@@ -3,6 +3,7 @@ import { QuarterPlansDashboardResponse } from '../../models/reponse/quarter-plan
 import { ApiService } from '../api_services/api.service';
 import { QuarterYearService } from '../../services/quarter-year.service';
 import { DateHelpers } from '../../utils/date-helpers';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,21 @@ export class QuarterPlansService {
   isError = signal<boolean>(false);
 
   getQuarterPlansDashboardData() {
-    return this.apiService.get<QuarterPlansDashboardResponse>(this.qPlansDashboardEndpoint);
+    return this.apiService.get<QuarterPlansDashboardResponse>(this.qPlansDashboardEndpoint).pipe(
+      // Fix EpicsByArea name to remove "Enterprise Quarterly Planning\\" in the response data
+      map((data) => {
+        const fixedData: QuarterPlansDashboardResponse = {
+          ...data,
+          epicsByArea: data.epicsByArea.map((epic) => ({
+            area: epic.area.replace('Enterprise Quarterly Planning\\', ''),
+            total: epic.total,
+            open: epic.open,
+            closed: epic.closed,
+          })),
+        };
+        return fixedData;
+      }),
+    );
   }
 
   readonly calendarElapsedPercent = computed(() => {

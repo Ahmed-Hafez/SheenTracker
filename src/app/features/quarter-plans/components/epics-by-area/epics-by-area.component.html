@@ -14,7 +14,7 @@
     <div class="card-rule"></div>
 
     <div class="mt-2 area-path-list">
-      @for (item of epicsByArea; track $index) {
+      @for (item of epicsByArea(); track $index) {
         <div class="area-path-item">
           <app-area-path [areaPath]="item"></app-area-path>
         </div>
