@@ -1,4 +1,4 @@
-import { BacklogItemApiModel } from '../../core/mock/all-epics.mock';
+import { BacklogItemApiModel } from "../../core/models/reponse/backlog-response.model";
 
 export interface BacklogItemUIModel {
   data: BacklogItemApiModel;

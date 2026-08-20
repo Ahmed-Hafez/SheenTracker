@@ -59,7 +59,7 @@
     </div>
 
     <!-- ── Loading skeleton ──────────────────────────────────────────────── -->
-    @if (isLoading()) {
+    @if (isLoading() && !backlogResponse) {
     <p-table [value]="[1, 2, 3, 4, 5]" [tableStyle]="{ 'min-width': '54rem' }">
       <ng-template #header>
         <tr>
@@ -109,7 +109,19 @@
     } @else {
 
 
-    <p-treetable [value]="BacklogTreeNodes" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}">
+    <p-treetable 
+    [value]="BacklogTreeNodes()" 
+    [scrollable]="true" 
+    [tableStyle]="{'min-width':'50rem'}"
+    [paginator]="true"
+    [rows]="10"
+    [lazy] ="true"
+    scrollHeight="500px"
+    [first]="first()"
+    [loading]="isLoading()"
+    [totalRecords]="backlogResponse?.totalCount || 0"
+    (onPage)="onPage($event)"
+    >
       <ng-template #header>
         <tr>
           <th class="w-full">Title</th>
@@ -121,31 +133,37 @@
       </ng-template>
       <ng-template #body let-rowNode let-rowData="rowData">
         <tr [ttRow]="rowNode" class="hover:!bg-gray-200">
-          <td class="w-full">
-  <p-treetable-toggler [rowNode]="rowNode" />
+  <td class="w-full">
+    <div class="flex items-start min-w-0">
+      <p-treetable-toggler [rowNode]="rowNode" class="shrink-0" />
 
-  <i
-    [class]="rowData.icon"
-    class="ml-2"
-    [style.color]="rowData.color"
-  ></i>
+      <i
+        [class]="rowData.icon"
+        class="ml-2 shrink-0"
+        [style.color]="rowData.color">
+      </i>
 
-  <span
-    class="ml-2 inline-block rounded-full px-2 py-0.5 text-xs font-medium text-white"
-    [style.background-color]="rowData.color"
-  >
-    {{ rowData.data.type }}
-  </span>
+      <span
+        class="ml-2 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+        [style.background-color]="rowData.color">
+        {{ rowData.data.type }}
+      </span>
 
-  {{ rowData.data.title }}
-</td>
-          <td class="w-[100px]">{{ rowData.data.effort }}</td>
-          <td class="w-[100px]">{{ rowData.data.completedWork }}</td>
-          <td class="w-[100px]">{{ rowData.data.remainingWork }}</td>
-          <td class="w-[140px]">
-            <p-tag [value]="rowData.data.healthStatus" [severity]="getSeverity(rowData.data.healthStatus)" />
-          </td>
-        </tr>
+      <span class="ml-2 min-w-0 break-words">
+        {{ rowData.data.title }}
+      </span>
+    </div>
+  </td>
+
+  <td class="w-[100px]">{{ rowData.data.effort }}</td>
+  <td class="w-[100px]">{{ rowData.data.completedWork }}</td>
+  <td class="w-[100px]">{{ rowData.data.remainingWork }}</td>
+  <td class="w-[140px]">
+    <p-tag
+      [value]="rowData.data.healthStatus"
+      [severity]="getSeverity(rowData.data.healthStatus)" />
+  </td>
+</tr>
       </ng-template>
     </p-treetable>
     }
