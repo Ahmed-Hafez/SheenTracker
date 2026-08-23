@@ -25,4 +25,6 @@ export const quarterPlansMock: QuarterPlansDashboardResponse = {
   closedStoryPoints: 359,
   completionPercentEffort: 25,
   completionPercentSP: 56,
+
+  epicsByArea: [],
 };
