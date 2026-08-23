@@ -6,21 +6,18 @@
   <!-- ── Search + Filter toolbar ────────────────────────────────────────── -->
   <div class="flex flex-wrap items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
 
-    <p-iconfield class="flex-1 min-w-48">
+    <p-iconfield class="flex-2 min-w-48">
       <p-inputicon styleClass="pi pi-search" />
-      <input pInputText type="text" placeholder="Search epics by title" class="w-full" [ngModel]="searchQuery()"
+      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-4 text-base" [ngModel]="searchQuery()"
         (ngModelChange)="searchQuery.set($event)" />
 
 
     </p-iconfield>
-
-    <div class="h-8 w-px bg-charcoal-100 hidden sm:block"></div>
-
-    <div class="flex flex-wrap gap-2">
-      @for (filter of filterOptions; track filter) {
-      <button pButton type="button" [label]="filter" [severity]="isFilterActive(filter) ? 'primary' : 'secondary'"
-        size="small" (click)="toggleFilter(filter)" class="transition-all duration-200"></button>
-      }
+<!-- gap -->
+    <div class = "w-0 md:w-4"></div>
+    <div class="flex-1 flex-wrap gap-2">
+      <p-multiselect [options]="filterOptions" [ngModel]="selectedFiltersArray()"
+        (ngModelChange)="onFiltersChange($event)" placeholder="Select Filters" size="large" display="chip" class="w-full md:w-full" [maxSelectedLabels]="3" />
     </div>
   </div>
 
@@ -109,19 +106,9 @@
     } @else {
 
 
-    <p-treetable 
-    [value]="BacklogTreeNodes()" 
-    [scrollable]="true" 
-    [tableStyle]="{'min-width':'50rem'}"
-    [paginator]="true"
-    [rows]="10"
-    [lazy] ="true"
-    scrollHeight="500px"
-    [first]="first()"
-    [loading]="isLoading()"
-    [totalRecords]="backlogResponse?.totalCount || 0"
-    (onPage)="onPage($event)"
-    >
+    <p-treetable [value]="BacklogTreeNodes()" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}"
+      [paginator]="true" [rows]="10" [lazy]="true" scrollHeight="500px" [first]="first()" [loading]="isLoading()"
+      [totalRecords]="backlogResponse?.totalCount || 0" (onPage)="onPage($event)">
       <ng-template #header>
         <tr>
           <th class="w-full">Title</th>
@@ -133,37 +120,31 @@
       </ng-template>
       <ng-template #body let-rowNode let-rowData="rowData">
         <tr [ttRow]="rowNode" class="hover:!bg-gray-200">
-  <td class="w-full">
-    <div class="flex items-start min-w-0">
-      <p-treetable-toggler [rowNode]="rowNode" class="shrink-0" />
+          <td class="w-full">
+            <div class="flex items-start min-w-0">
+              <p-treetable-toggler [rowNode]="rowNode" class="shrink-0" />
 
-      <i
-        [class]="rowData.icon"
-        class="ml-2 shrink-0"
-        [style.color]="rowData.color">
-      </i>
+              <i [class]="rowData.icon" class="ml-2 shrink-0" [style.color]="rowData.color">
+              </i>
 
-      <span
-        class="ml-2 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white"
-        [style.background-color]="rowData.color">
-        {{ rowData.data.type }}
-      </span>
+              <span class="ml-2 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                [style.background-color]="rowData.color">
+                {{ rowData.data.type }}
+              </span>
 
-      <span class="ml-2 min-w-0 break-words">
-        {{ rowData.data.title }}
-      </span>
-    </div>
-  </td>
+              <span class="ml-2 min-w-0 break-words">
+                {{ rowData.data.title }}
+              </span>
+            </div>
+          </td>
 
-  <td class="w-[100px]">{{ rowData.data.effort }}</td>
-  <td class="w-[100px]">{{ rowData.data.completedWork }}</td>
-  <td class="w-[100px]">{{ rowData.data.remainingWork }}</td>
-  <td class="w-[140px]">
-    <p-tag
-      [value]="rowData.data.healthStatus"
-      [severity]="getSeverity(rowData.data.healthStatus)" />
-  </td>
-</tr>
+          <td class="w-[100px]">{{ rowData.data.effort }}</td>
+          <td class="w-[100px]">{{ rowData.data.completedWork }}</td>
+          <td class="w-[100px]">{{ rowData.data.remainingWork }}</td>
+          <td class="w-[140px]">
+            <p-tag [value]="rowData.data.healthStatus" [severity]="getSeverity(rowData.data.healthStatus)" />
+          </td>
+        </tr>
       </ng-template>
     </p-treetable>
     }

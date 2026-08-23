@@ -20,6 +20,7 @@ import { StatCardComponent } from '../../shared/stat-card/stat-card.component';
 import { ALL_EPICS_SUMMARY } from '../../core/mock/all-epics.mock';
 import { BacklogItemApiModel, AllEpicsResponse } from '../../core/models/reponse/backlog-response.model';
 import { QuarterPlansAllEpicsService } from '../../core/http/backend_service/quarter-plans-all-epics.service';
+import { MultiSelect } from 'primeng/multiselect';
 
 type FilterKey =
   | 'On Track'
@@ -45,6 +46,8 @@ type FilterKey =
     TagModule,
     StatCardComponent,
     TreeTableModule,
+    FormsModule,
+    MultiSelect,
   ],
   templateUrl: './quarter-plans-all-epics.component.html',
   styleUrl: './quarter-plans-all-epics.component.scss',
@@ -72,21 +75,13 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
 
   searchQuery = signal('');
 
-  readonly filterOptions: FilterKey[] = [
-    'On Track',
-    'At Risk',
-    'Off Track',
-    'Has Remaining',
-    'Not Started',
-    'Completed',
-  ];
-  activeFilters = signal<Set<FilterKey>>(new Set());
+
 
   ngOnInit(): void {
     this.fetchEpics(1);
   }
 
-  fetchEpics(pageNumber: number): void {
+  private fetchEpics(pageNumber: number): void {
     this.isLoading.set(true);
     this.epicsService.getAllEpics(pageNumber).subscribe({
       next: (response) => {
@@ -158,17 +153,6 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
     }
   }
 
-  toggleFilter(filter: FilterKey): void {
-    this.activeFilters.update((current) => {
-      const next = new Set(current);
-      next.has(filter) ? next.delete(filter) : next.add(filter);
-      return next;
-    });
-  }
-
-  isFilterActive(filter: FilterKey): boolean {
-    return this.activeFilters().has(filter);
-  }
 
  expandAll(): void {
   this.BacklogTreeNodes.update(nodes => {
@@ -209,4 +193,25 @@ private setExpandedRecursively(
         return 'info';
     }
   }
+
+
+  readonly filterOptions: FilterKey[] = [
+    'On Track',
+    'At Risk',
+    'Off Track',
+    'Has Remaining',
+    'Not Started',
+    'Completed',
+  ];
+
+  activeFilters = signal<Set<FilterKey>>(new Set());
+
+  // Array view for the multiselect (it binds to arrays, not Sets)
+  selectedFiltersArray = computed(() => Array.from(this.activeFilters()));
+
+  onFiltersChange(values: FilterKey[]) {
+    this.activeFilters.set(new Set(values));
+  }
+
+  
 }
