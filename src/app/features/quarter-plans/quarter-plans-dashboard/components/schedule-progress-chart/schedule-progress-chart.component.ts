@@ -1,9 +1,9 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { EChartsOption } from 'echarts/types/dist/shared';
-import { DateService } from '../../../../core/services/date.service';
-import { QuarterPlansService } from '../../../../core/http/backend_service/quarter-plans.service';
+
 import { ScheduleProgressChartSkeletonComponent } from './schedule-progress-chart-skeleton/schedule-progress-chart-skeleton.component';
+import { QuarterPlansService } from '../../../../../core/http/backend_service/quarter-plans.service';
 
 @Component({
   selector: 'app-schedule-progress-chart',

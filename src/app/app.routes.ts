@@ -90,7 +90,7 @@ export const routes: Routes = [
             path: '',
             pathMatch: 'full',
             loadComponent: () =>
-              import('./features/quarter-plans/quarter-plans.component').then(
+              import('./features/quarter-plans/quarter-plans-dashboard/quarter-plans.component').then(
               (m) => m.QuarterPlansComponent,
           ),
           },
@@ -98,7 +98,7 @@ export const routes: Routes = [
             path: 'all-epics',
             title: 'All Epics - SheenTrack 360°',
             loadComponent: () =>
-              import('./features/quarter-plans-all-epics/quarter-plans-all-epics.component').then(
+              import('./features/quarter-plans/quarter-plans-epics/quarter-plans-all-epics.component').then(
               (m) => m.QuarterPlansAllEpicsComponent,
               ),
 

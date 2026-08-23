@@ -14,13 +14,16 @@ import { MenuItem, TreeNode } from 'primeng/api';
 import { TreeTableModule } from 'primeng/treetable';
 import { BacklogItemUIModel } from './backlog-tree-node.model';
 // Shared
-import { StatCardComponent } from '../../shared/stat-card/stat-card.component';
+import { StatCardComponent } from '../../../shared/stat-card/stat-card.component';
 
 // Models & Mock
-import { ALL_EPICS_SUMMARY } from '../../core/mock/all-epics.mock';
-import { BacklogItemApiModel, AllEpicsResponse } from '../../core/models/reponse/backlog-response.model';
-import { QuarterPlansAllEpicsService } from '../../core/http/backend_service/quarter-plans-all-epics.service';
+import { ALL_EPICS_SUMMARY } from '../../../core/mock/all-epics.mock';
+import {
+  BacklogItemApiModel,
+  AllEpicsResponse,
+} from '../../../core/models/reponse/backlog-response.model';
 import { MultiSelect } from 'primeng/multiselect';
+import { QuarterPlansService } from '../../../core/http/backend_service/quarter-plans.service';
 
 type FilterKey =
   | 'On Track'
@@ -53,7 +56,7 @@ type FilterKey =
   styleUrl: './quarter-plans-all-epics.component.scss',
 })
 export class QuarterPlansAllEpicsComponent implements OnInit {
-  private readonly epicsService = inject(QuarterPlansAllEpicsService);
+  private readonly epicsService = inject(QuarterPlansService);
   // ── Breadcrumb ─────────────────────────────────────────────────────────────
   readonly breadcrumbHome: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
   readonly breadcrumbItems: MenuItem[] = [
@@ -72,10 +75,7 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
 
   first = signal(0);
 
-
   searchQuery = signal('');
-
-
 
   ngOnInit(): void {
     this.fetchEpics(1);
@@ -101,9 +101,11 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
   initializeTreeNodes(): void {
     const firstLevelInTree = 0;
     if (this.backlogResponse) {
-      this.BacklogTreeNodes.set(this.backlogResponse.items.map((backlogApiItem) =>
-        this.createTreeNode(backlogApiItem, firstLevelInTree),
-      ));
+      this.BacklogTreeNodes.set(
+        this.backlogResponse.items.map((backlogApiItem) =>
+          this.createTreeNode(backlogApiItem, firstLevelInTree),
+        ),
+      );
     }
   }
 
@@ -153,33 +155,29 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
     }
   }
 
+  expandAll(): void {
+    this.BacklogTreeNodes.update((nodes) => {
+      this.setExpandedRecursively(nodes, true);
+      return [...nodes];
+    });
+  }
 
- expandAll(): void {
-  this.BacklogTreeNodes.update(nodes => {
-    this.setExpandedRecursively(nodes, true);
-    return [...nodes];
-  });
-}
+  collapseAll(): void {
+    this.BacklogTreeNodes.update((nodes) => {
+      this.setExpandedRecursively(nodes, false);
+      return [...nodes];
+    });
+  }
 
-collapseAll(): void {
-  this.BacklogTreeNodes.update(nodes => {
-    this.setExpandedRecursively(nodes, false);
-    return [...nodes];
-  });
-}
+  private setExpandedRecursively(nodes: TreeNode<BacklogItemUIModel>[], expanded: boolean): void {
+    for (const node of nodes) {
+      node.expanded = expanded;
 
-private setExpandedRecursively(
-  nodes: TreeNode<BacklogItemUIModel>[],
-  expanded: boolean
-): void {
-  for (const node of nodes) {
-    node.expanded = expanded;
-
-    if (node.children?.length) {
-      this.setExpandedRecursively(node.children, expanded);
+      if (node.children?.length) {
+        this.setExpandedRecursively(node.children, expanded);
+      }
     }
   }
-}
 
   getSeverity(healthStatus: string): 'success' | 'info' | 'warn' | 'danger' {
     switch (healthStatus) {
@@ -193,7 +191,6 @@ private setExpandedRecursively(
         return 'info';
     }
   }
-
 
   readonly filterOptions: FilterKey[] = [
     'On Track',
@@ -212,6 +209,4 @@ private setExpandedRecursively(
   onFiltersChange(values: FilterKey[]) {
     this.activeFilters.set(new Set(values));
   }
-
-  
 }

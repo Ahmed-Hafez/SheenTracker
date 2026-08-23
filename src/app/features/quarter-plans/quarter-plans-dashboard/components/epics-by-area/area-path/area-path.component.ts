@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { EpicsByArea } from '../../../../../core/models/reponse/quarter-plans-dashboard.response';
+import { EpicsByArea } from '../../../../../../core/models/reponse/quarter-plans-dashboard.response';
 
 @Component({
   selector: 'app-area-path',
