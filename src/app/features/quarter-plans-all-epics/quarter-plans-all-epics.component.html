@@ -8,16 +8,17 @@
 
     <p-iconfield class="flex-2 min-w-48">
       <p-inputicon styleClass="pi pi-search" />
-      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-4 text-base" [ngModel]="searchQuery()"
-        (ngModelChange)="searchQuery.set($event)" />
+      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-4 text-base"
+        [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
 
 
     </p-iconfield>
-<!-- gap -->
-    <div class = "w-0 md:w-4"></div>
+    <!-- gap -->
+    <div class="w-0 md:w-4"></div>
     <div class="flex-1 flex-wrap gap-2">
       <p-multiselect [options]="filterOptions" [ngModel]="selectedFiltersArray()"
-        (ngModelChange)="onFiltersChange($event)" placeholder="Select Filters" size="large" display="chip" class="w-full md:w-full" [maxSelectedLabels]="3" />
+        (ngModelChange)="onFiltersChange($event)" placeholder="Select Filters" size="large" display="chip"
+        class="w-full md:w-full" [maxSelectedLabels]="3" />
     </div>
   </div>
 
@@ -107,7 +108,10 @@
 
 
     <p-treetable [value]="BacklogTreeNodes()" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}"
-      [paginator]="true" [rows]="10" [lazy]="true" scrollHeight="500px" [first]="first()" [loading]="isLoading()"
+      [paginator]="true"
+      showCurrentPageReport="true" 
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records - {totalPages} pages" [rows]="10"
+      [lazy]="true" scrollHeight="500px" [first]="first()" [loading]="isLoading()"
       [totalRecords]="backlogResponse?.totalCount || 0" (onPage)="onPage($event)">
       <ng-template #header>
         <tr>
