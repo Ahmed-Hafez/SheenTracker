@@ -8,7 +8,7 @@
 
     <p-iconfield class="flex-2 min-w-48">
       <p-inputicon styleClass="pi pi-search" />
-      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-4 text-base"
+      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-3 text-base"
         [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
 
 
@@ -109,7 +109,7 @@
 
     <p-treetable [value]="BacklogTreeNodes()" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}"
       [paginator]="true"
-      showCurrentPageReport="true" 
+      showCurrentPageReport="true"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records - {totalPages} pages" [rows]="10"
       [lazy]="true" scrollHeight="500px" [first]="first()" [loading]="isLoading()"
       [totalRecords]="backlogResponse?.totalCount || 0" (onPage)="onPage($event)">
