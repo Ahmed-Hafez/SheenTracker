@@ -1,11 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { QuarterPlansDashboardResponse } from '../../core/models/reponse/quarter-plans-dashboard.response';
-import { quarterPlansMock } from '../../core/mock/quarter-plans.mock';
-import { ScheduleProgressChartComponent } from './components/schedule-progress-chart/schedule-progress-chart.component';
-import { HoursEffortTrackingComponent } from './components/hours-effort-tracking/hours-effort-tracking.component';
+import { QuarterPlansService } from '../../../core/http/backend_service/quarter-plans.service';
+import { QuarterYearService } from '../../../core/services/quarter-year.service';
 import { EpicsByAreaComponent } from './components/epics-by-area/epics-by-area.component';
-import { QuarterPlansService } from '../../core/http/backend_service/quarter-plans.service';
-import { QuarterYearService } from '../../core/services/quarter-year.service';
+import { HoursEffortTrackingComponent } from './components/hours-effort-tracking/hours-effort-tracking.component';
+import { ScheduleProgressChartComponent } from './components/schedule-progress-chart/schedule-progress-chart.component';
+
 
 @Component({
   selector: 'app-quarter-plans',

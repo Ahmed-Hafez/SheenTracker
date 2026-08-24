@@ -3,7 +3,8 @@ import { QuarterPlansDashboardResponse } from '../../models/reponse/quarter-plan
 import { ApiService } from '../api_services/api.service';
 import { QuarterYearService } from '../../services/quarter-year.service';
 import { DateHelpers } from '../../utils/date-helpers';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { AllEpicsResponse } from '../../models/reponse/backlog-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,12 @@ export class QuarterPlansService {
   isLoading = signal<boolean>(false);
   isError = signal<boolean>(false);
 
+   private readonly allEpicsEndpoint = 'dashboard/hierarchy';
+
+
+  getAllEpics(pageNumber: number): Observable<AllEpicsResponse> {
+    return this.apiService.get<AllEpicsResponse>(`${this.allEpicsEndpoint}?pageNumber=${pageNumber}&pageSize=10`);
+  }
   getQuarterPlansDashboardData() {
     return this.apiService.get<QuarterPlansDashboardResponse>(this.qPlansDashboardEndpoint).pipe(
       // Fix EpicsByArea name to remove "Enterprise Quarterly Planning\\" in the response data

@@ -1,0 +1,156 @@
+<div class="flex flex-col gap-6 px-1 pb-8">
+
+  <!-- ── Breadcrumb ─────────────────────────────────────────────────────── -->
+  <p-breadcrumb [home]="breadcrumbHome" [model]="breadcrumbItems" />
+
+  <!-- ── Search + Filter toolbar ────────────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+
+    <p-iconfield class="flex-2 min-w-48">
+      <p-inputicon styleClass="pi pi-search" />
+      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-3 text-base"
+        [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
+
+
+    </p-iconfield>
+    <!-- gap -->
+    <div class="w-0 md:w-4"></div>
+    <div class="flex-1 flex-wrap gap-2">
+      <p-multiselect [options]="filterOptions" [ngModel]="selectedFiltersArray()"
+        (ngModelChange)="onFiltersChange($event)" placeholder="Select Filters" size="large" display="chip"
+        class="w-full md:w-full" [maxSelectedLabels]="3" />
+    </div>
+  </div>
+
+  <!-- ── Stat Cards ─────────────────────────────────────────────────────── -->
+  @if (isLoading()) {
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    @for (_ of [1, 2, 3]; track $index) {
+    <p-skeleton height="90px" borderRadius="12px" />
+    }
+  </div>
+  } @else {
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <app-stat-card label="EFFORT" [value]="summary.totalEffort" color="default" />
+    <app-stat-card label="COMPLETED" [value]="summary.totalCompleted" color="green" />
+    <app-stat-card label="REMAINING" [value]="summary.totalRemaining" color="orange" />
+  </div>
+  }
+
+  <!-- ── Epic Effort Roll-Up ────────────────────────────────────────────── -->
+  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+
+    <!-- Section header -->
+    <div class="px-6 py-5 flex items-center justify-between">
+      <div>
+        <h2 class="text-base font-semibold text-charcoal-900">Epic effort roll-up</h2>
+        <p class="text-sm text-charcoal-400 mt-0.5">
+          All epics in the quarter plan with logged and remaining effort
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <p-button label="Expand All" icon="pi pi-plus" [text]="true" severity="secondary" size="small"
+          (onClick)="expandAll()" />
+        <p-button label="Collapse All" icon="pi pi-minus" [text]="true" severity="secondary" size="small"
+          (onClick)="collapseAll()" />
+      </div>
+    </div>
+
+    <!-- ── Loading skeleton ──────────────────────────────────────────────── -->
+    @if (isLoading() && !backlogResponse) {
+    <p-table [value]="[1, 2, 3, 4, 5]" [tableStyle]="{ 'min-width': '54rem' }">
+      <ng-template #header>
+        <tr>
+          <th class="w-[4rem] min-w-[4rem]"></th>
+          <th class="w-full text-left text-xs font-semibold uppercase tracking-wide text-charcoal-400">Epic</th>
+          <th
+            class="w-[100px] min-w-[100px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">
+            Effort</th>
+          <th
+            class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">
+            Completed</th>
+          <th
+            class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400">
+            Remaining</th>
+          <th
+            class="w-[140px] min-w-[140px] text-center text-xs font-semibold uppercase tracking-wide text-charcoal-400">
+            Status</th>
+        </tr>
+      </ng-template>
+      <ng-template #body>
+        <tr>
+          <td>
+            <p-skeleton shape="circle" size="2rem" />
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+              <p-skeleton width="48px" height="22px" borderRadius="999px" />
+              <p-skeleton width="200px" height="16px" />
+            </div>
+          </td>
+          <td>
+            <div class="flex justify-end"><p-skeleton width="40px" height="16px" /></div>
+          </td>
+          <td>
+            <div class="flex justify-end"><p-skeleton width="40px" height="16px" /></div>
+          </td>
+          <td>
+            <div class="flex justify-end"><p-skeleton width="40px" height="16px" /></div>
+          </td>
+          <td>
+            <div class="flex justify-center"><p-skeleton width="80px" height="24px" borderRadius="999px" /></div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    } @else {
+
+
+    <p-treetable [value]="BacklogTreeNodes()" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}"
+      [paginator]="true"
+      showCurrentPageReport="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records - {totalPages} pages" [rows]="10"
+      [lazy]="true" scrollHeight="500px" [first]="first()" [loading]="isLoading()"
+      [totalRecords]="backlogResponse?.totalCount || 0" (onPage)="onPage($event)">
+      <ng-template #header>
+        <tr>
+          <th class="w-full">Title</th>
+          <th class="w-[100px]">Effort</th>
+          <th class="w-[100px]">Completed</th>
+          <th class="w-[100px]">Remaining</th>
+          <th class="w-[140px]">Status</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-rowNode let-rowData="rowData">
+        <tr [ttRow]="rowNode" class="hover:!bg-gray-200">
+          <td class="w-full">
+            <div class="flex items-start min-w-0">
+              <p-treetable-toggler [rowNode]="rowNode" class="shrink-0" />
+
+              <i [class]="rowData.icon" class="ml-2 shrink-0" [style.color]="rowData.color">
+              </i>
+
+              <span class="ml-2 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                [style.background-color]="rowData.color">
+                {{ rowData.data.type }}
+              </span>
+
+              <span class="ml-2 min-w-0 break-words">
+                {{ rowData.data.title }}
+              </span>
+            </div>
+          </td>
+
+          <td class="w-[100px]">{{ rowData.data.effort }}</td>
+          <td class="w-[100px]">{{ rowData.data.completedWork }}</td>
+          <td class="w-[100px]">{{ rowData.data.remainingWork }}</td>
+          <td class="w-[140px]">
+            <p-tag [value]="rowData.data.healthStatus" [severity]="getSeverity(rowData.data.healthStatus)" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-treetable>
+    }
+  </div>
+</div>

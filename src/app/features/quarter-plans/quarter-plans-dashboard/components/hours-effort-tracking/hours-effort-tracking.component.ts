@@ -1,9 +1,9 @@
-import { Component, computed, inject, input } from '@angular/core';
-import { QuarterPlansDashboardResponse } from '../../../../core/models/reponse/quarter-plans-dashboard.response';
-import { StatCardComponent } from '../../../../shared/stat-card/stat-card.component';
-import { QuarterPlansService } from '../../../../core/http/backend_service/quarter-plans.service';
+import { Component, computed, inject } from '@angular/core';
+import { AnimateNumberDirective } from '../../../../../core/directives/animate-number.directive';
+import { QuarterPlansService } from '../../../../../core/http/backend_service/quarter-plans.service';
+import { StatCardComponent } from '../../../../../shared/stat-card/stat-card.component';
 import { EffortTrackingSkeletonComponent } from './effort-tracking-skeleton/effort-tracking-skeleton.component';
-import { AnimateNumberDirective } from '../../../../core/directives/animate-number.directive';
+
 
 @Component({
   selector: 'app-hours-effort-tracking',
