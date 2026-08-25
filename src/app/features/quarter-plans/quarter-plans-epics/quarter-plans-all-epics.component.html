@@ -4,7 +4,7 @@
   <p-breadcrumb [home]="breadcrumbHome" [model]="breadcrumbItems" />
 
   <!-- ── Search + Filter toolbar ────────────────────────────────────────── -->
-  <div class="flex flex-wrap items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+  <!-- <div class="flex flex-wrap items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
 
     <p-iconfield class="flex-2 min-w-48">
       <p-inputicon styleClass="pi pi-search" />
@@ -13,17 +13,17 @@
 
 
     </p-iconfield>
-    <!-- gap -->
+     gap
     <div class="w-0 md:w-4"></div>
     <div class="flex-1 flex-wrap gap-2">
       <p-multiselect [options]="filterOptions" [ngModel]="selectedFiltersArray()"
         (ngModelChange)="onFiltersChange($event)" placeholder="Select Filters" size="large" display="chip"
         class="w-full md:w-full" [maxSelectedLabels]="3" />
     </div>
-  </div>
+  </div> -->
 
   <!-- ── Stat Cards ─────────────────────────────────────────────────────── -->
-  @if (isLoading()) {
+  <!-- @if (isLoading()) {
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
     @for (_ of [1, 2, 3]; track $index) {
     <p-skeleton height="90px" borderRadius="12px" />
@@ -35,7 +35,7 @@
     <app-stat-card label="COMPLETED" [value]="summary.totalCompleted" color="green" />
     <app-stat-card label="REMAINING" [value]="summary.totalRemaining" color="orange" />
   </div>
-  }
+  } -->
 
   <!-- ── Epic Effort Roll-Up ────────────────────────────────────────────── -->
   <div class="bg-white rounded-lg shadow-sm overflow-hidden">
