@@ -1,0 +1,17 @@
+<div class="stat-card">
+  <div class="stat-card__label">{{ label() }}</div>
+
+  <div
+    class="stat-card__value"
+    [ngClass]="'stat-card__value--' + color()"
+    [appAnimateNumber]="value()"
+    suffix="{{ progressValue() ? '%' : '' }}"
+    [ready]="isReady()"
+  ></div>
+
+  <div class="stat-card__subtitle">{{ subtitle() }}</div>
+
+  @if (showProgress()) {
+    <p-progressbar [value]="progressValue()" showValue="false" [style]="{ height: '8px' }" />
+  }
+</div>

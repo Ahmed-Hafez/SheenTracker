@@ -1,0 +1,29 @@
+<div class="dash">
+  <div class="metric-row">
+    @for (m of metricCards; track m.id) {
+      <div class="metric-card">
+        <div class="skeleton sk-label" [style.width.px]="m.labelWidth"></div>
+        <div class="skeleton sk-value" [style.width.px]="m.valueWidth"></div>
+        <div class="skeleton sk-sublabel" [style.width.px]="m.subWidth"></div>
+        @if (m.hasBar) {
+          <div class="skeleton sk-progress"></div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="panel-row">
+    @for (p of panels; track p.id) {
+      <div class="panel-card">
+        <div class="skeleton sk-panel-title"></div>
+        <div class="panel-divider"></div>
+        @for (row of p.rows; track $index) {
+          <div class="stat-row" [class.stat-row--boxed]="p.boxed">
+            <div class="skeleton sk-stat-label" [style.width.px]="row"></div>
+            <div class="skeleton sk-stat-value"></div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

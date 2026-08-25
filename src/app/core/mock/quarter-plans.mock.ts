@@ -1,0 +1,30 @@
+import { QuarterPlansDashboardResponse } from '../models/reponse/quarter-plans-dashboard.response';
+
+export const quarterPlansMock: QuarterPlansDashboardResponse = {
+  epicsCount: 71,
+  featuresCount: 229,
+  storiesCount: 305,
+  bugsCount: 888,
+  testCaseCount: 1179,
+  meetingsCount: 444,
+  techStoryCount: 102,
+  supportCount: 36,
+  threadCount: 49,
+  childrenOfFeaturesCount: 446,
+  executionNewCount: 276,
+  executionActiveCount: 243,
+  executionClosedCount: 1616,
+  unlinkedEpicsCount: 1,
+  unlinkedFeaturesCount: 70,
+  tasksCount: 1458,
+  totalEffort: 30892,
+  totalStoryPoints: 641,
+  totalCompleted: 8086.000000000002,
+  totalRemaining: 22806,
+  closedEffort: 477,
+  closedStoryPoints: 359,
+  completionPercentEffort: 25,
+  completionPercentSP: 56,
+
+  epicsByArea: [],
+};

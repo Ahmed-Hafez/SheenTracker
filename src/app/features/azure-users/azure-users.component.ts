@@ -53,7 +53,6 @@ export class AzureUsersComponent implements OnInit {
 
   tableChild = viewChild<AzureUsersTableComponent>('tableRef');
 
-  readonly targetHours$ = this.dateService.targetHoursCount;
   readonly weekdaysCount$ = this.dateService.weekdaysCount;
   readonly holidaysCount$ = this.dateService.holidaysCount;
 

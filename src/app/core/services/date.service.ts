@@ -1,9 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-
-export interface DateRange {
-  start: Date;
-  end: Date;
-}
+import { DateHelpers, DateRange } from '../utils/date-helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -27,40 +23,39 @@ export class DateService {
   readonly targetHoursCount = computed(() => {
     const weekdaysCount = this.weekdaysCount();
     const holidaysCount = this.holidaysCount();
-    return weekdaysCount ? (weekdaysCount * 6.5) - (holidaysCount * 6.5) : 0;
+    return weekdaysCount ? weekdaysCount * 6.5 - holidaysCount * 6.5 : 0;
   });
 
-   getWeekdaysCount(startDate: Date, endDate: Date): number {
+  getWeekdaysCount(startDate: Date, endDate: Date): number {
     // Clone dates to avoid mutating original inputs
     const current = new Date(startDate.getTime());
     const target = new Date(endDate.getTime());
-    
+
     // Ensure start date is before or equal to end date
     if (current > target) return 0;
-    
+
     let count = 0;
-    
+
     // Loop through each day from start to end (inclusive)
     while (current <= target) {
-        const dayOfWeek = current.getDay();
-        
-        // 5 = Friday, 6 = Saturday
-        if (dayOfWeek !== 5 && dayOfWeek !== 6) {
-            count++;
-        }
-        
-        // Move to the next day
-        current.setDate(current.getDate() + 1);
-    }
-    
-    return count;
-}
+      const dayOfWeek = current.getDay();
 
+      // 5 = Friday, 6 = Saturday
+      if (dayOfWeek !== 5 && dayOfWeek !== 6) {
+        count++;
+      }
+
+      // Move to the next day
+      current.setDate(current.getDate() + 1);
+    }
+
+    return count;
+  }
 
   setDateRange(start: Date, end: Date): void {
     this.selectedDateRangeSignal.set({
-      start: this.toDateOnly(start),
-      end: this.toDateOnly(end),
+      start: DateHelpers.toDateOnly(start),
+      end: DateHelpers.toDateOnly(end),
     });
   }
 
@@ -69,8 +64,8 @@ export class DateService {
       return 0;
     }
 
-    const start = this.toDateOnly(range.start);
-    const end = this.toDateOnly(range.end);
+    const start = DateHelpers.toDateOnly(range.start);
+    const end = DateHelpers.toDateOnly(range.end);
     const diffMs = end.getTime() - start.getTime();
 
     if (diffMs < 0) {
@@ -111,14 +106,10 @@ export class DateService {
   }
 
   private createDefaultRange(): DateRange {
-    const end = this.toDateOnly(new Date());
-    const today = this.toDateOnly(new Date());
+    const end = DateHelpers.toDateOnly(new Date());
+    const today = DateHelpers.toDateOnly(new Date());
     const start = new Date(today.getFullYear(), today.getMonth(), 1);
     return { start, end };
-  }
-
-  private toDateOnly(date: Date): Date {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
   private isSameDay(first: Date, second: Date): boolean {

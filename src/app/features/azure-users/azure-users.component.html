@@ -56,29 +56,21 @@
       </div>
     </form>
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px">
-      <app-target-hours-card
-        [data]="{
-          icon: 'pi-clock',
-          label: 'Target hours',
-          value: targetHours$(),
-          sub: 'for selected range',
-        }"
-      />
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px">
       <app-target-hours-card
         [data]="{
           icon: 'pi-calendar-times',
           label: 'Holidays',
           value: holidaysCount$(),
-          sub: 'in this period',
+          sub: '',
         }"
       />
       <app-target-hours-card
         [data]="{
           icon: 'pi-calendar',
-          label: 'Weekdays',
+          label: 'Working Days',
           value: weekdaysCount$(),
-          sub: '× 6.5h per day',
+          sub: '',
         }"
       />
     </div>

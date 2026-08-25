@@ -49,16 +49,10 @@
       </td>
       <td>{{ user.email }}</td>
       <td><app-hours-badge [hours]="user.totalHours" [size]="'sm'"></app-hours-badge></td>
-      <td>
-        {{ getExpectedHoursOrDefault(user) }} hours
-        {{ user.expectedHours == null ? '(default)' : '' }}
-      </td>
+      <td><app-expected-hours-td [user]="user"></app-expected-hours-td></td>
       <td>
         <goal-status-badge
-          [loggedHours]="user.totalHours"
-          [targetHours]="
-            user.expectedHours == null ? targetHours$() : getExpectedHoursOrDefault(user)
-          "
+          [user]="user"
         />
       </td>
       <td>

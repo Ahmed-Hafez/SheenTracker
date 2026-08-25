@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { map, Observable } from 'rxjs';
 import { ApiService } from '../api_services/api.service';
 import { DateService } from '../../services/date.service';
+import { Department } from '../../enums/departments.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -95,32 +96,51 @@ export class UsersService {
 
     this.filteredUsers.set(filteredUsers);
   }
-  getExpectedHoursOrDefault(user: User): number {
-    const workingDays = this.dateService.weekdaysCount();
+  getExpectedHoursOrDefault(user: User, workingDays?: number): number {
+    if (workingDays === undefined) workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount();
     if (user.expectedHours === null) {
-      return 6.5 * workingDays;
+      return 6.5 * (workingDays!);
     }
-    return user.expectedHours * workingDays;
+    return user.expectedHours * (workingDays!);
   }
 
   exportUsersToCSV(users: User[]) {
     const optimizedUsers = users.map((user) => ({
-      displayName: user.displayName,
-      email: user.email,
-      expectedHours: this.getExpectedHoursOrDefault(user),
-      actualHours: user.totalHours,
-      missedHours: Math.max(0, this.getExpectedHoursOrDefault(user) - user.totalHours),
-      extraHours: Math.max(0, user.totalHours - this.getExpectedHoursOrDefault(user)),
-      compliancePercentage:
+      'Display Name': user.displayName,
+      'Direct Manager': user.teamLead,
+      'Department': Department[user.department],
+      'Scrum Master': user.scrumMasterNames.join(' | '),
+      'Product Owner': user.productOwnerNames.join(' | '),
+      'Email': user.email,
+      'Expected Hours': this.getExpectedHoursOrDefault(user),
+      'Actual Hours': user.totalHours,
+      'Missed Hours': Math.max(0, this.getExpectedHoursOrDefault(user) - user.totalHours),
+      'Extra Hours': Math.max(0, user.totalHours - this.getExpectedHoursOrDefault(user)),
+      'Compliance Percentage':
         user.totalHours > 0
           ? Math.round((user.totalHours / this.getExpectedHoursOrDefault(user)) * 100) + '%'
           : '0%',
-      projectsCount: user.projectsCount,
-      workItemsCount: user.workItemsCount,
-      projectNames: this.projectNameAndHours(user).join(' | '),
-      scrumMaster: user.scrumMasterNames.join(' | '),
-      productOwner: user.productOwnerNames.join(' | '),
+      'Projects Count': user.projectsCount,
+      'Work Items Count': user.workItemsCount,
+      'Project Names': this.projectNameAndHours(user).join(' | '),
+
     }));
+    /*
+    
+    Scrum Master 
+    Product owner
+    Email 
+    Expected hours
+    Actual hours
+    Missed hours
+    Extra hours
+    Compliance percentage 
+    Projects Count
+    Work items
+    Project names
+    
+    
+    */
 
     const worksheet = XLSX.utils.json_to_sheet(optimizedUsers);
     const workbook = XLSX.utils.book_new();

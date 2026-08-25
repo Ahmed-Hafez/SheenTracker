@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.schedule-progress-card {
+  border: 1px solid #ece8df;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  padding: 24px 28px 18px;
+}
+
+.schedule-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.schedule-progress-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.status-badge--behind {
+  color: #ef4444;
+  border-color: #ff8a8a;
+  background: #fff7f7;
+}
+
+.status-badge--ahead {
+  color: #10b982;
+  border-color: #3cc698;
+  background: #e7f8f2;
+}
+
+.status-badge--on-track {
+  color: #f5a429;
+  border-color: #f6a826;
+  background: #fef5e6;
+}
+
+.schedule-progress-chart {
+  width: 100%;
+  height: 178px;
+}

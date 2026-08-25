@@ -1,5 +1,8 @@
 // goal-status-badge.component.ts
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
+import { User } from '../../core/models/reponse/azure-users.response.model';
+import { UsersService } from '../../core/http/backend_service/azure-users.service';
+import { DateService } from '../../core/services/date.service';
 
 @Component({
   selector: 'goal-status-badge',
@@ -8,8 +11,15 @@ import { Component, input, computed } from '@angular/core';
   styleUrl: './goal-badge.component.scss',
 })
 export class GoalStatusBadgeComponent {
-  loggedHours = input.required<number>();
-  targetHours = input.required<number>();
+  private readonly userService = inject(UsersService);
+  private readonly dateService = inject(DateService);
+  loggedHours = computed(() => this.user().totalHours);
+  targetHours = computed(() => {
+    const workingDays = this.dateService.weekdaysCount()-this.dateService.holidaysCount();
+    return this.userService.getExpectedHoursOrDefault(this.user(), workingDays);
+  });
+  user = input.required<User>();
+
 
   isAchieved = computed(() => this.loggedHours() >= this.targetHours());
 

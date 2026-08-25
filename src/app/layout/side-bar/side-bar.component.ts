@@ -93,6 +93,11 @@ export class SideBarComponent implements OnInit {
       label: 'Settings',
       icon: 'pi pi-cog',
       routerLink: '/settings',
+    }
+    {
+      label: 'Quarterly Planning',
+      icon: 'pi pi-calendar',
+      routerLink: '/quarter-plans',
     },
   ];
 

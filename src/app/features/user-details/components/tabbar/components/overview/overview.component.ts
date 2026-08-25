@@ -6,7 +6,6 @@ import { inject } from '@angular/core';
 import { Departments } from '../../../../../../core/enums/departments.enum';
 import { Seniorities } from '../../../../../../core/enums/seniority.enum';
 import { EnumLabelPipe } from '../../../../../../core/pipes/enum-label-pipe';
-import { DateRange } from '../../../../../../core/services/date.service';
 import { AuthService } from '../../../../../../core/http/backend_service/auth.service';
 import { getInitialsFromName } from '../../../../../../core/utils/get-initials.util';
 
