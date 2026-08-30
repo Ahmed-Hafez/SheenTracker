@@ -94,6 +94,11 @@ export class SideBarComponent implements OnInit {
       icon: 'pi pi-calendar',
       routerLink: '/quarter-plans',
     },
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      routerLink: '/settings',
+    },
   ];
 
   getMenuItemsBasedOnRoles(roles: string[] | null): MenuItem[] {

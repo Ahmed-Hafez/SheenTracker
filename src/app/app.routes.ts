@@ -7,6 +7,7 @@ import { SquadsComponent } from './features/squads/squads.component';
 import { SquadDetailsComponent } from './features/squad-details/squad-details.component';
 import { ProjectUtilizationReportComponent } from './features/project-utilization-report/project-utilization-report.component';
 import { LoginComponent } from './features/login/login.component';
+import { SettingsComponent } from './features/settings/base-settings/settings.component';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -84,29 +85,51 @@ export const routes: Routes = [
       {
         path: 'quarter-plans',
         title: 'Enterprise Quarterly Planning - SheenTrack 360°',
-
         children: [
           {
             path: '',
             pathMatch: 'full',
             loadComponent: () =>
               import('./features/quarter-plans/quarter-plans-dashboard/quarter-plans.component').then(
-              (m) => m.QuarterPlansComponent,
-          ),
+                (m) => m.QuarterPlansComponent,
+              ),
           },
           {
             path: 'all-epics',
             title: 'All Epics - SheenTrack 360°',
             loadComponent: () =>
               import('./features/quarter-plans/quarter-plans-epics/quarter-plans-all-epics.component').then(
-              (m) => m.QuarterPlansAllEpicsComponent,
+                (m) => m.QuarterPlansAllEpicsComponent,
               ),
-
-          }
-
-
+          },
         ],
-
+      },
+      {
+        path: 'settings',
+        component: SettingsComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'users-permisions',
+            pathMatch: 'full',
+          },
+          {
+            path: 'general',
+            title: 'General Settings - SheenTrack 360°',
+            loadComponent: () =>
+              import('./features/settings/general/general.component').then(
+                (m) => m.GeneralComponent,
+              ),
+          },
+          {
+            path: 'users-permisions',
+            title: 'Users & Permissions - SheenTrack 360°',
+            loadComponent: () =>
+              import('./features/settings/users-permisions/users-permisions.component').then(
+                (m) => m.UsersPermisionsComponent,
+              ),
+          },
+        ],
       },
     ],
   },
