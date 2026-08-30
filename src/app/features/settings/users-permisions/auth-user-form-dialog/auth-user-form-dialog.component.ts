@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { RefreshService } from '../../../../core/services/refresh.service';
-import { AuthUserResponse } from '../../../../core/models/reponse/auth-user.response.model';
+import { PortalUserResponse } from '../../../../core/models/reponse/portal-user.response.model';
 import { PasswordModule } from 'primeng/password';
 
 interface PasswordRequirement {
@@ -26,7 +26,7 @@ export class AuthUserFormDialogComponent implements OnInit {
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
   isEditMode = input<boolean>(false);
-  userData = input<AuthUserResponse | null>(null);
+  userData = input<PortalUserResponse | null>(null);
   actionLoading = signal(false);
   userForm!: FormGroup;
   requirements: PasswordRequirement[] = [];
@@ -43,11 +43,11 @@ export class AuthUserFormDialogComponent implements OnInit {
     // Initialize your form here using FormBuilder
     this.userForm = this.fb.group({
       firstName: [
-        this.isEditMode() ? this.userData()?.fullName.split(' ')[0] : '',
+        this.isEditMode() ? this.userData()?.firstName : '',
         [Validators.required, Validators.pattern('^[A-Za-z]+$')],
       ],
       lastName: [
-        this.isEditMode() ? this.userData()?.fullName.split(' ')[1] : '',
+        this.isEditMode() ? this.userData()?.lastName : '',
         [Validators.required, Validators.pattern('^[A-Za-z]+$')],
       ],
       email: [

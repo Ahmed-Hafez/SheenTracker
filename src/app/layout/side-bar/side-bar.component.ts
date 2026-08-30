@@ -29,7 +29,14 @@ export class SideBarComponent implements OnInit {
   readonly isCollapsed = this.sidebarService.isCollapsed;
 
   private readonly coordinationHiddenLabels = new Set([]);
-  private readonly hrHiddenLabels = new Set(['Squads', 'System Users']);
+  private readonly hrHiddenLabels = new Set(['Squads', 'System Users', 'Settings']);
+  private readonly businessHiddenLabels = new Set([
+    'Dashboard',
+    'Users',
+    'Squads',
+    'Reports',
+    'Settings',
+  ]);
 
   userData = signal<UserData | null>(null);
 
@@ -102,12 +109,23 @@ export class SideBarComponent implements OnInit {
   ];
 
   getMenuItemsBasedOnRoles(roles: string[] | null): MenuItem[] {
-    if (roles?.includes('HR') && roles?.includes('Coordination')) {
+    if (!roles || roles.length === 0) {
+      return [];
+    }
+
+    // Coordination has access to all items
+    if (roles.includes('Coordination')) {
       return this.allMenuItems;
-    } else if (roles?.includes('HR')) {
+    }
+
+    // HR has access to all except Squads and System Users
+    if (roles.includes('HR')) {
       return this.filterMenuItems(this.hrHiddenLabels);
-    } else if (roles?.includes('Coordination')) {
-      return this.filterMenuItems(this.coordinationHiddenLabels);
+    }
+
+    // Business has access to only Quarterly Planning
+    if (roles.includes('Business')) {
+      return this.filterMenuItems(this.businessHiddenLabels);
     }
 
     return [];

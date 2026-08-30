@@ -8,7 +8,9 @@ import { SquadDetailsComponent } from './features/squad-details/squad-details.co
 import { ProjectUtilizationReportComponent } from './features/project-utilization-report/project-utilization-report.component';
 import { LoginComponent } from './features/login/login.component';
 import { SettingsComponent } from './features/settings/base-settings/settings.component';
+import { ForbiddenComponent } from './features/forbidden/forbidden.component';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -16,6 +18,11 @@ export const routes: Routes = [
     title: 'Sign In - SheenTrack 360°',
     component: LoginComponent,
     canActivate: [guestGuard],
+  },
+  {
+    path: 'forbidden',
+    title: 'Access Denied - SheenTrack 360°',
+    component: ForbiddenComponent,
   },
   {
     path: '',
@@ -31,6 +38,7 @@ export const routes: Routes = [
         path: 'dashboard',
         title: 'Dashboard - SheenTrack 360°',
         component: DashboardComponent,
+        canActivate: [roleGuard(['HR', 'Coordination'])],
       },
       {
         path: 'users',
@@ -39,16 +47,19 @@ export const routes: Routes = [
             path: 'azure',
             title: 'Azure Users - SheenTrack 360°',
             component: AzureUsersComponent,
+            canActivate: [roleGuard(['HR', 'Coordination'])],
           },
           {
             path: 'system',
             title: 'System Users - SheenTrack 360°',
             component: SystemUsersComponent,
+            canActivate: [roleGuard(['HR', 'Coordination'])],
           },
           {
             path: '',
             pathMatch: 'full',
             title: 'User Details - SheenTrack 360°',
+            canActivate: [roleGuard(['HR', 'Coordination'])],
             loadComponent: () =>
               import('./features/user-details/user-details.component').then(
                 (m) => m.UserDetailsComponent,
@@ -59,6 +70,7 @@ export const routes: Routes = [
       {
         path: 'squads',
         title: 'Squads - SheenTrack 360°',
+        canActivate: [roleGuard(['Coordination'])],
         children: [
           {
             path: '',
@@ -79,12 +91,14 @@ export const routes: Routes = [
             path: 'project-utilization',
             title: 'Project Utilization - SheenTrack 360°',
             component: ProjectUtilizationReportComponent,
+            canActivate: [roleGuard(['HR', 'Coordination'])],
           },
         ],
       },
       {
         path: 'quarter-plans',
         title: 'Enterprise Quarterly Planning - SheenTrack 360°',
+        canActivate: [roleGuard(['Business', 'Coordination'])],
         children: [
           {
             path: '',
@@ -107,6 +121,7 @@ export const routes: Routes = [
       {
         path: 'settings',
         component: SettingsComponent,
+        canActivate: [roleGuard(['Coordination'])],
         children: [
           {
             path: '',

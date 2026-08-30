@@ -1,0 +1,45 @@
+.forbidden-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.forbidden-content {
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 60px 40px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.error-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 12px 0;
+}
+
+.error-message {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 8px 0;
+  line-height: 1.6;
+}
+
+.error-details {
+  font-size: 14px;
+  color: #999;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}

@@ -43,7 +43,18 @@ export class LoginComponent {
     this.authService.login(request).subscribe({
       next: (response) => {
         this.authService.handleLoginSuccess(response);
-        this.router.navigate(['/dashboard']);
+
+        // Route based on user role
+        const userRoles = response.roles ?? [];
+        const isBusiness = userRoles.includes('Business');
+
+        if (isBusiness && !userRoles.includes('Coordination')) {
+          // Business users (without Coordination) go directly to quarter-plans
+          this.router.navigate(['/quarter-plans']);
+        } else {
+          // HR and Coordination users go to dashboard
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: () => {
         this.authService.isLoading.set(false);
