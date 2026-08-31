@@ -42,7 +42,26 @@ export class PortalUsersService {
     return this.apiService.get<PortalUserResponse>(`${this.portalUsersEndpoint}/${userKey}`);
   }
 
-  addPortalUser(userData: AddPortalUserRequest): Observable<any> {
+  addPortalUser(userData: AddPortalUserRequest): Observable<PortalUserResponse> {
     return this.apiService.post(this.portalUsersEndpoint, userData);
+  }
+
+  updatePortalUser(
+    userKey: number,
+    userData: Partial<AddPortalUserRequest>,
+  ): Observable<PortalUserResponse> {
+    return this.apiService.put(`${this.portalUsersEndpoint}/${userKey}`, userData);
+  }
+
+  deletePortalUser(userKey: number): Observable<any> {
+    return this.apiService.delete(`${this.portalUsersEndpoint}/${userKey}`);
+  }
+
+  activatePortalUser(userKey: number): Observable<PortalUserResponse> {
+    return this.apiService.patch(`${this.portalUsersEndpoint}/${userKey}/activate`, null);
+  }
+
+  deactivatePortalUser(userKey: number): Observable<PortalUserResponse> {
+    return this.apiService.patch(`${this.portalUsersEndpoint}/${userKey}/deactivate`, null);
   }
 }

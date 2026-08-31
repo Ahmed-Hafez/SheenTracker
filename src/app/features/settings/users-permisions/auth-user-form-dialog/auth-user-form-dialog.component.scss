@@ -1,0 +1,38 @@
+.password-requirements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.password-requirement-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background-color: var(--charcoal-100, #f0efed);
+  color: var(--charcoal-500, #8a8780);
+
+  i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 8px;
+    background-color: var(--charcoal-300, #c4c1bb);
+    color: #fff;
+  }
+
+  &.met {
+    color: var(--orange-500);
+
+    i {
+      background-color: var(--orange-500);
+    }
+  }
+}

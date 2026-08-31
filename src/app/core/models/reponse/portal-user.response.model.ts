@@ -5,5 +5,5 @@ export interface PortalUserResponse {
   email: string;
   title: string;
   role: string;
-  status: string;
+  isActive: boolean;
 }

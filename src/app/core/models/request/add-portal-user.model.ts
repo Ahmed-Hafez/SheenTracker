@@ -5,4 +5,5 @@ export interface AddPortalUserRequest {
   title: string;
   password: string;
   role: string;
+  isActive: boolean;
 }
