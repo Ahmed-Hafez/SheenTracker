@@ -25,7 +25,7 @@ export class App {
   initialize() {
     const isCoordination = this.authService.getUserData()?.roles.includes('Coordination');
     const isBussiness =
-      this.authService.getUserData()?.roles.includes('Business') ||
+      this.authService.getUserData()?.roles.includes('Business') &&
       this.authService.getUserData()?.roles.length === 1;
     untracked(() => {
       if (!isBussiness) {
