@@ -8,7 +8,7 @@ import { DateService } from '../../services/date.service';
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = "https://192.168.1.76:5000/api/";
+  private apiUrl = environment.apiUrl;
 
   private readonly httpClient = inject(HttpClient);
   private readonly dateService = inject(DateService);
