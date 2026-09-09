@@ -1,18 +1,18 @@
 import { Component, computed, input } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { EChartsOption } from 'echarts/types/dist/shared';
-import { EpicsByArea } from '../../../../../../core/models/reponse/quarter-plans-dashboard.response';
+import { EpicsByTaskType } from '../../../../../../core/models/reponse/quarter-plans-dashboard.response';
 
 @Component({
-  selector: 'app-area-path',
+  selector: 'app-task-type',
   imports: [NgxEchartsDirective],
-  templateUrl: './area-path.component.html',
-  styleUrl: './area-path.component.scss',
+  templateUrl: './task-type.component.html',
+  styleUrl: './task-type.component.scss',
 })
-export class AreaPathComponent {
-  areaPath = input.required<EpicsByArea>();
+export class TaskTypeComponent {
+  taskType = input.required<EpicsByTaskType>();
 
-  progressPercent = computed(() => Math.round(this.areaPath().completionPercent));
+  progressPercent = computed(() => Math.round(this.taskType().completionPercent));
 
   progressGaugeOptions = computed<EChartsOption>(() => {
     const percent = this.progressPercent();

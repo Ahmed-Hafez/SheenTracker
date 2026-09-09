@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { QuarterPlansService } from '../../../core/http/backend_service/quarter-plans.service';
 import { QuarterYearService } from '../../../core/services/quarter-year.service';
 import { EpicsByAreaComponent } from './components/epics-by-area/epics-by-area.component';
+import { EpicsByTaskTypeComponent } from './components/epics-by-task-type/epics-by-task-type.component';
 import { HoursEffortTrackingComponent } from './components/hours-effort-tracking/hours-effort-tracking.component';
 import { ScheduleProgressChartComponent } from './components/schedule-progress-chart/schedule-progress-chart.component';
 
@@ -9,7 +10,12 @@ import { ScheduleProgressChartComponent } from './components/schedule-progress-c
 @Component({
   selector: 'app-quarter-plans',
   standalone: true,
-  imports: [ScheduleProgressChartComponent, HoursEffortTrackingComponent, EpicsByAreaComponent],
+  imports: [
+    ScheduleProgressChartComponent,
+    HoursEffortTrackingComponent,
+    EpicsByAreaComponent,
+    EpicsByTaskTypeComponent,
+  ],
   templateUrl: './quarter-plans.component.html',
   styleUrl: './quarter-plans.component.scss',
 })

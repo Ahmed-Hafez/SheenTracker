@@ -25,6 +25,9 @@ export class QuarterPlansService {
   getAllEpics(pageNumber: number): Observable<AllEpicsResponse> {
     return this.apiService.get<AllEpicsResponse>(`${this.allEpicsEndpoint}?pageNumber=${pageNumber}&pageSize=10`);
   }
+
+
+  
   getQuarterPlansDashboardData() {
     return this.apiService.get<QuarterPlansDashboardResponse>(this.qPlansDashboardEndpoint).pipe(
       // Fix EpicsByArea name to remove "Enterprise Quarterly Planning\\" in the response data
@@ -34,8 +37,18 @@ export class QuarterPlansService {
           epicsByArea: data.epicsByArea.map((epic) => ({
             area: epic.area.replace('Enterprise Quarterly Planning\\', ''),
             total: epic.total,
-            open: epic.open,
+            notStarted: epic.notStarted,
+            inProgress: epic.inProgress,
             closed: epic.closed,
+            completionPercent: epic.completionPercent,
+          })),
+          epicsByTaskType: data.epicsByTaskType.map((epic) => ({
+            taskType: epic.taskType,
+            total: epic.total,
+            notStarted: epic.notStarted,
+            inProgress: epic.inProgress,
+            closed: epic.closed,
+            completionPercent: epic.completionPercent,
           })),
         };
         return fixedData;

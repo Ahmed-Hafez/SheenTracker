@@ -1,0 +1,23 @@
+@if (isLoading()) {
+  <app-epics-by-task-type-skeleton></app-epics-by-task-type-skeleton>
+} @else {
+  <div class="card">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3>Epics by Task Type</h3>
+        <p class="text-sm text-gray-500">Select a task type to open its epics</p>
+      </div>
+      <button class="btn btn-secondary" style="font-size: 12px" (click)="navigateToAllEpics()">
+        View All Epics <i class="pi pi-arrow-right" style="font-size: 10px"></i>
+      </button>
+    </div>
+    <div class="card-rule"></div>
+    <div class="mt-2 area-path-list">
+      @for (item of epicsByTaskType(); track $index) {
+        <div class="area-path-item">
+          <app-task-type [taskType]="item"></app-task-type>
+        </div>
+      }
+    </div>
+  </div>
+}
