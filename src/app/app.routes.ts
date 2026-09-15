@@ -22,6 +22,7 @@ export const routes: Routes = [
   {
     path: 'forbidden',
     title: 'Access Denied - SheenTrack 360°',
+    canActivate: [authGuard],
     component: ForbiddenComponent,
   },
   {

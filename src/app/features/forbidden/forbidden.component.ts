@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/http/backend_service/auth.service';
 
 @Component({
   selector: 'app-forbidden',
@@ -11,7 +12,12 @@ import { Router } from '@angular/router';
 export class ForbiddenComponent {
   constructor(private router: Router) {}
 
-  navigateToDashboard(): void {
-    this.router.navigate(['/dashboard']);
+  private readonly authService = inject(AuthService);
+  userData = this.authService.getUserData();
+
+
+  navigateToHome(): void {
+    const mainPage = this.authService.getMainPageBasedOnUserRole();
+    this.router.navigate([mainPage]);
   }
 }
