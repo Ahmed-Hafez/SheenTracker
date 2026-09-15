@@ -37,6 +37,13 @@ export class SideBarComponent implements OnInit {
     'Reports',
     'Settings',
   ]);
+  private readonly projectManagerHiddenLabels = new Set([
+    'Dashboard',
+    'Users',
+    'Squads',
+    'Reports',
+    'Settings',
+  ]);
 
   userData = signal<UserData | null>(null);
 
@@ -121,6 +128,11 @@ export class SideBarComponent implements OnInit {
     // HR has access to all except Squads and System Users
     if (roles.includes('HR')) {
       return this.filterMenuItems(this.hrHiddenLabels);
+    }
+
+    // Project Manager has access to all items
+    if (roles.includes('ProjectManager')) {
+      return this.filterMenuItems(this.projectManagerHiddenLabels);
     }
 
     // Business has access to only Quarterly Planning

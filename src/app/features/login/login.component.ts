@@ -47,8 +47,9 @@ export class LoginComponent {
         // Route based on user role
         const userRoles = response.roles ?? [];
         const isBusiness = userRoles.includes('Business');
+        const isProjectManger = userRoles.includes('ProjectManager');
 
-        if (isBusiness && !userRoles.includes('Coordination')) {
+        if ((isBusiness || isProjectManger) && !userRoles.includes('Coordination')) {
           // Business users (without Coordination) go directly to quarter-plans
           this.router.navigate(['/quarter-plans']);
         } else {

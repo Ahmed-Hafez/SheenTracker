@@ -98,7 +98,7 @@ export const routes: Routes = [
       {
         path: 'quarter-plans',
         title: 'Enterprise Quarterly Planning - SheenTrack 360°',
-        canActivate: [roleGuard(['Business', 'Coordination'])],
+        canActivate: [roleGuard(['Business', 'Coordination', 'ProjectManager'])],
         children: [
           {
             path: '',

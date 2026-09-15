@@ -27,8 +27,10 @@ export class App {
     const isBussiness =
       this.authService.getUserData()?.roles.includes('Business') &&
       this.authService.getUserData()?.roles.length === 1;
+
+    const isProjectManger = this.authService.getUserData()?.roles.includes('ProjectManager') && this.authService.getUserData()?.roles.length === 1;
     untracked(() => {
-      if (!isBussiness) {
+      if (!isBussiness && !isProjectManger) {
         this.getRoles();
         this.getMetaData();
         if (isCoordination) {
