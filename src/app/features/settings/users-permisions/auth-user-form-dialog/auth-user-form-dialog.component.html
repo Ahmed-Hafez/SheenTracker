@@ -65,48 +65,83 @@
           </p-message>
         }
       </div>
-      <div class="flex justify-center">
-        <div class="flex flex-col gap-2 w-64">
-          @if (getFieldErrorMessage('phoneNumber') !== null) {
-            <p-message severity="error" size="small" class="mt-1">
-              {{ getFieldErrorMessage('phoneNumber') }}
-            </p-message>
+      <div class="flex-1">
+        <label class="input-label" for="role">Role</label>
+        <p-select
+          inputId="role"
+          formControlName="role"
+          [options]="roles()"
+          [loading]="isRolesLoading()"
+          placeholder="Select a role"
+          [fluid]="true"
+        />
+        @if (getFieldErrorMessage('role') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('role') }}
+          </p-message>
+        }
+      </div>
+      @if (!isEditMode()) {
+        <div class="flex flex-col gap-1">
+          <label class="input-label" for="password">Password</label>
+          <p-password
+            formControlName="password"
+            [toggleMask]="true"
+            [invalid]="getFieldErrorMessage('password') !== null"
+            [feedback]="false"
+            autocomplete="off"
+            placeholder="••••••••••"
+            fluid
+          />
+          <div class="password-requirements">
+            @for (req of requirements; track req.id) {
+              <span class="password-requirement-chip" [class.met]="isRequirementMet(req)">
+                <i [class]="isRequirementMet(req) ? 'pi pi-check' : 'pi pi-times'"></i>
+                {{ req.label }}
+              </span>
+            }
+          </div>
+          @if (getFieldErrorMessage('password') !== null) {
+            <p-message severity="error" size="small">{{
+              getFieldErrorMessage('password')
+            }}</p-message>
           }
         </div>
-      </div>
-      <div class="flex flex-col gap-1">
-        <label class="input-label" for="password">Password</label>
-        <p-password
-          formControlName="password"
-          [invalid]="getFieldErrorMessage('password') !== null"
-          [feedback]="false"
-          autocomplete="off"
-          placeholder="••••••••••"
-          fluid
-        />
-
-        @if (getFieldErrorMessage('password') !== null) {
-          <p-message severity="error" size="small">{{
-            getFieldErrorMessage('password')
-          }}</p-message>
-        }
-      </div>
-      <div class="flex flex-col gap-1">
-        <label class="input-label" for="confirmPassword">Confirm Password</label>
-        <p-password
-          formControlName="confirmPassword"
-          [invalid]="getFieldErrorMessage('confirmPassword') !== null"
-          [feedback]="false"
-          autocomplete="off"
-          placeholder="••••••••••"
-          fluid
-        />
-
-        @if (getFieldErrorMessage('confirmPassword') !== null) {
-          <p-message severity="error" size="small">{{
-            getFieldErrorMessage('confirmPassword')
-          }}</p-message>
-        }
+        <div class="flex flex-col gap-1">
+          <label class="input-label" for="confirmPassword">Confirm Password</label>
+          <p-password
+            formControlName="confirmPassword"
+            [invalid]="getFieldErrorMessage('confirmPassword') !== null"
+            [feedback]="false"
+            autocomplete="off"
+            placeholder="••••••••••"
+            fluid
+          />
+          @if (getFieldErrorMessage('confirmPassword') !== null) {
+            <p-message severity="error" size="small">{{
+              getFieldErrorMessage('confirmPassword')
+            }}</p-message>
+          }
+        </div>
+      }
+      <div class="flex flex-row justify-between items-center gap-1 rounded-xl px-2 py-4 w-full">
+        <div>
+          <h2 for="status" class="font-bold text-black">ِAccount Status</h2>
+          <p class="text-label-color">Define if user is allowed to login</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span
+            class="text-md text-gray-500 font-semibold mr-2"
+            [class.text-red-500]="!isUserActive()"
+            >Inactive</span
+          >
+          <p-toggleswitch formControlName="isActive" size="small" />
+          <span
+            class="text-md text-gray-500 font-semibold ml-2"
+            [class.text-primary]="isUserActive()"
+            >Active</span
+          >
+        </div>
       </div>
       <div class="flex justify-end gap-3 mt-4">
         <button type="button" class="btn btn-secondary" (click)="onClosePopup()">Cancel</button>

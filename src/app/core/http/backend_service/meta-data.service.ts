@@ -37,8 +37,12 @@ export class MetaDataService {
   private readonly usersKpis = signal<AzureUsersKpis>({} as AzureUsersKpis);
   usersKpis$ = this.usersKpis.asReadonly();
 
+  private readonly roles = signal<string[]>([]);
+  roles$ = this.roles.asReadonly();
+
   isUsersLoading = signal(false);
   isSquadsLoading = signal(false);
+  isRolesLoading = signal(false);
 
   getAzureUsersMetaData(): Observable<any> {
     this.isUsersLoading.set(true);
@@ -77,6 +81,16 @@ export class MetaDataService {
         }));
         this.metaDataSquads.set(metaDataSquads);
         return metaDataSquads;
+      }),
+    );
+  }
+
+  getRoles(): Observable<string[]> {
+    return this.apiService.get<string[]>('roles').pipe(
+      map((response) => {
+        const roles: string[] = response;
+        this.roles.set(roles);
+        return roles;
       }),
     );
   }

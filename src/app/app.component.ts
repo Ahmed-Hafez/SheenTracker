@@ -15,7 +15,6 @@ export class App {
   private readonly authService = inject(AuthService);
   messageService = inject(MessageService);
 
-
   constructor() {
     effect(() => {
       if (this.authService.isAuthenticated()) {
@@ -23,12 +22,18 @@ export class App {
       }
     });
   }
-  initialize(){
+  initialize() {
+    const isCoordination = this.authService.getUserData()?.roles.includes('Coordination');
+    const isBussiness =
+      this.authService.getUserData()?.roles.includes('Business') &&
+      this.authService.getUserData()?.roles.length === 1;
     untracked(() => {
-    this.getMetaData();
-      const isCoordination = this.authService.getUserData()?.roles.includes('Coordination');
-      if(isCoordination){
-        this.getSquads();
+      if (!isBussiness) {
+        this.getRoles();
+        this.getMetaData();
+        if (isCoordination) {
+          this.getSquads();
+        }
       }
     });
   }
@@ -65,6 +70,23 @@ export class App {
           detail: 'Error fetching squads',
         });
         this.metaDataService.isSquadsLoading.set(false);
+      },
+    });
+  }
+
+  getRoles() {
+    this.metaDataService.isRolesLoading.set(true);
+    this.metaDataService.getRoles().subscribe({
+      next: (roles) => {
+        this.metaDataService.isRolesLoading.set(false);
+      },
+      error: () => {
+        this.metaDataService.isRolesLoading.set(false);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error fetching roles',
+        });
       },
     });
   }
