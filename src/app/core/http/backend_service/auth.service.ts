@@ -84,6 +84,19 @@ export class AuthService {
     return userData ? JSON.parse(userData) : null;
   }
 
+    getMainPageBasedOnUserRole(): string {
+    const userRoles = this.getUserData()?.roles ?? [];
+    const isBusiness = userRoles.includes('Business');
+    const isProjectManger = userRoles.includes('ProjectManager');
+
+    if ((isBusiness || isProjectManger) && !userRoles.includes('Coordination')) {
+      // Business users (without Coordination) go directly to quarter-plans
+      return '/quarter-plans';
+    } else {
+      // HR and Coordination users go to dashboard
+      return '/dashboard';
+    }
+  }
   /** Retrieves the cached refresh token */
   getRefreshToken(): string | null {
     return localStorage.getItem(REFRESH_TOKEN_KEY);
