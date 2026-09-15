@@ -15,6 +15,7 @@ export class HoursEffortTrackingComponent {
   private readonly qPlansService = inject(QuarterPlansService);
 
   readonly quarterPlans = this.qPlansService.qplansDashboardData;
+  readonly remainingHours = computed(() => this.quarterPlans()?.totalEffort- this.quarterPlans()?.totalCompleted);
 
   readonly isLoading = this.qPlansService.isLoading;
   readonly isError = this.qPlansService.isError;
