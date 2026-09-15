@@ -31,11 +31,23 @@ export interface QuarterPlansDashboardResponse {
   completionPercentSP: number;
 
   epicsByArea: EpicsByArea[];
+  epicsByTaskType: EpicsByTaskType[];
 }
 
 export interface EpicsByArea {
   area: string;
   total: number;
-  open: number;
+  notStarted: number;
+  inProgress: number;
   closed: number;
+  completionPercent: number;
+}
+
+export interface EpicsByTaskType {
+  taskType: string;
+  total: number;
+  notStarted: number;
+  inProgress: number;
+  closed: number;
+  completionPercent: number;
 }

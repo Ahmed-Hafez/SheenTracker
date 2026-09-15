@@ -22,8 +22,5 @@ export class EpicsByAreaComponent {
 
   epicsByArea = computed(() => this.qPlansService.qplansDashboardData().epicsByArea);
 
-  ngOnInit() {
-    console.log('epicsByArea', this.epicsByArea());
-    console.log('qplansDashboardData', this.qPlansService.qplansDashboardData());
-  }
+  
 }

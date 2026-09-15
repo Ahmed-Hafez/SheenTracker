@@ -1,0 +1,32 @@
+.area-path-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card-rule {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 10px 0 14px;
+}
+
+.area-path-item {
+  flex: 0 1 calc((100% - 2rem) / 3);
+}
+
+.area-path-item app-area-path {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .area-path-item {
+    flex-basis: calc((100% - 1rem) / 2);
+  }
+}
+
+@media (max-width: 640px) {
+  .area-path-item {
+    flex-basis: 100%;
+  }
+}

@@ -1,20 +1,20 @@
 <div class="area-path">
   <div class="area-path-info">
-    <label for="area-path" class="area-path-label"
-      ><i class="fa-solid fa-layer-group mr-1" style="color: #666463"></i>{{ areaPath().area }}</label
+    <label for="task-type" class="area-path-label"
+      ><i class="fa-solid fa-tag mr-1" style="color: #666463"></i>{{ taskType().taskType }}</label
     >
     <div class="area-path-metrics">
       <span class="area-path-value total"
-        >Total: <strong>{{ areaPath().total }}</strong></span
+        >Total: <strong>{{ taskType().total }}</strong></span
       >
       <span class="area-path-value open"
-        >Not Started: <strong>{{ areaPath().notStarted }}</strong></span
+        >Not Started: <strong>{{ taskType().notStarted }}</strong></span
       >
       <span class="area-path-value in-progress"
-        >In Progress: <strong>{{ areaPath().inProgress }}</strong></span
+        >In Progress: <strong>{{ taskType().inProgress }}</strong></span
       >
       <span class="area-path-value closed"
-        >Closed: <strong>{{ areaPath().closed }}</strong></span
+        >Closed: <strong>{{ taskType().closed }}</strong></span
       >
     </div>
   </div>

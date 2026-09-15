@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="card__header">
+    <div class="card__heading">
+      <div class="skeleton sk-title"></div>
+      <div class="skeleton sk-subtitle"></div>
+    </div>
+    <div class="skeleton sk-button"></div>
+  </div>
+
+  <div class="card__divider"></div>
+
+  <div class="tile-grid">
+    @for (tile of tiles; track $index) {
+      <div class="tile">
+        <div class="tile__row">
+          <div class="skeleton sk-icon"></div>
+          <div class="skeleton sk-tile-title"></div>
+        </div>
+        <div class="tile__stats">
+          <div class="skeleton sk-stat"></div>
+          <div class="skeleton sk-stat"></div>
+          <div class="skeleton sk-stat"></div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -27,4 +27,5 @@ export const quarterPlansMock: QuarterPlansDashboardResponse = {
   completionPercentSP: 56,
 
   epicsByArea: [],
+  epicsByTaskType: [],
 };
