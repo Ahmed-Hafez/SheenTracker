@@ -2,10 +2,10 @@
   #azureUsersTable
   [value]="users()"
   [paginator]="true"
+  [scrollable]="true"
   [(first)]="first"
   [rows]="10"
   [tableStyle]="{
-    'min-width': '50rem',
     'border-radius': '8px 8px 0 0',
     border: '1px solid #ebe9e7',
     'border-bottom': 'none',
@@ -17,15 +17,23 @@
   [sortOrder]="-1"
 >
   <ng-template #header>
-    <tr class="">
-      @for (col of columns; track col) {
+    <tr class="whitespace-nowrap">
+      @for (col of columns; track col.field) {
         @if (col.field === 'Actions') {
-          <th [style.width]="col.width">{{ col.header }}</th>
+          <th [class]="visibilityClasses[col.field]" [style.min-width]="col.minWidth">
+            {{ col.header }}
+          </th>
         } @else {
-          <th pSortableColumn="{{ col.field }}" [style.width]="col.width">
+          <th
+            pSortableColumn="{{ col.sortField ?? col.field }}"
+            pFrozenColumn
+            [frozen]="col.field === 'displayName'"
+            [class]="visibilityClasses[col.field]"
+            [style.min-width]="col.minWidth"
+          >
             <div class="flex items-center gap-1">
               <span class="mono-small">{{ col.header }}</span>
-              <p-sortIcon field="{{ col.field }}" />
+              <p-sortIcon field="{{ col.sortField ?? col.field }}" />
             </div>
           </th>
         }
@@ -33,7 +41,7 @@
     </tr>
   </ng-template>
   <ng-template #body let-user let-rowIndex="rowIndex">
-    <tr>
+    <tr class="whitespace-nowrap">
       <td pFrozenColumn>
         <div class="flex items-center gap-3">
           <img
@@ -44,30 +52,36 @@
             class="h-8 w-8 rounded-full object-cover"
             (error)="onImageError($event, user.userKey)"
           />
-          <span>{{ fixDisplayName(user.displayName) }}</span>
+          <span class="max-w-56 truncate" [title]="fixDisplayName(user.displayName)">
+            {{ fixDisplayName(user.displayName) }}
+          </span>
         </div>
       </td>
-      <td>{{ user.email }}</td>
+      <td [class]="visibilityClasses['email']">
+        <span class="block max-w-64 truncate" [title]="user.email">{{ user.email }}</span>
+      </td>
       <td><app-hours-badge [hours]="user.totalHours" [size]="'sm'"></app-hours-badge></td>
       <td><app-expected-hours-td [user]="user"></app-expected-hours-td></td>
-      <td>
-        <goal-status-badge
-          [user]="user"
-        />
+      <td [class]="visibilityClasses['hoursPerDay']">
+        {{ user.expectedHours ?? 6.5 }} hours
+        {{ user.expectedHours == null ? '(default)' : '' }}
       </td>
       <td>
+        <goal-status-badge [user]="user" />
+      </td>
+      <td [class]="visibilityClasses['projectsCount']">
         {{ user.projectsCount }}
         <span class="mono-small text-gray-400" style="font-size: 12px">
           {{ user.projectsCount === 1 ? 'project' : 'projects' }}</span
         >
       </td>
-      <td>
+      <td [class]="visibilityClasses['workItemsCount']">
         {{ user.workItemsCount }}
         <span class="mono-small text-gray-400" style="font-size: 12px">
           {{ user.workItemsCount === 1 ? 'item' : 'items' }}</span
         >
       </td>
-      <td style="text-align: center">
+      <td>
         <button type="button" class="btn btn-secondary btn-sm" (click)="showDetails(user.userKey)">
           Details
         </button>

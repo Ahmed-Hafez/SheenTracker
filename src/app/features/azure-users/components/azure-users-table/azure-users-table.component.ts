@@ -18,11 +18,20 @@ import { DateService } from '../../../../core/services/date.service';
 import { UsersService } from '../../../../core/http/backend_service/azure-users.service';
 import { ExpectedHoursTdComponent } from '../expected-hours-td/expected-hours-td.component';
 
+type Breakpoint = 'md' | 'lg';
+
 interface Column {
   field: string;
   header: string;
-  width?: string;
+  sortField?: string;
+  minWidth?: string;
+  hideBelow?: Breakpoint;
 }
+
+const HIDE_BELOW_CLASSES: Record<Breakpoint, string> = {
+  md: 'hidden md:table-cell',
+  lg: 'hidden lg:table-cell',
+};
 
 @Component({
   selector: 'app-azure-users-table',
@@ -54,6 +63,7 @@ export class AzureUsersTableComponent implements OnInit {
   targetHours$ = this.dateService.targetHoursCount;
 
   columns!: Column[];
+  visibilityClasses: Record<string, string> = {};
 
   ngOnInit(): void {
     this.initializeTableColumns();
@@ -61,15 +71,20 @@ export class AzureUsersTableComponent implements OnInit {
 
   initializeTableColumns() {
     this.columns = [
-      { field: 'displayName', header: 'Name', width: '20%' },
-      { field: 'email', header: 'Email', width: '25%' },
-      { field: 'totalHours', header: 'Total Hours', width: '15%' },
-      { field: 'expectedHours', header: 'Expected Hours', width: '15%' },
-      { field: 'goal', header: 'Goal', width: '15%' },
-      { field: 'projectsCount', header: 'Projects', width: '15%' },
-      { field: 'workItemsCount', header: 'Work Items', width: '15%' },
-      { field: 'Actions', header: 'Actions', width: '15%' },
+      { field: 'displayName', header: 'Name', minWidth: '12rem' },
+      { field: 'email', header: 'Email', minWidth: '12rem', hideBelow: 'lg' },
+      { field: 'totalHours', header: 'Total Hours' },
+      { field: 'expectedHours', header: 'Expected Hours' },
+      { field: 'hoursPerDay', header: 'Hours Per Day', sortField: 'expectedHours', hideBelow: 'md' },
+      { field: 'goal', header: 'Goal' },
+      { field: 'projectsCount', header: 'Projects', hideBelow: 'md' },
+      { field: 'workItemsCount', header: 'Work Items', hideBelow: 'md' },
+      { field: 'Actions', header: 'Actions' },
     ];
+
+    this.visibilityClasses = Object.fromEntries(
+      this.columns.map((col) => [col.field, col.hideBelow ? HIDE_BELOW_CLASSES[col.hideBelow] : '']),
+    );
   }
 
   fixDisplayName(name: string): string {
