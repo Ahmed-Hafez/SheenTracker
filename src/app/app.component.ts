@@ -4,6 +4,7 @@ import { MetaDataService } from './core/http/backend_service/meta-data.service';
 import { AuthService } from './core/http/backend_service/auth.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { hasRole, holdsRole } from './core/utils/roles.util';
 
 @Component({
   selector: 'app-root',
@@ -23,12 +24,10 @@ export class App {
     });
   }
   initialize() {
-    const isCoordination = this.authService.getUserData()?.roles.includes('Coordination');
-    const isBussiness =
-      this.authService.getUserData()?.roles.includes('Business') &&
-      this.authService.getUserData()?.roles.length === 1;
-
-    const isProjectManger = this.authService.getUserData()?.roles.includes('ProjectManager') && this.authService.getUserData()?.roles.length === 1;
+    const roles = this.authService.getUserData()?.roles ?? [];
+    const isCoordination = hasRole(roles, 'Coordination');
+    const isBussiness = holdsRole(roles, 'Business') && roles.length === 1;
+    const isProjectManger = holdsRole(roles, 'ProjectManager') && roles.length === 1;
     untracked(() => {
       if (!isBussiness && !isProjectManger) {
         this.getRoles();

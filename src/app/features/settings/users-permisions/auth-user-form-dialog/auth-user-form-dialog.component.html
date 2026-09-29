@@ -80,6 +80,11 @@
             {{ getFieldErrorMessage('role') }}
           </p-message>
         }
+        @if (isRoleChanged()) {
+          <p-message severity="info" size="small" class="mt-1">
+            The new role takes effect the next time this user signs in.
+          </p-message>
+        }
       </div>
       @if (!isEditMode()) {
         <div class="flex flex-col gap-1">

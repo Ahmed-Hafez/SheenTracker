@@ -1,7 +1,10 @@
 export interface QuarterPlansDashboardResponse {
   epicsCount: number;
   featuresCount: number;
+  /** `User Story` type only. Use totalStoriesCount for "Stories". */
   storiesCount: number;
+  /** storiesCount + techStoryCount. Optional until the backend change is deployed. */
+  totalStoriesCount?: number;
   bugsCount: number;
   testCaseCount: number;
   meetingsCount: number;
@@ -11,10 +14,14 @@ export interface QuarterPlansDashboardResponse {
   tasksCount: number;
 
   childrenOfFeaturesCount: number;
+  /** Task/Bug/Thread/Support items under a Story. Equals executionNew + executionActive + executionClosed. Optional until the backend change is deployed. */
+  totalChildrenCount?: number;
 
   executionNewCount: number;
   executionActiveCount: number;
   executionClosedCount: number;
+  /** executionClosedCount / totalChildrenCount * 100, unrounded (0–100). */
+  executionCompletionPercent?: number;
 
   unlinkedEpicsCount: number;
   unlinkedFeaturesCount: number;

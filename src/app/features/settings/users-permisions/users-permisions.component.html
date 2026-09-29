@@ -65,49 +65,58 @@
         />
       </td>
       <td>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="btn btn-secondary btn-sm"
-            title="Edit"
-            (click)="showEditPopup(user)"
-          >
-            <i class="pi pi-pencil"></i>
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary btn-sm"
-            title="Delete"
-            (click)="showDeletePopup(user)"
-          >
-            <i class="pi pi-trash"></i>
-          </button>
-          @if (user.isActive) {
+        @if (canManageUser(user)) {
+          <div class="flex items-center gap-2">
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              title="Deactivate"
-              (click)="deactivateUser(user)"
+              title="Edit"
+              (click)="showEditPopup(user)"
             >
-              <i class="pi pi-ban"></i>
+              <i class="pi pi-pencil"></i>
             </button>
-          } @else {
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              title="Activate"
-              (click)="activateUser(user)"
+              title="Delete"
+              (click)="showDeletePopup(user)"
             >
-              <i class="pi pi-check"></i>
+              <i class="pi pi-trash"></i>
             </button>
-          }
-        </div>
+            @if (user.isActive) {
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                title="Deactivate"
+                (click)="deactivateUser(user)"
+              >
+                <i class="pi pi-ban"></i>
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                title="Activate"
+                (click)="activateUser(user)"
+              >
+                <i class="pi pi-check"></i>
+              </button>
+            }
+          </div>
+        } @else {
+          <span
+            class="flex items-center gap-1 text-sm text-gray-500"
+            title="Only a Super Admin can change a Super Admin account."
+          >
+            <i class="pi pi-lock"></i> Protected
+          </span>
+        }
       </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="5">
+      <td colspan="6">
         <div class="flex md:justify-center items-center p-10">
           <p class="block mono-metric" style="font-weight: 400">
             No users match the current filters.

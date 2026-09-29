@@ -11,6 +11,7 @@ import { MetaDataService } from '../../../../core/http/backend_service/meta-data
 import { Tag } from "primeng/tag";
 import { AzureStatusComponent } from "../azure-status/azure-status.component";
 import { AuthService } from '../../../../core/http/backend_service/auth.service';
+import { hasRole } from '../../../../core/utils/roles.util';
 
 @Component({
   selector: 'app-user-card',
@@ -111,7 +112,7 @@ export class UserCardComponent {
   }
 
   isActionsButtonVisible = computed(() => {
-    return this.isSystemUser() && this.authService.getUserData()?.roles.includes('Coordination');
+    return this.isSystemUser() && hasRole(this.authService.getUserData()?.roles, 'Coordination');
   });
   hasImageError = signal(false);
 

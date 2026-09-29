@@ -1,5 +1,12 @@
 <header class="section-header">
-  <h2 class="section-title">Hours / Effort Tracking</h2>
+  <div class="section-title-row">
+    <h2 class="section-title">Hours / Effort Tracking</h2>
+    @if (canViewAllMetrics) {
+      <a class="btn btn-secondary" style="font-size: 12px" routerLink="/quarter-plans/all-metrics">
+        View All Metrics <i class="pi pi-arrow-right" style="font-size: 10px"></i>
+      </a>
+    }
+  </div>
   <div class="section-rule"></div>
 </header>
 
@@ -74,7 +81,7 @@
             <span class="label">Stories</span>
             <span
               class="stat stat--blue"
-              [appAnimateNumber]="quarterPlans().storiesCount"
+              [appAnimateNumber]="quarterPlans().totalStoriesCount ?? 0"
               [ready]="isReady()"
             ></span>
           </div>
@@ -83,7 +90,7 @@
             <span class="label">Story-linked Items</span>
             <span
               class="stat stat--green"
-              [appAnimateNumber]="quarterPlans().childrenOfFeaturesCount"
+              [appAnimateNumber]="quarterPlans().totalChildrenCount ?? 0"
               [ready]="isReady()"
             ></span>
           </div>
@@ -99,7 +106,7 @@
             <span class="execution-label">Total Children</span>
             <span
               class="execution-value execution-value--dark"
-              [appAnimateNumber]="quarterPlans().childrenOfFeaturesCount"
+              [appAnimateNumber]="quarterPlans().totalChildrenCount ?? 0"
               [ready]="isReady()"
             >
             </span>
@@ -141,7 +148,7 @@
             <span
               class="execution-value execution-value--orange"
               id="stat-execution-percent"
-              [appAnimateNumber]="quarterPlans().completionPercentEffort"
+              [appAnimateNumber]="quarterPlans().executionCompletionPercent ?? 0"
               suffix="%"
               [ready]="isReady()"
             >

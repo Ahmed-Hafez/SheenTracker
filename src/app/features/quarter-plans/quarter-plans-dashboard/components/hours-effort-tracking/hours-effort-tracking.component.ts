@@ -1,5 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AnimateNumberDirective } from '../../../../../core/directives/animate-number.directive';
+import { AuthService } from '../../../../../core/http/backend_service/auth.service';
+import { isSuperAdmin } from '../../../../../core/utils/roles.util';
 import { QuarterPlansService } from '../../../../../core/http/backend_service/quarter-plans.service';
 import { StatCardComponent } from '../../../../../shared/stat-card/stat-card.component';
 import { EffortTrackingSkeletonComponent } from './effort-tracking-skeleton/effort-tracking-skeleton.component';
@@ -7,12 +10,13 @@ import { EffortTrackingSkeletonComponent } from './effort-tracking-skeleton/effo
 
 @Component({
   selector: 'app-hours-effort-tracking',
-  imports: [StatCardComponent, EffortTrackingSkeletonComponent, AnimateNumberDirective],
+  imports: [StatCardComponent, EffortTrackingSkeletonComponent, AnimateNumberDirective, RouterLink],
   templateUrl: './hours-effort-tracking.component.html',
   styleUrl: './hours-effort-tracking.component.scss',
 })
 export class HoursEffortTrackingComponent {
   private readonly qPlansService = inject(QuarterPlansService);
+  private readonly authService = inject(AuthService);
 
   readonly quarterPlans = this.qPlansService.qplansDashboardData;
   readonly remainingHours = computed(() => this.quarterPlans()?.totalEffort- this.quarterPlans()?.totalCompleted);
@@ -20,4 +24,6 @@ export class HoursEffortTrackingComponent {
   readonly isLoading = this.qPlansService.isLoading;
   readonly isError = this.qPlansService.isError;
   readonly isReady = computed(() => !this.isLoading() && !this.isError());
+
+  readonly canViewAllMetrics = isSuperAdmin(this.authService.getUserData()?.roles);
 }

@@ -11,6 +11,7 @@ import { SettingsComponent } from './features/settings/base-settings/settings.co
 import { ForbiddenComponent } from './features/forbidden/forbidden.component';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { SUPER_ADMIN } from './core/utils/roles.util';
 
 export const routes: Routes = [
   {
@@ -115,6 +116,15 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/quarter-plans/quarter-plans-epics/quarter-plans-all-epics.component').then(
                 (m) => m.QuarterPlansAllEpicsComponent,
+              ),
+          },
+          {
+            path: 'all-metrics',
+            title: 'All Metrics - SheenTrack 360°',
+            canActivate: [roleGuard([SUPER_ADMIN])],
+            loadComponent: () =>
+              import('./features/quarter-plans/quarter-plans-metrics/quarter-plans-all-metrics.component').then(
+                (m) => m.QuarterPlansAllMetricsComponent,
               ),
           },
         ],

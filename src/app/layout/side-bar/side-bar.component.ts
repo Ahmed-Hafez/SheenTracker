@@ -9,6 +9,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { AuthService } from '../../core/http/backend_service/auth.service';
 import { MenuItem, MenuItemComponent } from './menu-item/menu-item.component';
+import { hasRole } from '../../core/utils/roles.util';
 
 interface UserData {
   roles: string[];
@@ -121,22 +122,22 @@ export class SideBarComponent implements OnInit {
     }
 
     // Coordination has access to all items
-    if (roles.includes('Coordination')) {
+    if (hasRole(roles, 'Coordination')) {
       return this.allMenuItems;
     }
 
     // HR has access to all except Squads and System Users
-    if (roles.includes('HR')) {
+    if (hasRole(roles, 'HR')) {
       return this.filterMenuItems(this.hrHiddenLabels);
     }
 
     // Project Manager has access to all items
-    if (roles.includes('ProjectManager')) {
+    if (hasRole(roles, 'ProjectManager')) {
       return this.filterMenuItems(this.projectManagerHiddenLabels);
     }
 
     // Business has access to only Quarterly Planning
-    if (roles.includes('Business')) {
+    if (hasRole(roles, 'Business')) {
       return this.filterMenuItems(this.businessHiddenLabels);
     }
 

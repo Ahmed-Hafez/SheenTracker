@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, output, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -20,6 +20,8 @@ import { PortalUserResponse } from '../../../../core/models/reponse/portal-user.
 import { PortalUsersService } from '../../../../core/http/backend_service/portal-users.service';
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
 import { AddPortalUserRequest } from '../../../../core/models/request/add-portal-user.model';
+import { AuthService } from '../../../../core/http/backend_service/auth.service';
+import { isSuperAdmin } from '../../../../core/utils/roles.util';
 
 interface PasswordRequirement {
   id: string;
@@ -46,6 +48,7 @@ export class AuthUserFormDialogComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly portalUsersService = inject(PortalUsersService);
   private readonly metaDataService = inject(MetaDataService);
+  private readonly authService = inject(AuthService);
 
   outputVisibleSignal = output<boolean>();
   inputVisibleSignal = input<boolean>(false);
@@ -57,7 +60,19 @@ export class AuthUserFormDialogComponent implements OnInit {
   userForm!: FormGroup;
   requirements: PasswordRequirement[] = [];
 
-  roles = this.metaDataService.roles$;
+  private readonly currentUserIsSuperAdmin = isSuperAdmin(this.authService.getUserData()?.roles);
+
+  /** The backend rejects assigning SuperAdmin unless the current user is one, so hide it otherwise. */
+  roles = computed(() =>
+    this.currentUserIsSuperAdmin
+      ? this.metaDataService.roles$()
+      : this.metaDataService.roles$().filter((role) => !isSuperAdmin([role])),
+  );
+  selectedRole = signal<string | null>(null);
+  /** Roles are baked into the JWT, so a change only applies after the user signs in again. */
+  isRoleChanged = computed(
+    () => this.isEditMode() && !!this.selectedRole() && this.selectedRole() !== this.userData()?.role,
+  );
   isRolesLoading = this.metaDataService.isRolesLoading;
 
   visible = false;
@@ -94,6 +109,11 @@ export class AuthUserFormDialogComponent implements OnInit {
 
     this.userForm.get('password')?.valueChanges.subscribe((value) => {
       this.passwordValue.set(value ?? '');
+    });
+
+    this.selectedRole.set(this.userForm.get('role')?.value ?? null);
+    this.userForm.get('role')?.valueChanges.subscribe((value) => {
+      this.selectedRole.set(value ?? null);
     });
   }
 

@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../http/backend_service/auth.service';
+import { hasRole } from '../utils/roles.util';
 
 /**
  * Role-based access control guard.
@@ -25,8 +26,8 @@ export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
     const userData = authService.getUserData();
     const userRoles = userData?.roles ?? [];
 
-    // Check if user has at least one of the required roles
-    const hasRequiredRole = requiredRoles.some((role) => userRoles.includes(role));
+    // Check if user has at least one of the required roles (Super Admin always passes)
+    const hasRequiredRole = hasRole(userRoles, ...requiredRoles);
 
     if (hasRequiredRole) {
       return true;

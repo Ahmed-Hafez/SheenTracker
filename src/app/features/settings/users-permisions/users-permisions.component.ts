@@ -20,6 +20,8 @@ import { DeletePopupComponent } from '../../../shared/delete-popup/delete-popup.
 import { PortalUsersService } from '../../../core/http/backend_service/portal-users.service';
 import { RefreshService } from '../../../core/services/refresh.service';
 import { PortalUserResponse } from '../../../core/models/reponse/portal-user.response.model';
+import { AuthService } from '../../../core/http/backend_service/auth.service';
+import { isSuperAdmin } from '../../../core/utils/roles.util';
 
 @Component({
   selector: 'app-users-permisions',
@@ -40,6 +42,10 @@ export class UsersPermisionsComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   private readonly injector = inject(Injector);
+  private readonly authService = inject(AuthService);
+
+  /** Only a Super Admin may edit, delete, activate or deactivate another Super Admin (backend returns 403 otherwise). */
+  private readonly currentUserIsSuperAdmin = isSuperAdmin(this.authService.getUserData()?.roles);
 
   users = this.portalUserService.users$;
   isLoading = signal(false);
@@ -173,6 +179,10 @@ export class UsersPermisionsComponent implements OnInit {
       this.selectedUser.set(null);
       this.isEditMode.set(false);
     }
+  }
+
+  canManageUser(user: PortalUserResponse): boolean {
+    return this.currentUserIsSuperAdmin || !isSuperAdmin([user.role]);
   }
 
   getUserDisplayName(user: PortalUserResponse): string {

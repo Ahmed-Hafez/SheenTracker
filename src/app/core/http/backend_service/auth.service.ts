@@ -4,6 +4,7 @@ import { Observable, of, throwError, delay, catchError } from 'rxjs';
 import { LoginRequest } from '../../models/request/login.request.model';
 import { LoginResponse } from '../../models/reponse/login.response.model';
 import { ApiService } from '../api_services/api.service';
+import { hasRole, holdsRole } from '../../utils/roles.util';
 
 const TOKEN_KEY = 'auth_token';
 const USER_DATA_KEY = 'auth_user_data';
@@ -86,10 +87,10 @@ export class AuthService {
 
     getMainPageBasedOnUserRole(): string {
     const userRoles = this.getUserData()?.roles ?? [];
-    const isBusiness = userRoles.includes('Business');
-    const isProjectManger = userRoles.includes('ProjectManager');
+    const isBusiness = holdsRole(userRoles, 'Business');
+    const isProjectManger = holdsRole(userRoles, 'ProjectManager');
 
-    if ((isBusiness || isProjectManger) && !userRoles.includes('Coordination')) {
+    if ((isBusiness || isProjectManger) && !hasRole(userRoles, 'Coordination')) {
       // Business users (without Coordination) go directly to quarter-plans
       return '/quarter-plans';
     } else {
