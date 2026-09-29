@@ -29,7 +29,7 @@ export class SideBarComponent implements OnInit {
   readonly isCollapsed = this.sidebarService.isCollapsed;
 
   private readonly coordinationHiddenLabels = new Set([]);
-  private readonly hrHiddenLabels = new Set(['Squads', 'System Users', 'Settings']);
+  private readonly hrHiddenLabels = new Set(['Squads', 'System Users', 'Settings', 'Quarterly Planning']);
   private readonly businessHiddenLabels = new Set([
     'Dashboard',
     'Users',
