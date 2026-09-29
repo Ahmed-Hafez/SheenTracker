@@ -113,6 +113,7 @@ export class UsersService {
       'Product Owner': user.productOwnerNames.join(' | '),
       'Email': user.email,
       'Expected Hours': this.getExpectedHoursOrDefault(user),
+      'Hours Per Day': user.expectedHours,
       'Actual Hours': user.totalHours,
       'Missed Hours': Math.max(0, this.getExpectedHoursOrDefault(user) - user.totalHours),
       'Extra Hours': Math.max(0, user.totalHours - this.getExpectedHoursOrDefault(user)),
