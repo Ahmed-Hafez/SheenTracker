@@ -5,16 +5,16 @@
     >
     <div class="area-path-metrics">
       <span class="area-path-value total"
-        >Total: <strong>{{ areaPath().total }}</strong></span
+        >Total: <strong>{{ areaPath().total | number }}</strong></span
       >
       <span class="area-path-value open"
-        >Not Started: <strong>{{ areaPath().notStarted }}</strong></span
+        >Not Started: <strong>{{ areaPath().notStarted | number }}</strong></span
       >
       <span class="area-path-value in-progress"
-        >In Progress: <strong>{{ areaPath().inProgress }}</strong></span
+        >In Progress: <strong>{{ areaPath().inProgress | number }}</strong></span
       >
       <span class="area-path-value closed"
-        >Closed: <strong>{{ areaPath().closed }}</strong></span
+        >Closed: <strong>{{ areaPath().closed | number }}</strong></span
       >
     </div>
   </div>

@@ -27,7 +27,7 @@ export class AnimateNumberDirective {
       const suffix = this.suffix();
 
       if (start === target) {
-        this.el.textContent = `${target}${suffix}`;
+        this.el.textContent = `${this.format(target)}${suffix}`;
         return;
       }
 
@@ -38,7 +38,7 @@ export class AnimateNumberDirective {
         if (startTimestamp === null) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         this.current = Math.round(progress * (target - start) + start);
-        this.el.textContent = `${this.current}${suffix}`;
+        this.el.textContent = `${this.format(this.current)}${suffix}`;
         if (progress < 1) {
           this.rafId = requestAnimationFrame(step);
         }
@@ -54,5 +54,10 @@ export class AnimateNumberDirective {
     this.destroyRef.onDestroy(() => {
       if (this.rafId !== null) cancelAnimationFrame(this.rafId);
     });
+  }
+
+  /** Adds thousands separators, e.g. 123456 -> 123,456. */
+  private format(value: number): string {
+    return value.toLocaleString('en-US');
   }
 }

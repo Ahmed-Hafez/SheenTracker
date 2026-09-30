@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { EChartsOption } from 'echarts/types/dist/shared';
@@ -5,7 +6,7 @@ import { EpicsByArea } from '../../../../../../core/models/reponse/quarter-plans
 
 @Component({
   selector: 'app-area-path',
-  imports: [NgxEchartsDirective],
+  imports: [NgxEchartsDirective, DecimalPipe],
   templateUrl: './area-path.component.html',
   styleUrl: './area-path.component.scss',
 })

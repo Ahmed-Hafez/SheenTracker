@@ -5,16 +5,16 @@
     >
     <div class="area-path-metrics">
       <span class="area-path-value total"
-        >Total: <strong>{{ taskType().total }}</strong></span
+        >Total: <strong>{{ taskType().total | number }}</strong></span
       >
       <span class="area-path-value open"
-        >Not Started: <strong>{{ taskType().notStarted }}</strong></span
+        >Not Started: <strong>{{ taskType().notStarted | number }}</strong></span
       >
       <span class="area-path-value in-progress"
-        >In Progress: <strong>{{ taskType().inProgress }}</strong></span
+        >In Progress: <strong>{{ taskType().inProgress | number }}</strong></span
       >
       <span class="area-path-value closed"
-        >Closed: <strong>{{ taskType().closed }}</strong></span
+        >Closed: <strong>{{ taskType().closed | number }}</strong></span
       >
     </div>
   </div>

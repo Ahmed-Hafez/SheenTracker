@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { EChartsOption } from 'echarts/types/dist/shared';
@@ -5,7 +6,7 @@ import { EpicsByTaskType } from '../../../../../../core/models/reponse/quarter-p
 
 @Component({
   selector: 'app-task-type',
-  imports: [NgxEchartsDirective],
+  imports: [NgxEchartsDirective, DecimalPipe],
   templateUrl: './task-type.component.html',
   styleUrl: './task-type.component.scss',
 })
