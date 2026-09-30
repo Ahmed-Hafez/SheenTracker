@@ -111,6 +111,10 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
     backlogApiItem: BacklogItemApiModel,
     levelNumber: number,
   ): TreeNode<BacklogItemUIModel> {
+    //ceil all numbers
+    backlogApiItem.effort = Math.ceil(backlogApiItem.effort);
+    backlogApiItem.completedWork = Math.ceil(backlogApiItem.completedWork);
+    backlogApiItem.remainingWork = Math.ceil(backlogApiItem.effort - backlogApiItem.completedWork);
     const uiModel: BacklogItemUIModel = {
       data: backlogApiItem,
       color: this.getLevelColor(levelNumber),

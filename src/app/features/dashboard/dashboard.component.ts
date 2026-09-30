@@ -65,7 +65,8 @@ export class DashboardComponent {
       zeroLog: 0,
       lowCompliance: 0,
       partialCompliance: 0,
-      compliant: 0,
+      nearCompliance: 0,
+      overCompliance: 0,
     };
 
     users.forEach((user) => {
@@ -79,20 +80,23 @@ export class DashboardComponent {
 
       const percentage = (user.totalHours / TotalExpectedHoursForUser) * 100;
 
-      if (percentage < 50) {
+      if (percentage <= 50) {
         counts.lowCompliance += 1;
-      } else if (percentage < 100) {
+      } else if (percentage < 80) {
         counts.partialCompliance += 1;
+      } else if (percentage <= 100) {
+        counts.nearCompliance += 1;
       } else {
-        counts.compliant += 1;
+        counts.overCompliance += 1;
       }
     });
 
     return [
-      { name: 'Zero log', value: counts.zeroLog },
-      { name: '1-49%', value: counts.lowCompliance },
-      { name: '50-100%', value: counts.partialCompliance },
-      { name: '100+%', value: counts.compliant },
+      { name: 'Zero', value: counts.zeroLog },
+      { name: '1-50%', value: counts.lowCompliance },
+      { name: '51-79%', value: counts.partialCompliance },
+      { name: '80-100%', value: counts.nearCompliance },
+      { name: '+100%', value: counts.overCompliance },
     ];
   });
 
@@ -140,7 +144,7 @@ export class DashboardComponent {
           barWidth: '70%',
           itemStyle: {
             borderRadius: [6, 6, 0, 0],
-            color: ({ dataIndex }) => ['#b13a3a', '#d08a1f', '#1f66b3', '#20a57a'][dataIndex],
+            color: ({ dataIndex }) => ['#b13a3a', '#d08a1f', '#c9a227', '#20a57a', '#1f66b3'][dataIndex],
           },
           label: {
             show: true,
