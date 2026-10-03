@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T00:00:00Z",
+  "title": "Design System: SheenTrack 360°",
+  "extensions": {
+    "colorMeta": {
+      "orange-50": {
+        "role": "primary",
+        "displayName": "Amber Wash",
+        "canonical": "#fdf0e0",
+        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+      },
+      "orange-300": {
+        "role": "primary",
+        "displayName": "Amber Glow",
+        "canonical": "#f5a84a",
+        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+      },
+      "orange-500": {
+        "role": "primary",
+        "displayName": "Signal Amber",
+        "canonical": "#e8821a",
+        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+      },
+      "orange-700": {
+        "role": "primary",
+        "displayName": "Deep Amber",
+        "canonical": "#b5600e",
+        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+      },
+      "orange-900": {
+        "role": "primary",
+        "displayName": "Burnt Amber",
+        "canonical": "#7a3e06",
+        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+      },
+      "charcoal-50": {
+        "role": "neutral",
+        "displayName": "Linen",
+        "canonical": "#f5f4f0",
+        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+      },
+      "charcoal-100": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e8e7e3",
+        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+      },
+      "charcoal-400": {
+        "role": "neutral",
+        "displayName": "Ash",
+        "canonical": "#aeada9",
+        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+      },
+      "charcoal-600": {
+        "role": "neutral",
+        "displayName": "Slate Graphite",
+        "canonical": "#5c5c59",
+        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+      },
+      "charcoal-800": {
+        "role": "neutral",
+        "displayName": "Dark Graphite",
+        "canonical": "#3a3a38",
+        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+      },
+      "charcoal-900": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#1d1d1b",
+        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+      },
+      "page-bg": { "role": "neutral", "displayName": "Warm Paper", "canonical": "#f4f2ef" },
+      "white": { "role": "neutral", "displayName": "White", "canonical": "#ffffff" },
+      "success": {
+        "role": "status",
+        "displayName": "Success",
+        "canonical": "#1d9e75",
+        "tonalRamp": ["#1d9e75", "#e1f5ee"]
+      },
+      "warning": {
+        "role": "status",
+        "displayName": "Warning",
+        "canonical": "#ba7517",
+        "tonalRamp": ["#ba7517", "#faeeda"]
+      },
+      "info": {
+        "role": "status",
+        "displayName": "Info",
+        "canonical": "#185fa5",
+        "tonalRamp": ["#185fa5", "#e6f1fb"]
+      },
+      "danger-strong": {
+        "role": "status",
+        "displayName": "Danger",
+        "canonical": "#ac312c",
+        "tonalRamp": ["#a94845", "#ac312c"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Rare hero numbers or page-level statements (.display)."
+      },
+      "headline": { "displayName": "Headline", "purpose": "h1 page titles." },
+      "title": { "displayName": "Title", "purpose": "h2 section heads." },
+      "title-sm": {
+        "displayName": "Title Small",
+        "purpose": "h3, card titles, topbar page title."
+      },
+      "body": { "displayName": "Body", "purpose": "Default 14px interface text." },
+      "body-sm": { "displayName": "Body Small", "purpose": "Hints, captions, sublines (.small)." },
+      "label": { "displayName": "Label", "purpose": "Uppercase field and KPI labels (.label)." },
+      "metric": { "displayName": "Metric", "purpose": "KPI values in DM Mono, tabular." },
+      "mono-sm": { "displayName": "Mono Small", "purpose": "Hours in badges and tables." }
+    },
+    "shadows": [
+      {
+        "name": "card-lift",
+        "value": "0 2px 4px rgba(0,0,0,0.05)",
+        "purpose": "Cards and chart containers resting on Warm Paper."
+      },
+      {
+        "name": "button-rest",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "purpose": "All buttons at rest."
+      },
+      {
+        "name": "amber-focus-halo",
+        "value": "0 0 0 3px rgba(232,130,26,0.2)",
+        "purpose": "Focus on secondary and ghost buttons."
+      },
+      {
+        "name": "amber-field-focus",
+        "value": "0 0 0 3px rgba(232,130,26,0.12)",
+        "purpose": "Focus on text fields."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "all 0.15s",
+        "purpose": "Buttons, chips, fields, rows."
+      },
+      {
+        "name": "press-scale",
+        "value": "transform: scale(0.98)",
+        "purpose": "Active state on buttons."
+      },
+      {
+        "name": "layout-transition",
+        "value": "all 0.3s ease",
+        "purpose": "Sidebar collapse and topbar offset; disabled under prefers-reduced-motion."
+      },
+      { "name": "progress-fill", "value": "width 0.3s ease", "purpose": "Progress bar fill." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action on a page or dialog.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Save changes</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 500; border: none; cursor: pointer; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: all 0.15s; } .ds-btn-primary { background: var(--orange-500, #e8821a); color: #fff; } .ds-btn-primary:hover { background: var(--orange-700, #b5600e); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(232,130,26,0.2); } .ds-btn-primary:active { transform: scale(0.98); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting action such as Refresh or Cancel.",
+      "html": "<button class=\"ds-btn-secondary\">Refresh</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 500; background: var(--page-bg, #f4f2ef); color: #374151; border: 1px solid #e3e1de; cursor: pointer; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: all 0.15s; } .ds-btn-secondary:hover { background: #ffefd9; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(232,130,26,0.2); } .ds-btn-secondary:active { transform: scale(0.98); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-emphasis action, sidebar toggle.",
+      "html": "<button class=\"ds-btn-ghost\">View all</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 500; background: transparent; color: var(--orange-700, #b5600e); border: none; cursor: pointer; transition: all 0.15s; } .ds-btn-ghost:hover { background: var(--orange-50, #fdf0e0); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(232,130,26,0.2); } .ds-btn-ghost:active { transform: scale(0.98); }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Destructive confirmation.",
+      "html": "<button class=\"ds-btn-danger\">Delete</button>",
+      "css": ".ds-btn-danger { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 500; background: #ac312c; color: #fff; border: none; cursor: pointer; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: all 0.15s; } .ds-btn-danger:hover { background: #a94845; } .ds-btn-danger:focus-visible { outline: 2px solid #ac312c; outline-offset: 2px; } .ds-btn-danger:active { transform: scale(0.98); }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Text input inset on Warm Paper with amber focus.",
+      "html": "<label class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg><input class=\"ds-field\" placeholder=\"Search users\" aria-label=\"Search users\" /></label>",
+      "css": ".ds-search { position: relative; display: block; color: #5c5c59; } .ds-search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); } .ds-field { height: 38px; width: 100%; padding: 5px 12px 5px 36px; border: 1.5px solid var(--charcoal-100, #e8e7e3); border-radius: 8px; background: var(--page-bg, #f4f2ef); color: #1d1d1b; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; } .ds-field::placeholder { color: #5c5c59; } .ds-field:focus-visible { border-color: var(--orange-500, #e8821a); box-shadow: 0 0 0 3px rgba(232,130,26,0.12); }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Toggleable filter; selected state uses Amber Wash.",
+      "html": "<button class=\"ds-chip\">All</button> <button class=\"ds-chip is-selected\" aria-pressed=\"true\">Active</button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; padding: 6px 12px; border: 1.5px solid #e8e7e3; border-radius: 8px; background: #fff; color: #5c5c59; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; } .ds-chip:hover { border-color: #f5a84a; } .ds-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(232,130,26,0.2); } .ds-chip.is-selected { border-color: #e8821a; background: #fdf0e0; color: #7a3e06; }"
+    },
+    {
+      "name": "KPI Card",
+      "kind": "card",
+      "refersTo": "kpi-card",
+      "description": "Signature metric tile: uppercase label, DM Mono figure, amber icon tile.",
+      "html": "<div class=\"ds-kpi\"><div><p class=\"ds-kpi-label\">Total actual hours</p><p class=\"ds-kpi-value\">12,480</p></div><div class=\"ds-kpi-icon\" aria-hidden=\"true\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/></svg></div></div>",
+      "css": ".ds-kpi { display: flex; justify-content: space-between; gap: 16px; background: #fff; border: 1px solid #e8e7e3; border-radius: 12px; padding: 16px 20px; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-kpi-label { margin: 0 0 6px; font-size: 11px; font-weight: 500; text-transform: uppercase; color: #5c5c59; } .ds-kpi-value { margin: 0; font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 700; letter-spacing: -0.03em; color: #1d1d1b; font-variant-numeric: tabular-nums; } .ds-kpi-icon { width: 32px; height: 32px; border-radius: 8px; background: #fdf0e0; color: #e8821a; display: flex; align-items: center; justify-content: center; }"
+    },
+    {
+      "name": "Hours & Status Badges",
+      "kind": "custom",
+      "refersTo": "hours-badge",
+      "description": "Mono hours badge (default, high, zero) and dotted status pills.",
+      "html": "<span class=\"ds-hours\">32.5h</span> <span class=\"ds-hours is-high\">48h</span> <span class=\"ds-hours is-zero\">0h</span> <span class=\"ds-status is-active\"><i></i>Active</span> <span class=\"ds-status is-resolved\"><i></i>Resolved</span> <span class=\"ds-status is-closed\"><i></i>Closed</span>",
+      "css": ".ds-hours { display: inline-flex; padding: 4px 10px; border-radius: 8px; background: #fdf0e0; color: #e8821a; border: 1px solid #f5a84a; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; } .ds-hours.is-high { background: #e8821a; color: #fff; } .ds-hours.is-zero { background: #e8e7e3; color: #aeada9; border: 0; font-weight: 500; } .ds-status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 9999px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600; } .ds-status i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; } .ds-status.is-active { background: #e6f1fb; color: #185fa5; } .ds-status.is-resolved { background: #e1f5ee; color: #1d9e75; } .ds-status.is-closed { background: #e8e7e3; color: #5c5c59; }"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "sidebar",
+      "description": "Graphite rail with amber wordmark and translucent-white items.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main\"><div class=\"ds-nav-brand\">Sheen<span>Track 360°</span></div><p class=\"ds-nav-label\">Main</p><a href=\"#\" class=\"ds-nav-item is-active\" aria-current=\"page\">Dashboard</a><a href=\"#\" class=\"ds-nav-item\">Squads</a><a href=\"#\" class=\"ds-nav-item\">Quarter Plans</a></nav>",
+      "css": ".ds-nav { width: 200px; background: #1d1d1b; padding: 24px 0; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-nav-brand { padding: 0 16px 12px; color: #fff; font-weight: 600; font-size: 15px; } .ds-nav-brand span { color: #e8821a; font-weight: 700; } .ds-nav-label { margin: 12px 0 4px; padding: 0 16px; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); } .ds-nav-item { display: block; padding: 8px 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; transition: background-color 0.2s ease, color 0.2s ease; } .ds-nav-item:hover, .ds-nav-item.is-active { background: rgba(255,255,255,0.1); color: #fff; } .ds-nav-item:focus-visible { outline: 2px solid #e8821a; outline-offset: -2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Ember Ledger",
+    "overview": "SheenTrack reads like a well-kept ledger on warm paper. The workspace sits on a soft off-white page, surfaces are clean white sheets edged with fine warm hairlines, and every number is set in a monospaced face like an entry in a book. Within that calm, Signal Amber is the ember. It marks the primary action, the selected item, and the hours that matter, so the eye goes to it first.\n\nThe shell has two parts: a dark Graphite navigation rail on the left and a light, warm workspace on the right. Information is dense because this is an internal tool used daily, but the density stays readable. The base size is 14px, rows have generous padding, and labels sit small and uppercase above large mono figures. Components are warm and tactile. Corners are softly rounded, buttons give slightly when pressed, and cards lift gently off the page.",
+    "keyCharacteristics": [
+      "Warm neutrals throughout. Page, surfaces, and greys all carry a slight yellow-brown cast.",
+      "One brand accent, Signal Amber, used for action, selection, and highlighted hours.",
+      "Plus Jakarta Sans for interface text, DM Mono for every figure.",
+      "Dark Graphite sidebar against a light paper workspace.",
+      "PrimeNG components themed through `src/primeng-preset.ts`, so third-party controls inherit the same tokens."
+    ],
+    "rules": [
+      {
+        "name": "The Single Ember Rule",
+        "body": "Signal Amber is the only brand hue. Status colors communicate state and never decorate. Any other emphasis comes from Graphite weight, not a new color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm Neutral Rule",
+        "body": "Every grey comes from the charcoal scale. Tailwind's cool greys (`gray-*`, `slate-*`, `#6b7280`, `#e5e7eb`) still appear in places. They are drift, not system.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ledger Rule",
+        "body": "Every count, hour total, or percentage is set in DM Mono with `tabular-nums` so columns line up. Text that describes a number stays in Jakarta Sans.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Stack Rule",
+        "body": "There are only two levels: paper and sheet. Overlays (dialogs, menus, selects) are the only surfaces allowed above a card, and they come from PrimeNG.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do reference tokens (`var(--orange-500)`, Tailwind `bg-primary`, `text-(--charcoal-600)`) rather than raw hex.",
+      "Do set every figure in DM Mono with `tabular-nums`.",
+      "Do keep fields on Warm Paper inside white cards, so inputs read as inset.",
+      "Do theme PrimeNG components through `src/primeng-preset.ts` instead of overriding their CSS.",
+      "Do give interactive controls the amber focus treatment (3px halo or 2px outline).",
+      "Do use 12px radius for containers and 8px for controls."
+    ],
+    "donts": [
+      "Don't introduce a second brand hue. Status colors are for state only.",
+      "Don't use Tailwind's cool greys (`gray-*`, `slate-*`) or `#6b7280` and `#e5e7eb`. Use the charcoal scale.",
+      "Don't hardcode chart colors outside the palette. Several ECharts option files currently do this and should move to tokens.",
+      "Don't stack shadows or raise cards above the card-lift shadow. Only PrimeNG overlays sit higher.",
+      "Don't use `--danger` until it is defined in `styles.css`."
+    ]
+  }
+}
