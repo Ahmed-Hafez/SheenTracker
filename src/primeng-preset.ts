@@ -33,9 +33,9 @@ export const PrimeNG_Preset = definePreset(Aura, {
           950: 'var(--charcoal-900)',
         },
         primary: {
-          color: 'var(--orange-500)',
+          color: 'var(--orange-700)',
           contrastColor: 'var(--white)',
-          hoverColor: 'var(--orange-700)',
+          hoverColor: 'var(--orange-900)',
           activeColor: 'var(--orange-900)',
         },
         highlight: {
@@ -55,8 +55,8 @@ export const PrimeNG_Preset = definePreset(Aura, {
             background: '#e3e1de',
             borderColor: 'transparent',
             hoverBackground: '#e3e1de',
-            checkedBackground: 'var(--orange-500)',
-            checkedHoverBackground: 'var(--orange-500)',
+            checkedBackground: 'var(--orange-700)',
+            checkedHoverBackground: 'var(--orange-900)',
           },
           handle: {
             background: 'var(--white)',
@@ -71,7 +71,7 @@ export const PrimeNG_Preset = definePreset(Aura, {
       colorScheme: {
         light: {
           date: {
-            selectedBackground: 'var(--orange-500)',
+            selectedBackground: 'var(--orange-700)',
             rangeSelectedBackground: 'var(--orange-50)',
             rangeSelectedColor: 'var(--charcoal-900)',
             hoverBackground: 'var(--orange-300)',

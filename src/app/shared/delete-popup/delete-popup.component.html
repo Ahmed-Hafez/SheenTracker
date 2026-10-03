@@ -1,32 +1,33 @@
 <p-dialog
   [modal]="true"
-  [(visible)]="visible"
-  (onHide)="onClosePopup()"
-  (onShow)="onOpenPopup()"
-  [dismissableMask]="true"
+  [visible]="visible()"
+  (visibleChange)="!$event && onClosePopup()"
   [resizable]="false"
   [draggable]="false"
+  [style]="{ width: '28rem', backgroundColor: 'var(--page-bg)' }"
+  [breakpoints]="{ '640px': '95vw' }"
+  ariaLabelledBy="delete-popup-title"
 >
-  <ng-template pTemplate="header"
-    ><h4 class="text-center text-2xl font-semibold m-0 mx-auto">
-      Delete {{ title() }}
-    </h4>
+  <ng-template #header>
+    <h2 id="delete-popup-title" class="m-0">Delete {{ title() }}?</h2>
   </ng-template>
-  <div class="flex justify-between items-center gap-5 p-10 pt-4">
-    <div class="text-2xl self-end">
-      <span>{{ description() }}</span>
-    </div>
-  </div>
 
-  <div class="flex justify-center mx-10 gap-5">
-    <button type="submit" class="btn btn-danger" (click)="onSubmit()">
-      @if (isDeleteLoading()) {
-        <i class="fa-solid fa-circle-notch fa-spin" style="color: #ffffff;"></i>
-      }
-      <span> Yes, Delete</span> 
+  <p class="m-0 text-(--charcoal-600)">{{ description() }}</p>
+
+  <ng-template #footer>
+    <div class="flex justify-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="onClosePopup()">Keep</button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        [disabled]="isDeleteLoading()"
+        (click)="onSubmit()"
+      >
+        @if (isDeleteLoading()) {
+          <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+        }
+        Delete
       </button>
-    <button type="reset" class="btn btn-secondary" (click)="onClosePopup()">
-        <span>No, Keep</span> 
-      </button>
-  </div>
+    </div>
+  </ng-template>
 </p-dialog>

@@ -34,3 +34,15 @@ export const PAGE_ROLES = {
   allMetrics: [SUPER_ADMIN],
   settings: ['Coordination'],
 } as const satisfies Record<string, readonly string[]>;
+
+/** Plain-language summary of what each role can open, derived from PAGE_ROLES. */
+const ROLE_ACCESS: Record<string, string> = {
+  superadmin: 'Every page, including All Metrics, and can manage other Super Admins.',
+  coordination: 'Every page: Dashboard, Users, Squads, Reports, Quarter Plans and Settings.',
+  hr: 'Dashboard, Azure Users, user details and the Project Utilization report.',
+  business: 'Quarter Plans only.',
+  projectmanager: 'Quarter Plans only.',
+};
+
+export const describeRoleAccess = (role: string | null | undefined): string | null =>
+  role ? (ROLE_ACCESS[role.toLowerCase()] ?? null) : null;

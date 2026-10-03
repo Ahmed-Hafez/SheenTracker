@@ -191,13 +191,19 @@ p {
   transition: all 0.15s;
 }
 
+/* Deep Amber fill: white on Signal Amber is only 2.7:1, white on Deep Amber passes AA. */
 .btn-primary {
-  background: var(--orange-500);
+  background: var(--orange-700);
   color: var(--white);
 }
 
 .btn-primary:hover {
-  background: var(--orange-700);
+  background: var(--orange-900);
+}
+
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.35);
 }
 
 .btn-primary:active {
@@ -640,6 +646,12 @@ p {
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--space-md);
+}
+
+/* Destructive entries in popup menus (menus are appended to <body>, so this is global). */
+.row-menu-danger .p-menu-item-label,
+.row-menu-danger .p-menu-item-icon {
+  color: var(--danger-bg);
 }
 
 @import 'tailwindcss';

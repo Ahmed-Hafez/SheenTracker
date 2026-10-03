@@ -1,4 +1,14 @@
-import { Component, computed, effect, inject, input, OnInit, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -21,7 +31,7 @@ import { PortalUsersService } from '../../../../core/http/backend_service/portal
 import { MetaDataService } from '../../../../core/http/backend_service/meta-data.service';
 import { AddPortalUserRequest } from '../../../../core/models/request/add-portal-user.model';
 import { AuthService } from '../../../../core/http/backend_service/auth.service';
-import { isSuperAdmin } from '../../../../core/utils/roles.util';
+import { describeRoleAccess, isSuperAdmin } from '../../../../core/utils/roles.util';
 
 interface PasswordRequirement {
   id: string;
@@ -41,6 +51,7 @@ interface PasswordRequirement {
   ],
   templateUrl: './auth-user-form-dialog.component.html',
   styleUrl: './auth-user-form-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthUserFormDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -74,14 +85,10 @@ export class AuthUserFormDialogComponent implements OnInit {
     () => this.isEditMode() && !!this.selectedRole() && this.selectedRole() !== this.userData()?.role,
   );
   isRolesLoading = this.metaDataService.isRolesLoading;
+  /** One-line summary of what the selected role can open, shown under the Role field. */
+  roleAccess = computed(() => describeRoleAccess(this.selectedRole()));
 
-  visible = false;
-
-  constructor() {
-    effect(() => {
-      this.visible = this.inputVisibleSignal();
-    });
-  }
+  readonly visible = linkedSignal(() => this.inputVisibleSignal());
 
   initializeForm() {
     const editMode = this.isEditMode();
@@ -179,7 +186,7 @@ export class AuthUserFormDialogComponent implements OnInit {
     }
 
     if (field.hasError('email')) {
-      return 'Invalid email format.';
+      return 'Enter an email like name@company.com.';
     }
 
     if (field.hasError('pattern')) {
@@ -212,7 +219,7 @@ export class AuthUserFormDialogComponent implements OnInit {
       case 'password':
         return 'Password is required.';
       case 'confirmPassword':
-        return 'Please confirm your password.';
+        return 'Type the password again.';
       default:
         return 'This field is required.';
     }
@@ -221,9 +228,9 @@ export class AuthUserFormDialogComponent implements OnInit {
   private getPatternFieldMessage(fieldName: string): string {
     switch (fieldName) {
       case 'firstName':
-        return 'First name must be one word';
+        return 'Use letters only, as one word.';
       case 'lastName':
-        return 'Last name must be one word';
+        return 'Use letters only, as one word.';
       default:
         return 'Invalid format.';
     }
@@ -270,51 +277,42 @@ export class AuthUserFormDialogComponent implements OnInit {
         next: () => {
           this.messageService.add({
             severity: 'success',
-            summary: 'Success',
-            detail: 'User updated successfully.',
+            summary: 'Changes saved',
+            detail: `${userPayload.firstName} ${userPayload.lastName}'s account is updated.`,
           });
           this.onClosePopup();
           this.actionLoading.set(false);
           this.refreshService.trigger();
         },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to update user.',
-          });
-          this.actionLoading.set(false);
-        },
+        // The error interceptor shows the server's reason; keep the form so nothing is lost.
+        error: () => this.actionLoading.set(false),
       });
     } else {
       this.portalUsersService.addPortalUser(userPayload).subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',
-            summary: 'Success',
-            detail: 'User added successfully.',
+            summary: 'User added',
+            detail: userPayload.isActive
+              ? `${userPayload.firstName} ${userPayload.lastName} can now sign in with ${userPayload.email}.`
+              : `${userPayload.firstName} ${userPayload.lastName} was added as inactive and can't sign in yet.`,
           });
           this.onClosePopup();
           this.actionLoading.set(false);
           this.refreshService.trigger();
         },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to add user.',
-          });
-          this.actionLoading.set(false);
-        },
+        error: () => this.actionLoading.set(false),
       });
     }
   }
 
-  onOpenPopup() {
-    this.visible = true;
+  /** Start keyboard users on the first field rather than the dialog's close button. */
+  focusFirstField() {
+    document.getElementById('firstName')?.focus();
   }
 
   onClosePopup() {
+    this.visible.set(false);
     this.outputVisibleSignal.emit(false);
     this.passwordValue.set('');
     this.userForm.reset();

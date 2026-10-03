@@ -289,7 +289,7 @@
       "refersTo": "button-primary",
       "description": "Main action on a page or dialog.",
       "html": "<button class=\"ds-btn ds-btn-primary\">Save changes</button>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 500; border: none; cursor: pointer; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: all 0.15s; } .ds-btn-primary { background: var(--orange-500, #e8821a); color: #fff; } .ds-btn-primary:hover { background: var(--orange-700, #b5600e); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(232,130,26,0.2); } .ds-btn-primary:active { transform: scale(0.98); }"
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 500; border: none; cursor: pointer; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: all 0.15s; } .ds-btn-primary { background: var(--orange-700, #b5600e); color: #fff; } .ds-btn-primary:hover { background: var(--orange-900, #7a3e06); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(232,130,26,0.2); } .ds-btn-primary:active { transform: scale(0.98); }"
     },
     {
       "name": "Secondary Button",
@@ -367,6 +367,11 @@
       "PrimeNG components themed through `src/primeng-preset.ts`, so third-party controls inherit the same tokens."
     ],
     "rules": [
+      {
+        "name": "The Readable Ember Rule",
+        "body": "White text never sits on Signal Amber: that pair is 2.7:1. Filled controls with white text use Deep Amber (about 5:1), and Signal Amber stays for accents, focus, and fills that carry no text.",
+        "section": "colors"
+      },
       {
         "name": "The Single Ember Rule",
         "body": "Signal Amber is the only brand hue. Status colors communicate state and never decorate. Any other emphasis comes from Graphite weight, not a new color.",

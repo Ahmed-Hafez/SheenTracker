@@ -91,12 +91,12 @@ spacing:
   3xl: "48px"
 components:
   button-primary:
-    backgroundColor: "{colors.orange-500}"
+    backgroundColor: "{colors.orange-700}"
     textColor: "{colors.white}"
     rounded: "{rounded.md}"
     padding: "6px 12px"
   button-primary-hover:
-    backgroundColor: "{colors.orange-700}"
+    backgroundColor: "{colors.orange-900}"
   button-secondary:
     backgroundColor: "{colors.page-bg}"
     textColor: "{colors.charcoal-800}"
@@ -180,8 +180,8 @@ The shell has two parts: a dark Graphite navigation rail on the left and a light
 The palette is warm paper and graphite with a single amber signal, plus a small, conventional set of status hues.
 
 ### Primary
-- **Signal Amber** (orange-500): Primary buttons, the selected chip and date, the progress fill, KPI icons, sort-icon hover, and the "Track 360°" half of the wordmark. PrimeNG's `primary` maps here.
-- **Deep Amber** (orange-700): Hover and pressed states for primary actions, ghost-button text, and highlighted text.
+- **Signal Amber** (orange-500): Focus halos, the selected chip, the progress fill, KPI icons, sort-icon hover, and the "Track 360°" half of the wordmark. 
+- **Deep Amber** (orange-700): Primary button fill, PrimeNG `primary` (selected dates, checked switches), the active Settings tab rule, ghost-button text, and links on paper.
 - **Burnt Amber** (orange-900): Text on amber tints, such as selected chips, task badges, and avatar initials.
 - **Amber Glow** (orange-300): Hover borders on chips and user rows, avatar rings, hours-badge outlines, and date hover.
 - **Amber Wash** (orange-50): Tinted backgrounds for selections, KPI icon tiles, hours badges, and ghost/secondary hover.
@@ -203,6 +203,8 @@ The palette is warm paper and graphite with a single amber signal, plus a small,
 - **Danger** (danger-strong / danger-hover): Destructive buttons. The CSS variable `--danger-bg` holds this strong red despite its name, and `--danger` is referenced by `.kpi-delta.negative` and the Tailwind `danger` color but is **not defined** in `styles.css`. Fix both before relying on danger tokens.
 
 ### Named Rules
+**The Readable Ember Rule.** White text never sits on Signal Amber: that pair is 2.7:1. Filled controls with white text use Deep Amber (about 5:1), and Signal Amber stays for accents, focus, and fills that carry no text.
+
 **The Single Ember Rule.** Signal Amber is the only brand hue. Status colors communicate state and never decorate. Any other emphasis comes from Graphite weight, not a new color.
 
 **The Warm Neutral Rule.** Every grey comes from the charcoal scale. Tailwind's cool greys (`gray-*`, `slate-*`, `#6b7280`, `#e5e7eb`) still appear in places. They are drift, not system.
@@ -255,7 +257,7 @@ Corners are softly rounded and consistent. Inputs, buttons, chips, KPI icon tile
 ### Buttons
 Warm and tactile. Each press visibly gives.
 - **Shape:** gently rounded (8px). Large buttons use 12px.
-- **Primary:** Signal Amber fill, white text, 15px/500, 6px 12px padding, 6px icon gap. Hover shifts to Deep Amber, and pressed scales to 0.98.
+- **Primary:** Deep Amber fill, white text, 15px/500, 6px 12px padding, 6px icon gap. Hover shifts to Burnt Amber, focus shows the amber halo, and pressed scales to 0.98.
 - **Secondary:** Warm Paper fill with a warm border (#e3e1de) and dark text. Hover warms to a pale amber (#ffefd9), and focus shows the amber halo.
 - **Ghost:** Transparent with Deep Amber text. Hover fills with Amber Wash. Used for the sidebar toggle and low-emphasis actions.
 - **Danger:** Strong red fill, white text. Hover darkens and presses in.
@@ -285,6 +287,9 @@ This is the system's signature tile. An uppercase 11px Slate label sits above a 
 - **Focus:** The border turns Signal Amber and a soft 3px amber halo appears (alpha 0.12).
 - **Disabled:** Linen fill, Ash text.
 - **PrimeNG:** inputtext, textarea, select, and inputgroup are themed to the same Warm Paper fill, Hairline border, and 8px radius.
+
+### Tabs (in-page sections)
+Used when a page has 2–4 real peer sections (Settings). The tabs are a row of router links under the topbar title, inside `<nav aria-label>`, with `aria-current="page"` on the active one. Text is 14px/500 Slate Graphite. The active tab is Graphite at weight 600 with a 2px Deep Amber bottom rule, and it sits on a Hairline divider. Never show a placeholder destination as a tab or menu entry.
 
 ### Data Tables (PrimeNG)
 Header cells sit on near-white (#f9f8f7) with Graphite text at weight 400 and 0.5rem 1rem padding. Body cells use 0.75rem 1rem padding with Hairline row borders. Hover rows go to Linen, and sort icons turn amber on hover.

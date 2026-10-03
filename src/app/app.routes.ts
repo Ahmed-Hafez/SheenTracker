@@ -155,7 +155,13 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'users-permisions',
+            redirectTo: 'users-permissions',
+            pathMatch: 'full',
+          },
+          {
+            // Old misspelled URL, kept so existing bookmarks still work.
+            path: 'users-permisions',
+            redirectTo: 'users-permissions',
             pathMatch: 'full',
           },
           {
@@ -167,12 +173,12 @@ export const routes: Routes = [
               ),
           },
           {
-            path: 'users-permisions',
+            path: 'users-permissions',
             title: 'Users & Permissions - SheenTrack 360°',
             data: { refresh: true } satisfies ShellRouteData,
             loadComponent: () =>
-              import('./features/settings/users-permisions/users-permisions.component').then(
-                (m) => m.UsersPermisionsComponent,
+              import('./features/settings/users-permissions/users-permissions.component').then(
+                (m) => m.UsersPermissionsComponent,
               ),
           },
         ],

@@ -1,0 +1,65 @@
+.role-access {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--charcoal-600);
+}
+
+.password-requirements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.password-requirement-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  background-color: var(--charcoal-100);
+  color: var(--charcoal-600);
+
+  i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 11px;
+    background-color: var(--charcoal-600);
+    color: var(--white);
+  }
+
+  &.met {
+    background-color: var(--orange-50);
+    color: var(--orange-900);
+
+    i {
+      background-color: var(--orange-700);
+    }
+  }
+}
+
+.account-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--white);
+  border: 1px solid var(--charcoal-100);
+  border-radius: var(--radius-md);
+}
+
+.account-status__value {
+  min-width: 4.5rem;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--charcoal-900);
+}
