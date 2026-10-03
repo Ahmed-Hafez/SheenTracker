@@ -1,0 +1,277 @@
+:host {
+  display: block;
+}
+
+/* Field boundaries must reach 3:1 against the white card (WCAG 1.4.11); the global hairline does not. */
+:host ::ng-deep .p-inputnumber-input,
+:host ::ng-deep .p-multiselect,
+.field {
+  border-color: var(--charcoal-400);
+}
+
+.setting-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  background: var(--card-bg);
+  border: 1px solid var(--charcoal-100);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.setting-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-lg);
+}
+
+.setting-card__title {
+  margin: 0 0 var(--space-xs);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--charcoal-900);
+}
+
+.setting-card__title:focus-visible {
+  outline: 2px solid var(--orange-500);
+  outline-offset: 2px;
+}
+
+.setting-card__help {
+  margin: 0;
+  max-width: 64ch;
+  font-size: 13px;
+  color: var(--charcoal-600);
+}
+
+.setting-card__updated {
+  margin: 0;
+  font-size: 12px;
+  color: var(--charcoal-600);
+  white-space: nowrap;
+}
+
+.setting-card__feedback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.setting-card__feedback:empty {
+  display: none;
+}
+
+.saved-note {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.setting-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--charcoal-100);
+}
+
+.number-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.number-field__unit,
+.toggle-value {
+  font-size: 13px;
+  color: var(--charcoal-600);
+}
+
+.list-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.list-editor__add {
+  max-width: 40rem;
+}
+
+.list-editor__meta,
+.list-editor__notice {
+  margin: 0;
+  font-size: 12px;
+  color: var(--charcoal-600);
+}
+
+.list-editor__meta {
+  font-weight: 600;
+}
+
+.list-editor__notice:empty {
+  display: none;
+}
+
+.list-editor__notice--warn {
+  color: var(--charcoal-900);
+  font-weight: 600;
+}
+
+/* Unsaved changes: a tinted panel above the saved list, so edits are never buried in it. */
+.pending {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--orange-50);
+  border: 1px solid var(--orange-300);
+  border-radius: var(--radius-md);
+}
+
+.pending__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--orange-900);
+}
+
+.pending__effect {
+  margin: 0;
+  font-size: 13px;
+  color: var(--charcoal-900);
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Saved chip: the quiet default. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  max-width: 100%;
+  padding: 2px 4px 2px 10px;
+  border: 1.5px solid var(--charcoal-100);
+  border-radius: var(--radius-md);
+  background: var(--page-bg);
+  font-size: 13px;
+  color: var(--charcoal-900);
+}
+
+/* Added, not saved: amber outline on Amber Wash, with a "New" tag. */
+.chip--new {
+  background: var(--card-bg);
+  border-color: var(--orange-700);
+  color: var(--orange-900);
+}
+
+/* Removed, not saved: dashed and struck through, so it reads as pending, not gone. */
+.chip--removed {
+  background: transparent;
+  border: 1.5px dashed var(--charcoal-400);
+  color: var(--charcoal-600);
+}
+
+.chip--removed .chip__text {
+  text-decoration: line-through;
+}
+
+/* Saved entry that matches nobody or far too many: needs a second look. */
+.chip--warn {
+  background: var(--warning-bg);
+  border-color: var(--warning);
+}
+
+.chip__tag {
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--orange-700);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.chip--removed .chip__tag {
+  background: var(--charcoal-600);
+}
+
+.chip__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--charcoal-600);
+}
+
+.chip__count--none,
+.chip__flag {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--charcoal-900);
+}
+
+.chip__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--charcoal-600);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.chip__action:hover {
+  background: var(--charcoal-100);
+  color: var(--charcoal-900);
+}
+
+.chip__action:focus-visible {
+  outline: 2px solid var(--orange-500);
+  outline-offset: 1px;
+}
+
+.excludes-nobody {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--charcoal-600);
+}
+
+@media (max-width: 639px) {
+  .setting-card {
+    padding: var(--space-lg);
+  }
+
+  .setting-card__actions .btn {
+    flex: 1;
+  }
+}

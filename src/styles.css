@@ -661,3 +661,15 @@ p-accordion-panel,
   border: none !important;
   margin-bottom: 0 !important;
 }
+
+/* Destructive confirm buttons use the system's danger-strong, not PrimeNG's default red (white on it fails AA). */
+.p-confirmdialog .p-button-danger {
+  background: var(--danger-bg);
+  border-color: var(--danger-bg);
+  color: var(--white);
+}
+
+.p-confirmdialog .p-button-danger:not(:disabled):hover {
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
+}

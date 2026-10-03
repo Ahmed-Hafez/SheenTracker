@@ -12,6 +12,7 @@ import { SettingsComponent } from './features/settings/base-settings/settings.co
 import { ForbiddenComponent } from './features/forbidden/forbidden.component';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 import { PAGE_ROLES } from './core/utils/roles.util';
 import { AuthService } from './core/http/backend_service/auth.service';
 import { ShellRouteData } from './layout/shell-route-data';
@@ -179,6 +180,17 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/settings/users-permissions/users-permissions.component').then(
                 (m) => m.UsersPermissionsComponent,
+              ),
+          },
+          {
+            path: 'app-settings',
+            title: 'App Settings - SheenTrack 360°',
+            canActivate: [roleGuard(PAGE_ROLES.appSettings)],
+            canDeactivate: [unsavedChangesGuard],
+            data: { refresh: true } satisfies ShellRouteData,
+            loadComponent: () =>
+              import('./features/settings/app-settings/app-settings.component').then(
+                (m) => m.AppSettingsComponent,
               ),
           },
         ],

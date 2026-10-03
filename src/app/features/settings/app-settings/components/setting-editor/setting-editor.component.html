@@ -1,0 +1,295 @@
+<article class="setting-card" [attr.aria-labelledby]="controlId() + '-title'">
+  <header class="setting-card__head">
+    <div class="min-w-0">
+      <h4 #title tabindex="-1" class="setting-card__title" [id]="controlId() + '-title'">
+        {{ meta().label }}
+      </h4>
+      @if (meta().help) {
+        <p class="setting-card__help" [id]="controlId() + '-help'">{{ meta().help }}</p>
+      }
+    </div>
+    <p class="setting-card__updated">
+      Last updated
+      <time [attr.datetime]="setting().updatedAt">{{
+        setting().updatedAt | date: 'd MMM y, HH:mm'
+      }}</time>
+    </p>
+  </header>
+
+  <div class="setting-card__body">
+    @switch (setting().type) {
+      @case ('Decimal') {
+        <label class="sr-only" [for]="controlId()">{{ meta().label }}</label>
+        <div class="number-field">
+          <p-inputnumber
+            [inputId]="controlId()"
+            [formControl]="control"
+            mode="decimal"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="meta().maxFractionDigits ?? 2"
+            [useGrouping]="false"
+            [inputStyle]="{ fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }"
+            [invalid]="validationMessage() !== null"
+            (onInput)="onNumberInput($event.value)"
+          />
+          @if (meta().unit) {
+            <span class="number-field__unit">{{ meta().unit }}</span>
+          }
+        </div>
+      }
+      @case ('Int') {
+        <label class="sr-only" [for]="controlId()">{{ meta().label }}</label>
+        <p-inputnumber
+          [inputId]="controlId()"
+          [formControl]="control"
+          [maxFractionDigits]="0"
+          [useGrouping]="false"
+          [inputStyle]="{ fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }"
+          [invalid]="validationMessage() !== null"
+          (onInput)="onNumberInput($event.value)"
+        />
+      }
+      @case ('Bool') {
+        <div class="flex items-center gap-2">
+          <p-toggleswitch
+            [inputId]="controlId()"
+            [formControl]="control"
+            [ariaLabelledBy]="controlId() + '-title'"
+          />
+          <span class="toggle-value" aria-hidden="true">{{ control.value ? 'On' : 'Off' }}</span>
+        </div>
+      }
+      @case ('String') {
+        <label class="sr-only" [for]="controlId()">{{ meta().label }}</label>
+        <input
+          class="field"
+          [id]="controlId()"
+          [formControl]="control"
+          [attr.aria-describedby]="meta().help ? controlId() + '-help' : null"
+        />
+      }
+      @case ('StringList') {
+        <div class="list-editor">
+          <div class="list-editor__add">
+            <label class="input-label" [for]="controlId()">Filter or add a name</label>
+            <div class="flex gap-2">
+              <input
+                #entryInput
+                class="field"
+                [id]="controlId()"
+                autocomplete="off"
+                placeholder="Type to filter, Enter to add. Paste a list to add many."
+                [value]="newEntry()"
+                (input)="newEntry.set($any($event.target).value)"
+                (keydown)="onEntryKeydown($event)"
+                (paste)="onPaste($event)"
+                [attr.aria-describedby]="controlId() + '-notice'"
+              />
+              <button
+                type="button"
+                class="btn btn-secondary shrink-0"
+                [disabled]="!canAdd()"
+                (click)="addEntry()"
+              >
+                <i class="pi pi-plus" aria-hidden="true"></i> Add
+              </button>
+            </div>
+          </div>
+          <ng-container [ngTemplateOutlet]="pending" />
+          <ng-container [ngTemplateOutlet]="savedList" />
+          <p
+            class="list-editor__notice"
+            [class.list-editor__notice--warn]="notice()?.tone === 'warn'"
+            [id]="controlId() + '-notice'"
+            aria-live="polite"
+          >
+            {{ notice()?.text }}
+          </p>
+        </div>
+      }
+      @case ('DepartmentList') {
+        <ng-container [ngTemplateOutlet]="enumList" />
+      }
+      @case ('SeniorityList') {
+        <ng-container [ngTemplateOutlet]="enumList" />
+      }
+    }
+
+    <!-- Unsaved additions and removals, kept above the saved list so edits stay in view. -->
+    <ng-template #pending>
+      @if (changeCount() > 0) {
+        <section class="pending" [attr.aria-label]="'Unsaved changes to ' + meta().label">
+          <p class="pending__head">
+            <span class="pending__count"
+              >{{ added().length }} added · {{ removed().length }} removed</span
+            >
+            <span class="pending__state">Not saved yet</span>
+          </p>
+          @if (effectSummary(); as effect) {
+            <p class="pending__effect">{{ effect }}.</p>
+          }
+          <ul class="chip-list">
+            @for (entry of added(); track entry.value) {
+              <li class="chip chip--new">
+                <span class="chip__tag">New</span>
+                <span class="chip__text">{{ entry.label }}</span>
+                @if (entry.matches !== null) {
+                  <span class="chip__count" [class.chip__count--none]="entry.matches === 0">{{
+                    entry.matches === 0 ? 'no match' : entry.matches
+                  }}</span>
+                }
+                @if (isBroad(entry)) {
+                  <span class="chip__flag">Matches many people</span>
+                }
+                <button
+                  type="button"
+                  class="chip__action"
+                  [attr.aria-label]="'Take back ' + entry.label"
+                  (click)="revert(entry.value)"
+                >
+                  <i class="pi pi-undo" aria-hidden="true"></i>
+                </button>
+              </li>
+            }
+            @for (entry of removed(); track entry.value) {
+              <li class="chip chip--removed">
+                <span class="chip__tag">Removed</span>
+                <span class="chip__text">{{ entry.label }}</span>
+                @if (entry.matches) {
+                  <span class="chip__count">{{ entry.matches }}</span>
+                }
+                <button
+                  type="button"
+                  class="chip__action"
+                  [attr.aria-label]="'Restore ' + entry.label"
+                  (click)="revert(entry.value)"
+                >
+                  <i class="pi pi-undo" aria-hidden="true"></i>
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </ng-template>
+
+    <ng-template #savedList>
+      <div class="list-editor__meta">
+        <span>
+          {{ keptCount() }} saved {{ keptCount() === 1 ? 'entry' : 'entries' }}
+          @if (unmatchedKept() > 0) {
+            · {{ unmatchedKept() }} match nobody
+          }
+        </span>
+      </div>
+      @if (keptCount() === 0) {
+        <p class="excludes-nobody">Excludes nobody</p>
+      } @else if (matchingKept().length === 0) {
+        <p class="excludes-nobody">No saved entry matches "{{ newEntry().trim() }}"</p>
+      } @else {
+        <ul class="chip-list" [attr.aria-label]="'Saved ' + meta().label">
+          @for (entry of visibleKept(); track entry.value) {
+            <li class="chip" [class.chip--warn]="entry.matches === 0 || isBroad(entry)">
+              <span class="chip__text">{{ entry.label }}</span>
+              @if (entry.matches !== null) {
+                <span class="chip__count" [class.chip__count--none]="entry.matches === 0">{{
+                  entry.matches === 0 ? 'no match' : entry.matches
+                }}</span>
+              }
+              @if (isBroad(entry)) {
+                <span class="chip__flag">Matches many people</span>
+              }
+              <button
+                type="button"
+                class="chip__action"
+                [attr.aria-label]="'Remove ' + entry.label"
+                (click)="removeEntry(entry.value)"
+              >
+                <i class="pi pi-times" aria-hidden="true"></i>
+              </button>
+            </li>
+          }
+        </ul>
+        @if (hiddenCount() > 0) {
+          <button type="button" class="btn btn-ghost btn-sm self-start" (click)="showAll.set(true)">
+            Show all {{ matchingKept().length }}
+          </button>
+        } @else if (showAll() && !filterTerm() && keptCount() > 24) {
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm self-start"
+            (click)="showAll.set(false)"
+          >
+            Show fewer
+          </button>
+        }
+      }
+    </ng-template>
+
+    <ng-template #enumList>
+      <div class="list-editor">
+        <label class="sr-only" [for]="controlId()">{{ meta().label }}</label>
+        <p-multiselect
+          [inputId]="controlId()"
+          [formControl]="control"
+          [options]="enumOptions()"
+          optionLabel="label"
+          optionValue="value"
+          display="chip"
+          [filter]="true"
+          filterPlaceHolder="Search"
+          placeholder="Excludes nobody"
+          appendTo="body"
+          [fluid]="true"
+        />
+        @if (enumCoverage(); as coverage) {
+          <p class="pending__effect">{{ coverage }}.</p>
+        }
+        <ng-container [ngTemplateOutlet]="pending" />
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="setting-card__feedback" aria-live="polite">
+    @if (validationMessage(); as message) {
+      <p-message severity="error" size="small">{{ message }}</p-message>
+    }
+    @if (softWarning(); as warning) {
+      <p-message severity="warn" size="small">{{ warning }}</p-message>
+    }
+    @if (serverError(); as error) {
+      <p-message severity="error" size="small">{{ error }}</p-message>
+    }
+    @if (savedNotice()) {
+      <p class="saved-note"><i class="pi pi-check" aria-hidden="true"></i> Saved</p>
+    }
+  </div>
+
+  @if (isDirty()) {
+    <div class="setting-card__actions">
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm"
+        (click)="cancel()"
+        [disabled]="saving()"
+      >
+        {{ isList() ? 'Discard changes' : 'Cancel' }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary btn-sm"
+        [disabled]="!canSave()"
+        (click)="submit()"
+      >
+        @if (saving()) {
+          <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+        }
+        {{
+          isList()
+            ? 'Save ' + changeCount() + (changeCount() === 1 ? ' change' : ' changes')
+            : 'Save'
+        }}
+      </button>
+    </div>
+  }
+</article>

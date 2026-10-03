@@ -33,6 +33,8 @@ export const PAGE_ROLES = {
   quarterPlans: ['Business', 'Coordination', 'ProjectManager'],
   allMetrics: [SUPER_ADMIN],
   settings: ['Coordination'],
+  /** The backend refuses every other role on `/api/settings`. */
+  appSettings: [SUPER_ADMIN],
 } as const satisfies Record<string, readonly string[]>;
 
 /** Plain-language summary of what each role can open, derived from PAGE_ROLES. */

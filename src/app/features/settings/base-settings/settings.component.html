@@ -1,5 +1,5 @@
 <nav class="settings-tabs" aria-label="Settings sections">
-  @for (section of sections; track section.route) {
+  @for (section of visibleSections(); track section.route) {
     <a
       class="settings-tab"
       [routerLink]="section.route"
