@@ -15,18 +15,22 @@
   z-index: 260;
 }
 
-.layout-motion {
-  transition: all 0.3s ease;
+/* Only the phone drawer slides; collapse and content offset change without animating layout. */
+.layout-sidebar-motion {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.layout-sidebar-motion {
-  transition:
-    width 0.3s ease,
-    transform 0.3s ease;
+.sidebar-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 240;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgb(29 29 27 / 0.45);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .layout-motion,
   .layout-sidebar-motion {
     transition: none;
   }

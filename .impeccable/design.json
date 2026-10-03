@@ -8,93 +8,185 @@
         "role": "primary",
         "displayName": "Amber Wash",
         "canonical": "#fdf0e0",
-        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+        "tonalRamp": [
+          "#7a3e06",
+          "#b5600e",
+          "#e8821a",
+          "#f5a84a",
+          "#fdf0e0"
+        ]
       },
       "orange-300": {
         "role": "primary",
         "displayName": "Amber Glow",
         "canonical": "#f5a84a",
-        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+        "tonalRamp": [
+          "#7a3e06",
+          "#b5600e",
+          "#e8821a",
+          "#f5a84a",
+          "#fdf0e0"
+        ]
       },
       "orange-500": {
         "role": "primary",
         "displayName": "Signal Amber",
         "canonical": "#e8821a",
-        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+        "tonalRamp": [
+          "#7a3e06",
+          "#b5600e",
+          "#e8821a",
+          "#f5a84a",
+          "#fdf0e0"
+        ]
       },
       "orange-700": {
         "role": "primary",
         "displayName": "Deep Amber",
         "canonical": "#b5600e",
-        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+        "tonalRamp": [
+          "#7a3e06",
+          "#b5600e",
+          "#e8821a",
+          "#f5a84a",
+          "#fdf0e0"
+        ]
       },
       "orange-900": {
         "role": "primary",
         "displayName": "Burnt Amber",
         "canonical": "#7a3e06",
-        "tonalRamp": ["#7a3e06", "#b5600e", "#e8821a", "#f5a84a", "#fdf0e0"]
+        "tonalRamp": [
+          "#7a3e06",
+          "#b5600e",
+          "#e8821a",
+          "#f5a84a",
+          "#fdf0e0"
+        ]
       },
       "charcoal-50": {
         "role": "neutral",
         "displayName": "Linen",
         "canonical": "#f5f4f0",
-        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+        "tonalRamp": [
+          "#1d1d1b",
+          "#3a3a38",
+          "#5c5c59",
+          "#aeada9",
+          "#e8e7e3",
+          "#f5f4f0"
+        ]
       },
       "charcoal-100": {
         "role": "neutral",
         "displayName": "Hairline",
         "canonical": "#e8e7e3",
-        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+        "tonalRamp": [
+          "#1d1d1b",
+          "#3a3a38",
+          "#5c5c59",
+          "#aeada9",
+          "#e8e7e3",
+          "#f5f4f0"
+        ]
       },
       "charcoal-400": {
         "role": "neutral",
         "displayName": "Ash",
         "canonical": "#aeada9",
-        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+        "tonalRamp": [
+          "#1d1d1b",
+          "#3a3a38",
+          "#5c5c59",
+          "#aeada9",
+          "#e8e7e3",
+          "#f5f4f0"
+        ]
       },
       "charcoal-600": {
         "role": "neutral",
         "displayName": "Slate Graphite",
         "canonical": "#5c5c59",
-        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+        "tonalRamp": [
+          "#1d1d1b",
+          "#3a3a38",
+          "#5c5c59",
+          "#aeada9",
+          "#e8e7e3",
+          "#f5f4f0"
+        ]
       },
       "charcoal-800": {
         "role": "neutral",
         "displayName": "Dark Graphite",
         "canonical": "#3a3a38",
-        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+        "tonalRamp": [
+          "#1d1d1b",
+          "#3a3a38",
+          "#5c5c59",
+          "#aeada9",
+          "#e8e7e3",
+          "#f5f4f0"
+        ]
       },
       "charcoal-900": {
         "role": "neutral",
         "displayName": "Graphite",
         "canonical": "#1d1d1b",
-        "tonalRamp": ["#1d1d1b", "#3a3a38", "#5c5c59", "#aeada9", "#e8e7e3", "#f5f4f0"]
+        "tonalRamp": [
+          "#1d1d1b",
+          "#3a3a38",
+          "#5c5c59",
+          "#aeada9",
+          "#e8e7e3",
+          "#f5f4f0"
+        ]
       },
-      "page-bg": { "role": "neutral", "displayName": "Warm Paper", "canonical": "#f4f2ef" },
-      "white": { "role": "neutral", "displayName": "White", "canonical": "#ffffff" },
+      "page-bg": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "#f4f2ef"
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "#ffffff"
+      },
       "success": {
         "role": "status",
         "displayName": "Success",
         "canonical": "#1d9e75",
-        "tonalRamp": ["#1d9e75", "#e1f5ee"]
+        "tonalRamp": [
+          "#1d9e75",
+          "#e1f5ee"
+        ]
       },
       "warning": {
         "role": "status",
         "displayName": "Warning",
         "canonical": "#ba7517",
-        "tonalRamp": ["#ba7517", "#faeeda"]
+        "tonalRamp": [
+          "#ba7517",
+          "#faeeda"
+        ]
       },
       "info": {
         "role": "status",
         "displayName": "Info",
         "canonical": "#185fa5",
-        "tonalRamp": ["#185fa5", "#e6f1fb"]
+        "tonalRamp": [
+          "#185fa5",
+          "#e6f1fb"
+        ]
       },
       "danger-strong": {
         "role": "status",
         "displayName": "Danger",
         "canonical": "#ac312c",
-        "tonalRamp": ["#a94845", "#ac312c"]
+        "tonalRamp": [
+          "#a94845",
+          "#ac312c"
+        ]
       }
     },
     "typographyMeta": {
@@ -102,17 +194,38 @@
         "displayName": "Display",
         "purpose": "Rare hero numbers or page-level statements (.display)."
       },
-      "headline": { "displayName": "Headline", "purpose": "h1 page titles." },
-      "title": { "displayName": "Title", "purpose": "h2 section heads." },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "h1 page titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "h2 section heads."
+      },
       "title-sm": {
         "displayName": "Title Small",
         "purpose": "h3, card titles, topbar page title."
       },
-      "body": { "displayName": "Body", "purpose": "Default 14px interface text." },
-      "body-sm": { "displayName": "Body Small", "purpose": "Hints, captions, sublines (.small)." },
-      "label": { "displayName": "Label", "purpose": "Uppercase field and KPI labels (.label)." },
-      "metric": { "displayName": "Metric", "purpose": "KPI values in DM Mono, tabular." },
-      "mono-sm": { "displayName": "Mono Small", "purpose": "Hours in badges and tables." }
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default 14px interface text."
+      },
+      "body-sm": {
+        "displayName": "Body Small",
+        "purpose": "Hints, captions, sublines (.small)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase field and KPI labels (.label)."
+      },
+      "metric": {
+        "displayName": "Metric",
+        "purpose": "KPI values in DM Mono, tabular."
+      },
+      "mono-sm": {
+        "displayName": "Mono Small",
+        "purpose": "Hours in badges and tables."
+      }
     },
     "shadows": [
       {
@@ -152,11 +265,21 @@
         "value": "all 0.3s ease",
         "purpose": "Sidebar collapse and topbar offset; disabled under prefers-reduced-motion."
       },
-      { "name": "progress-fill", "value": "width 0.3s ease", "purpose": "Progress bar fill." }
+      {
+        "name": "progress-fill",
+        "value": "width 0.3s ease",
+        "purpose": "Progress bar fill."
+      }
     ],
     "breakpoints": [
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" }
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
     ]
   },
   "components": [
@@ -230,7 +353,7 @@
       "refersTo": "sidebar",
       "description": "Graphite rail with amber wordmark and translucent-white items.",
       "html": "<nav class=\"ds-nav\" aria-label=\"Main\"><div class=\"ds-nav-brand\">Sheen<span>Track 360°</span></div><p class=\"ds-nav-label\">Main</p><a href=\"#\" class=\"ds-nav-item is-active\" aria-current=\"page\">Dashboard</a><a href=\"#\" class=\"ds-nav-item\">Squads</a><a href=\"#\" class=\"ds-nav-item\">Quarter Plans</a></nav>",
-      "css": ".ds-nav { width: 200px; background: #1d1d1b; padding: 24px 0; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-nav-brand { padding: 0 16px 12px; color: #fff; font-weight: 600; font-size: 15px; } .ds-nav-brand span { color: #e8821a; font-weight: 700; } .ds-nav-label { margin: 12px 0 4px; padding: 0 16px; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); } .ds-nav-item { display: block; padding: 8px 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; transition: background-color 0.2s ease, color 0.2s ease; } .ds-nav-item:hover, .ds-nav-item.is-active { background: rgba(255,255,255,0.1); color: #fff; } .ds-nav-item:focus-visible { outline: 2px solid #e8821a; outline-offset: -2px; }"
+      "css": ".ds-nav { width: 256px; background: #1d1d1b; padding: 24px 0; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-nav-brand { padding: 0 16px 12px; color: #fff; font-weight: 600; font-size: 15px; } .ds-nav-brand span { color: #e8821a; font-weight: 700; } .ds-nav-label { margin: 12px 0 4px; padding: 0 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.6); } .ds-nav-item { display: block; padding: 8px 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; transition: background-color 0.2s ease, color 0.2s ease; } .ds-nav-item:hover, .ds-nav-item.is-active { background: rgba(255,255,255,0.1); color: #fff; } .ds-nav-item:focus-visible { outline: 2px solid #e8821a; outline-offset: -2px; }"
     }
   ],
   "narrative": {
@@ -278,7 +401,8 @@
       "Don't use Tailwind's cool greys (`gray-*`, `slate-*`) or `#6b7280` and `#e5e7eb`. Use the charcoal scale.",
       "Don't hardcode chart colors outside the palette. Several ECharts option files currently do this and should move to tokens.",
       "Don't stack shadows or raise cards above the card-lift shadow. Only PrimeNG overlays sit higher.",
-      "Don't use `--danger` until it is defined in `styles.css`."
+      "Don't use `--danger` until it is defined in `styles.css`.",
+      "Don't put a topbar control on a page that doesn't read it. Declare `dateScope` and `refresh` in the route's `data`."
     ]
   }
 }

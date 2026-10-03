@@ -1,80 +1,74 @@
-import { Component, signal, input, inject, OnInit, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
+import { filter, map } from 'rxjs';
+import { RippleModule } from 'primeng/ripple';
+import { TooltipModule } from 'primeng/tooltip';
 import { SidebarService } from '../../../core/services/sidebar.service';
 
 export interface MenuItem {
   label: string;
   icon?: string;
   routerLink?: string;
+  /** Roles allowed to see this entry. Parents without roles show when any child is visible. */
+  roles?: readonly string[];
   items?: MenuItem[];
-  action?: () => void;
 }
 
 @Component({
   selector: 'app-menu-item',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, RippleModule, TooltipModule],
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuItemComponent implements OnInit {
-  router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
+export class MenuItemComponent {
+  private readonly router = inject(Router);
   private readonly sidebarService = inject(SidebarService);
-  readonly isMobile = this.sidebarService.isMobile;
 
-  isSubmenuOpen = signal(false);
-  private currentUrl = signal(this.router.url);
+  readonly menuItem = input.required<MenuItem>();
+  readonly isSidebarCollapsed = input.required<boolean>();
 
-  menuItem = input.required<MenuItem>();
-  isSidebarCollapsed = input.required<boolean>();
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map((e) => e.urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
+  );
+
+  readonly isChildRouteActive = computed(() => {
+    const url = this.currentUrl();
+    return (this.menuItem().items ?? []).some(
+      (child) => child.routerLink && url.startsWith(child.routerLink),
+    );
+  });
+
+  /** Opens automatically when a child page is active; the user can still toggle it. */
+  readonly isSubmenuOpen = linkedSignal(() => this.isChildRouteActive());
+
+  readonly submenuId = computed(
+    () => `submenu-${this.menuItem().label.toLowerCase().replace(/\W+/g, '-')}`,
+  );
 
   toggleSubmenu(): void {
-    this.isSubmenuOpen.update((open) => !open);
-    
     if (this.isSidebarCollapsed()) {
-      if (this.sidebarService.isTablet()) {
-        this.sidebarService.toggleMobileOverlay();
-      }
-      this.sidebarService.expand();
-    }
-
-  }
-
-  isChildRouteActive(): boolean {
-    const items = this.menuItem().items;
-    if (!items || items.length === 0) return false;
-    const url = this.currentUrl();
-    return items.some((child) => child.routerLink && url.startsWith(child.routerLink));
-  }
-
-  ngOnInit(): void {
-    if (this.isChildRouteActive()) {
+      // A collapsed rail has no room for children: expand it and show them.
+      this.sidebarService.toggleSidebar();
       this.isSubmenuOpen.set(true);
+      return;
     }
-
-    this.subscribeToRouteChanges();
+    this.isSubmenuOpen.update((open) => !open);
   }
 
-  subscribeToRouteChanges(): void { 
-    this.router.events
-      .pipe(
-        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((e) => {
-        this.currentUrl.set(e.urlAfterRedirects);
-      });
-  }
-
-  onLinkClick(action?: () => void): void {
-    if (this.isMobile()) {
-      this.sidebarService.closeSidebarMobile();
-    }
-
-    if (action) {
-      action();
-    }
+  onLinkClick(): void {
+    this.sidebarService.closeSidebarMobile();
   }
 }

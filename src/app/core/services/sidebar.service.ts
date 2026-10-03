@@ -27,6 +27,14 @@ export class SidebarService {
 
   isMobile = computed(() => this.isTablet() || this.isPhone());
 
+  /** The sidebar is open on top of the page (phone drawer or tablet overlay). */
+  readonly isOverlayOpen = computed(() => this.isMobile() && this.isMobileOverlayOpen());
+
+  /** Whether the navigation labels are visible: drives the toggle's label and aria-expanded. */
+  readonly navExpanded = computed(() =>
+    this.isPhone() ? this.isMobileOverlayOpen() : !this.isCollapsed(),
+  );
+
   sidebarWidthPx = computed(() => {
     if (this.isPhone()) return this.overlayExpandedWidth;
     if (this.isTablet())

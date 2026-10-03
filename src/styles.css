@@ -71,9 +71,16 @@
   --radius-full: 9999px;
 
   /* Layout */
-  --sidebar-width: 200px;
+  --sidebar-width: 256px;
   --topbar-height: 64px;
   --content-max-w: 1200px;
+}
+
+/* Phones stack the topbar: page title on one row, time controls on the next. */
+@media (max-width: 639px) {
+  :root {
+    --topbar-height: 112px;
+  }
 }
 
 /* ============================================
@@ -212,7 +219,8 @@ p {
   background-color: #ffefd9;
 }
 
-.btn-secondary:focus {
+.btn-secondary:focus-visible {
+  outline: none;
   box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.2);
 }
 
@@ -234,7 +242,8 @@ p {
   background: var(--orange-50);
 }
 
-.btn-ghost:focus {
+.btn-ghost:focus-visible {
+  outline: none;
   box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.2);
 }
 

@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
@@ -11,7 +12,9 @@ import { SettingsComponent } from './features/settings/base-settings/settings.co
 import { ForbiddenComponent } from './features/forbidden/forbidden.component';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
-import { SUPER_ADMIN } from './core/utils/roles.util';
+import { PAGE_ROLES } from './core/utils/roles.util';
+import { AuthService } from './core/http/backend_service/auth.service';
+import { ShellRouteData } from './layout/shell-route-data';
 
 export const routes: Routes = [
   {
@@ -33,14 +36,16 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
+        // Each role lands on a page it can open (Business and PMs go to Quarter Plans).
+        redirectTo: () => inject(AuthService).getMainPageBasedOnUserRole(),
         pathMatch: 'full',
       },
       {
         path: 'dashboard',
         title: 'Dashboard - SheenTrack 360°',
         component: DashboardComponent,
-        canActivate: [roleGuard(['HR', 'Coordination'])],
+        canActivate: [roleGuard(PAGE_ROLES.dashboard)],
+        data: { header: 'Dashboard', dateScope: 'range', refresh: true } satisfies ShellRouteData,
       },
       {
         path: 'users',
@@ -49,19 +54,26 @@ export const routes: Routes = [
             path: 'azure',
             title: 'Azure Users - SheenTrack 360°',
             component: AzureUsersComponent,
-            canActivate: [roleGuard(['HR', 'Coordination'])],
+            canActivate: [roleGuard(PAGE_ROLES.azureUsers)],
+            data: {
+              header: 'Azure Users',
+              dateScope: 'range',
+              refresh: true,
+            } satisfies ShellRouteData,
           },
           {
             path: 'system',
             title: 'System Users - SheenTrack 360°',
             component: SystemUsersComponent,
-            canActivate: [roleGuard(['HR', 'Coordination'])],
+            canActivate: [roleGuard(PAGE_ROLES.systemUsers)],
+            data: { header: 'System Users' } satisfies ShellRouteData,
           },
           {
             path: '',
             pathMatch: 'full',
             title: 'User Details - SheenTrack 360°',
-            canActivate: [roleGuard(['HR', 'Coordination'])],
+            canActivate: [roleGuard(PAGE_ROLES.userDetails)],
+            data: { header: 'User Details', dateScope: 'range' } satisfies ShellRouteData,
             loadComponent: () =>
               import('./features/user-details/user-details.component').then(
                 (m) => m.UserDetailsComponent,
@@ -72,17 +84,19 @@ export const routes: Routes = [
       {
         path: 'squads',
         title: 'Squads - SheenTrack 360°',
-        canActivate: [roleGuard(['Coordination'])],
+        canActivate: [roleGuard(PAGE_ROLES.squads)],
         children: [
           {
             path: '',
             title: 'Squads - SheenTrack 360°',
             component: SquadsComponent,
+            data: { header: 'Squads' } satisfies ShellRouteData,
           },
           {
             path: ':squadId',
             title: 'Squad Details - SheenTrack 360°',
             component: SquadDetailsComponent,
+            data: { header: 'Squad Details' } satisfies ShellRouteData,
           },
         ],
       },
@@ -93,14 +107,16 @@ export const routes: Routes = [
             path: 'project-utilization',
             title: 'Project Utilization - SheenTrack 360°',
             component: ProjectUtilizationReportComponent,
-            canActivate: [roleGuard(['HR', 'Coordination'])],
+            canActivate: [roleGuard(PAGE_ROLES.projectUtilization)],
+            data: { header: 'Project Utilization' } satisfies ShellRouteData,
           },
         ],
       },
       {
         path: 'quarter-plans',
-        title: 'Enterprise Quarterly Planning - SheenTrack 360°',
-        canActivate: [roleGuard(['Business', 'Coordination', 'ProjectManager'])],
+        title: 'Quarter Plans - SheenTrack 360°',
+        canActivate: [roleGuard(PAGE_ROLES.quarterPlans)],
+        data: { header: 'Quarter Plans', dateScope: 'quarter' } satisfies ShellRouteData,
         children: [
           {
             path: '',
@@ -113,6 +129,7 @@ export const routes: Routes = [
           {
             path: 'all-epics',
             title: 'All Epics - SheenTrack 360°',
+            data: { header: 'All Epics' } satisfies ShellRouteData,
             loadComponent: () =>
               import('./features/quarter-plans/quarter-plans-epics/quarter-plans-all-epics.component').then(
                 (m) => m.QuarterPlansAllEpicsComponent,
@@ -121,7 +138,8 @@ export const routes: Routes = [
           {
             path: 'all-metrics',
             title: 'All Metrics - SheenTrack 360°',
-            canActivate: [roleGuard([SUPER_ADMIN])],
+            canActivate: [roleGuard(PAGE_ROLES.allMetrics)],
+            data: { header: 'All Metrics' } satisfies ShellRouteData,
             loadComponent: () =>
               import('./features/quarter-plans/quarter-plans-metrics/quarter-plans-all-metrics.component').then(
                 (m) => m.QuarterPlansAllMetricsComponent,
@@ -132,7 +150,8 @@ export const routes: Routes = [
       {
         path: 'settings',
         component: SettingsComponent,
-        canActivate: [roleGuard(['Coordination'])],
+        canActivate: [roleGuard(PAGE_ROLES.settings)],
+        data: { header: 'Settings' } satisfies ShellRouteData,
         children: [
           {
             path: '',
@@ -150,6 +169,7 @@ export const routes: Routes = [
           {
             path: 'users-permisions',
             title: 'Users & Permissions - SheenTrack 360°',
+            data: { refresh: true } satisfies ShellRouteData,
             loadComponent: () =>
               import('./features/settings/users-permisions/users-permisions.component').then(
                 (m) => m.UsersPermisionsComponent,

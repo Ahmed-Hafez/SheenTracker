@@ -1,29 +1,81 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
 import { DateService } from '../../core/services/date.service';
 import { QuarterYearService } from '../../core/services/quarter-year.service';
-import { SelectModule } from 'primeng/select';
+import { RefreshService } from '../../core/services/refresh.service';
+import { SidebarService } from '../../core/services/sidebar.service';
 import { DateHelpers, DateRange } from '../../core/utils/date-helpers';
+import { DateScope } from '../shell-route-data';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  imports: [DatePickerModule, FormsModule, SelectModule],
+  imports: [DatePickerModule, FormsModule, SelectModule, DatePipe, NgOptimizedImage],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: `
+    .page-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0;
+      color: var(--charcoal-900);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .page-subtitle {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--charcoal-600);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .refreshed-at {
+      font-size: 12px;
+      color: var(--charcoal-600);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    @media (max-width: 639px) {
+      .page-subtitle {
+        display: none;
+      }
+    }
+  `,
 })
 export class HeaderComponent implements OnInit {
   private readonly dateService = inject(DateService);
   private readonly quarterDateService = inject(QuarterYearService);
+  private readonly refreshService = inject(RefreshService);
+  private readonly sidebarService = inject(SidebarService);
 
-  readonly sidebarOpen = input(false);
-  readonly isCollapsed = input(false);
   readonly title = input('');
   readonly subtitle = input('');
-  readonly isQplanRoute = input(false);
-  readonly toggleSidebar = output<void>();
-  readonly toggleCollapse = output<void>();
-  readonly refresh = output<void>();
+  readonly dateScope = input<DateScope>('none');
+  readonly showRefresh = input(false);
 
+  readonly isPhone = this.sidebarService.isPhone;
+  readonly navExpanded = this.sidebarService.navExpanded;
+  readonly toggleLabel = computed(() => {
+    if (this.sidebarService.isPhone()) {
+      return this.navExpanded() ? 'Close navigation' : 'Open navigation';
+    }
+    return this.navExpanded() ? 'Collapse sidebar' : 'Expand sidebar';
+  });
+
+  readonly lastRefreshedAt = this.refreshService.lastRefreshedAt;
   readonly rangeDates = signal<Date[] | null>(null);
 
   readonly availableQuarters = this.quarterDateService.getAvailableQuarters();
@@ -56,6 +108,10 @@ export class HeaderComponent implements OnInit {
     this.dateService.setDateRange(defaultRange[0], defaultRange[1]);
   }
 
+  toggleSidebar(): void {
+    this.sidebarService.toggleSidebar();
+  }
+
   onQuarterChange(quarter: string): void {
     console.log('Selected Quarter:', quarter);
     //TODO: Implement the logic to handle quarter change and update the date range accordingly
@@ -75,7 +131,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onRefreshClick(): void {
-    this.refresh.emit();
+    this.refreshService.trigger();
   }
 
   getDateNDaysAgo(n: number): Date {

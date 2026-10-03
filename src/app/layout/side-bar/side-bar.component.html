@@ -1,61 +1,89 @@
-<div class="flex h-full flex-col justify-start transition-all duration-300">
+<div class="flex h-full flex-col justify-start">
   <div class="flex-1 overflow-y-auto">
-    <a class="sidebar-logo" [class.justify-center]="isCollapsed()" routerLink="/dashboard">
-      <span class="sidebar-icon" aria-hidden="true">
-        <img src="logo/Logo-light.png" alt="SheenTrack 360° logo" />
+    <a
+      class="sidebar-logo"
+      [class.justify-center]="isCollapsed()"
+      [class.sidebar-logo--with-close]="isOverlayOpen()"
+      [routerLink]="homePage"
+      [attr.aria-label]="isCollapsed() ? 'SheenTrack 360° home' : null"
+    >
+      <span class="sidebar-icon">
+        <img ngSrc="logo/Logo-light.png" alt="" width="133" height="112" priority />
       </span>
       @if (!isCollapsed()) {
-        <div class="flex min-w-0 flex-col">
-          <h2 class="m-0 text-md font-semibold truncate">
+        <span class="flex min-w-0 flex-col">
+          <span class="sidebar-brand-name truncate">
             Sheen<span class="font-bold text-(--orange-500)">Track 360°</span>
-          </h2>
-          <span class="truncate text-xs text-gray-500">Sheen Information Technologies</span>
-        </div>
+          </span>
+          <span class="sidebar-brand-owner truncate">Sheen Information Technology</span>
+        </span>
       }
     </a>
 
-    <hr class="m-0 border-(--charcoal-800)" />
-
-    @if (!isCollapsed()) {
-      <p class="sidebar-section-label">Main</p>
+    @if (isOverlayOpen()) {
+      <button
+        type="button"
+        class="sidebar-close"
+        aria-label="Close navigation"
+        (click)="closeNavigation()"
+      >
+        <i class="pi pi-times" aria-hidden="true"></i>
+      </button>
     }
 
-    <ul class="m-0 list-none px-0 py-2">
-      @for (item of mainMenuItems(); track $index) {
-        <app-menu-item [menuItem]="item" [isSidebarCollapsed]="isCollapsed()"></app-menu-item>
+    <hr class="m-0 border-(--charcoal-800)" />
+
+    <nav aria-label="Primary">
+      @if (!isCollapsed()) {
+        <p class="sidebar-section-label" aria-hidden="true">Main</p>
       }
-    </ul>
+
+      <ul class="m-0 list-none px-0 py-2">
+        @for (item of menuItems; track item.label) {
+          <app-menu-item [menuItem]="item" [isSidebarCollapsed]="isCollapsed()"></app-menu-item>
+        }
+      </ul>
+    </nav>
   </div>
 
   <div class="sidebar-bottom">
     <hr class="m-0 border-(--charcoal-800)" />
     <div class="sidebar-user" [class.sidebar-user--collapsed]="isCollapsed()">
-      <div class="sidebar-user-avatar">
-        <span>{{ userData()?.fullName?.substring(0, 2)?.toUpperCase() }}</span>
+      <div
+        class="sidebar-user-avatar"
+        role="img"
+        [attr.aria-label]="'Signed in as ' + (userData?.fullName ?? 'unknown user')"
+        [attr.title]="isCollapsed() ? userData?.fullName : null"
+      >
+        <span aria-hidden="true">{{ initials }}</span>
       </div>
       @if (!isCollapsed()) {
         <div class="sidebar-user-info">
-          <span class="sidebar-user-name">{{ userData()?.fullName }}</span>
-          <span class="sidebar-user-role">{{ userData()?.email }}</span>
+          <span class="sidebar-user-name">{{ userData?.fullName }}</span>
+          <span class="sidebar-user-role" [attr.title]="userData?.email">{{
+            userData?.email
+          }}</span>
         </div>
         <button
+          type="button"
           class="sidebar-logout-btn"
           (click)="onLogout()"
           title="Sign out"
           aria-label="Sign out"
         >
-          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
         </button>
       }
     </div>
     @if (isCollapsed()) {
       <button
-        class="sidebar-logout-btn"
+        type="button"
+        class="sidebar-logout-btn sidebar-logout-btn--collapsed"
         (click)="onLogout()"
         title="Sign out"
         aria-label="Sign out"
       >
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
       </button>
     }
   </div>

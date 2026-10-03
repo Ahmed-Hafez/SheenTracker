@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageService, ToastMessageOptions } from 'primeng/api';
 import { from, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 // import { AuthService } from '../../../auth/auth/auth.service';
@@ -99,7 +99,7 @@ function handleError(
 
   switch (status) {
     case 0:
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Network Error',
         detail:
@@ -110,7 +110,7 @@ function handleError(
       break;
     case 400:
       // Bad Request
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Bad Request',
         detail: finalErrorMessage ?? 'Not a Valid Request',
@@ -120,7 +120,7 @@ function handleError(
     case 401:
       // Redirect to login if unauthorized
       router.navigate(['/login']);
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Unauthorized',
         detail: finalErrorMessage ?? 'You do not have permission to access this resource.',
@@ -129,7 +129,7 @@ function handleError(
       break;
     case 403:
       // Forbidden access
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Access Denied',
         detail: finalErrorMessage ?? 'You do not have permission to access this resource.',
@@ -138,7 +138,7 @@ function handleError(
       break;
     case 404:
       // Resource not found
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Not Found',
         detail: finalErrorMessage ?? 'The requested resource was not found.',
@@ -148,7 +148,7 @@ function handleError(
 
     case 405:
       // Method not allowed
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Method Not Allowed',
         detail: finalErrorMessage ?? 'The requested method is not allowed.',
@@ -158,7 +158,7 @@ function handleError(
 
     case 429:
       // Too Many Requests
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Too Many Requests',
         detail: finalErrorMessage ?? 'Too many requests. Please try again in 5 seconds.',
@@ -167,21 +167,43 @@ function handleError(
       break;
     case 500:
       // Internal server error
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
         summary: 'Server Error',
-        detail: finalErrorMessage ?? 'Internal Server Error.',
+        detail:
+          finalErrorMessage ??
+          'The server hit an error. Try again, and contact support if it keeps happening.',
         life: 10000,
       });
       break;
     default: {
-      messageService.add({
+      notify(messageService, {
         severity: 'error',
-        summary: 'Error',
-        detail: finalErrorMessage ?? 'Unexpected Error.',
+        summary: 'Request failed',
+        detail:
+          finalErrorMessage ??
+          `The server could not complete the request${status ? ` (HTTP ${status})` : ''}. Try Refresh, or try again in a minute.`,
         life: 10000,
       });
       break;
     }
   }
+}
+
+const DUPLICATE_WINDOW_MS = 4000;
+const recentToasts = new Map<string, number>();
+
+/**
+ * Shows an error toast unless the same one appeared moments ago, so a page whose
+ * parallel requests all fail shows one message instead of a stack of identical ones.
+ */
+function notify(messageService: MessageService, message: ToastMessageOptions) {
+  const key = `${message.summary}|${message.detail}`;
+  const now = Date.now();
+  const lastShown = recentToasts.get(key);
+  if (lastShown !== undefined && now - lastShown < DUPLICATE_WINDOW_MS) {
+    return;
+  }
+  recentToasts.set(key, now);
+  messageService.add(message);
 }

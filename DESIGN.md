@@ -152,7 +152,7 @@ components:
   sidebar:
     backgroundColor: "{colors.charcoal-900}"
     textColor: "{colors.white}"
-    width: "200px"
+    width: "256px"
   topbar:
     backgroundColor: "{colors.charcoal-50}"
     height: "64px"
@@ -221,7 +221,7 @@ The palette is warm paper and graphite with a single amber signal, plus a small,
 - **Title Small** (600, 15px, 1.4): `h3`, card titles, and the topbar page title.
 - **Body** (400, 14px, 1.6): Default text. The app's base size is 14px.
 - **Body Small** (400, 12px, 1.5): Hints, captions, and sublines. Use the `.small` class.
-- **Label** (700, 11px, 0.06em, uppercase): Field and KPI labels. Use the `.label` class. Sidebar section labels shrink to 9px at 0.1em.
+- **Label** (700, 11px, 0.06em, uppercase): Field and KPI labels, and the sidebar section label. Use the `.label` class.
 - **Metric** (DM Mono 700, 24px, -0.03em, tabular): KPI values. The `.mono-metric` class sets the same figure at 20px.
 - **Mono Small** (DM Mono 500, 13px, 0.02em): Hours in badges and tables.
 
@@ -230,7 +230,7 @@ The palette is warm paper and graphite with a single amber signal, plus a small,
 
 ## Layout
 
-The shell is fixed. A 200px Graphite sidebar (`--sidebar-width`) sits on the left and collapses to an icon rail. A 64px Linen topbar (`--topbar-height`) shows the page title, the date-range picker or quarter selector, and Refresh. Content scrolls in the remaining area with 24px padding (`--space-xl`). On phones the sidebar becomes an off-canvas overlay with a dimmed scrim, and the layout motion is disabled under `prefers-reduced-motion`.
+The shell is fixed. A 256px Graphite sidebar (`--sidebar-width`) sits on the left and collapses to an 80px icon rail. Below 1024px the rail stays collapsed and expands as an overlay. A 64px Linen topbar (`--topbar-height`) shows the page title (the page's only h1), plus whichever controls the route declares in its `data`: the date range or the quarter select, and Refresh with a "Refreshed HH:mm" note. Content scrolls in the remaining area with 24px padding (`--space-xl`). On phones (<640px) the sidebar becomes an off-canvas drawer with a Graphite scrim, and the topbar grows to 112px, with the title on the first row and the controls on the second. Only the drawer animates, and only with `transform`. Nothing animates under `prefers-reduced-motion`.
 
 Spacing uses a 4px base unit: xs 4, sm 8, md 12, lg 16, xl 24, 2xl 32, 3xl 48. Within a page, a KPI row runs one column on phones, two on tablets, and five on desktop (`grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4`). Chart pairs split two-thirds and one-third and stack on small screens. Cards are separated by 16px. Form grids auto-fit columns of at least 200px with 16px gaps.
 
@@ -290,7 +290,15 @@ This is the system's signature tile. An uppercase 11px Slate label sits above a 
 Header cells sit on near-white (#f9f8f7) with Graphite text at weight 400 and 0.5rem 1rem padding. Body cells use 0.75rem 1rem padding with Hairline row borders. Hover rows go to Linen, and sort icons turn amber on hover.
 
 ### Navigation
-- **Sidebar:** Graphite, 200px wide, collapsible. The logo and wordmark sit at the top, with "Track 360°" in amber. Section labels are 9px uppercase at 25% white. Menu items (PrimeNG panelmenu) are 70% white text and get a 10% white wash on focus or hover. The user block at the bottom has an amber avatar and a round logout button with an amber 2px focus outline.
+- **Sidebar:** Graphite, 256px wide, collapsing to an 80px rail.
+  - **Top:** the logo and wordmark, with "Track 360°" in amber.
+  - **Section label:** 11px, uppercase, 60% white.
+  - **Items:** custom links at 70% white. Hover goes to 90% white over a 6% white wash. The active item is white at weight 600, with a 2px amber left rule and `aria-current="page"`.
+  - **Parents with children** are buttons with `aria-expanded`.
+  - **Collapsed rail:** labels stay as screen-reader text, and a tooltip shows the label on the right.
+  - **Focus:** a 2px amber outline.
+  - **Bottom:** the avatar uses the Avatar spec, followed by the round logout button.
+  - **Phone drawer:** gains a close button, closes on Escape, and returns focus to the toggle.
 - **Topbar:** Linen with a Hairline bottom border. It holds the sidebar toggle, a 1px divider, the page title and subtitle, then right-aligned controls: a date range or quarter select, and a secondary Refresh button.
 
 ### Avatar
@@ -312,3 +320,4 @@ A 40px circle with Amber Wash fill, Burnt Amber initials (13px/700), and a 2px A
 - **Don't** hardcode chart colors outside the palette. Several ECharts option files currently do this and should move to tokens.
 - **Don't** stack shadows or raise cards above the card-lift shadow. Only PrimeNG overlays sit higher.
 - **Don't** use `--danger` until it is defined in `styles.css`.
+- **Don't** put a topbar control on a page that doesn't read it. Declare `dateScope` and `refresh` in the route's `data`.

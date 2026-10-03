@@ -18,7 +18,7 @@ import { hasRole } from '../utils/roles.util';
  * @param requiredRoles - Array of role names. User must have at least one.
  * @returns A CanActivateFn that validates user roles
  */
-export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
+export const roleGuard = (requiredRoles: readonly string[]): CanActivateFn => {
   return () => {
     const authService = inject(AuthService);
     const router = inject(Router);

@@ -1,73 +1,89 @@
-<div class="flex w-full items-center justify-between gap-4">
-  <div class="flex min-w-0 items-center">
+<div class="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2">
+  <div class="flex min-w-0 flex-1 items-center gap-3">
     <button
+      id="sidebar-toggle"
       type="button"
-      class="btn btn-ghost"
-      (click)="toggleCollapse.emit()"
-      [attr.aria-label]="isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      class="btn btn-ghost shrink-0"
+      (click)="toggleSidebar()"
+      aria-controls="app-sidebar"
+      [attr.aria-expanded]="navExpanded()"
+      [attr.aria-label]="toggleLabel()"
     >
       <img
-        [src]="isCollapsed() ? 'svgs/sidebar-open.svg' : 'svgs/sidebar-close.svg'"
-        alt="Toggle sidebar"
-        class="h-5 w-5 shrink-0"
+        [ngSrc]="navExpanded() ? 'svgs/sidebar-close.svg' : 'svgs/sidebar-open.svg'"
+        alt=""
+        width="20"
+        height="20"
+        class="shrink-0"
       />
     </button>
 
-    <span class="h-7 w-px shrink-0 bg-(--charcoal-800)" aria-hidden="true"></span>
-    <div class="w-5"></div>
+    <span class="h-7 w-px shrink-0 bg-(--charcoal-100)" aria-hidden="true"></span>
     <div class="min-w-0">
-      <h3 class="">
-        {{ title() || 'Sheen Pulse' }}
-      </h3>
+      <h1 class="page-title">{{ title() }}</h1>
       @if (subtitle()) {
-        <span class="text-sm text-muted-foreground">
-          {{ subtitle() }}
-        </span>
+        <p class="page-subtitle">{{ subtitle() }}</p>
       }
     </div>
   </div>
 
-  <div class="flex items-center gap-2">
-    @if (isQplanRoute()) {
-      <p-select
-        [options]="availableQuarters"
-        [(ngModel)]="selectedQuarter"
-        (onChange)="onQuarterChange($event.value)"
-        placeholder="Select Quarter"
-        optionLabel="quarter"
-        optionValue="quarter"
-        [style]="{ minWidth: '12rem' }"
-      >
-        <ng-template #item let-quarter>
-          <div class="flex flex-col items-start justify-between">
-            <span
-              class="font-semibold"
-              [class.text-white]="isQuarterSelected(quarter.quarter)"
-              [class.text-black]="!isQuarterSelected(quarter.quarter)"
-              >{{ quarter.quarter }}</span
-            >
-            <span class="text-sm font-light">{{ formatDate(quarter.dateRange) }}</span>
-          </div>
-        </ng-template>
-      </p-select>
-    } @else {
-      <p-datepicker
-        [ngModel]="rangeDates()"
-        (ngModelChange)="onRangeChange($event)"
-        selectionMode="range"
-        [readonlyInput]="true"
-        [numberOfMonths]="2"
-        [variant]="'filled'"
-        [showIcon]="true"
-        [minDate]="minDate"
-        [maxDate]="maxDate"
-        [dateFormat]="'dd M yy'"
-        inputId="icondisplay"
-        [iconDisplay]="'input'"
-      />
+  <div class="flex items-center gap-2 max-sm:w-full">
+    @switch (dateScope()) {
+      @case ('quarter') {
+        <p-select
+          [options]="availableQuarters"
+          [(ngModel)]="selectedQuarter"
+          (onChange)="onQuarterChange($event.value)"
+          placeholder="Select quarter"
+          ariaLabel="Quarter"
+          optionLabel="quarter"
+          optionValue="quarter"
+          class="max-sm:flex-1"
+          [style]="{ minWidth: '12rem' }"
+        >
+          <ng-template #item let-quarter>
+            <div class="flex flex-col items-start justify-between">
+              <span
+                class="font-semibold"
+                [class.text-white]="isQuarterSelected(quarter.quarter)"
+                [class.text-black]="!isQuarterSelected(quarter.quarter)"
+                >{{ quarter.quarter }}</span
+              >
+              <span class="text-sm font-light">{{ formatDate(quarter.dateRange) }}</span>
+            </div>
+          </ng-template>
+        </p-select>
+      }
+      @case ('range') {
+        <label for="shell-date-range" class="sr-only">Date range</label>
+        <p-datepicker
+          class="min-w-0 max-sm:flex-1"
+          [ngModel]="rangeDates()"
+          (ngModelChange)="onRangeChange($event)"
+          selectionMode="range"
+          [readonlyInput]="true"
+          [showOnFocus]="false"
+          [numberOfMonths]="isPhone() ? 1 : 2"
+          [variant]="'filled'"
+          [showIcon]="true"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          [dateFormat]="'dd M yy'"
+          inputId="shell-date-range"
+          [iconDisplay]="'input'"
+        />
+      }
     }
-    <button type="button" class="btn btn-secondary" (click)="onRefreshClick()">
-      <i class="pi pi-refresh"></i> Refresh
-    </button>
+
+    @if (showRefresh()) {
+      <span class="refreshed-at max-md:sr-only" aria-live="polite">
+        @if (lastRefreshedAt(); as refreshedAt) {
+          Refreshed {{ refreshedAt | date: 'HH:mm' }}
+        }
+      </span>
+      <button type="button" class="btn btn-secondary shrink-0" (click)="onRefreshClick()">
+        <i class="pi pi-refresh" aria-hidden="true"></i> Refresh
+      </button>
+    }
   </div>
 </div>

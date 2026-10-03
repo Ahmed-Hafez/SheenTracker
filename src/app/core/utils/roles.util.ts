@@ -18,3 +18,19 @@ export const hasRole = (roles: string[] = [], ...allowed: string[]) =>
  */
 export const holdsRole = (roles: string[] = [], ...allowed: string[]) =>
   roles.some((r) => allowed.some((a) => sameRole(r, a)));
+
+/**
+ * Who may open each authenticated page. The route guards and the sidebar both read
+ * this map, so navigation can never show a page the guard would refuse.
+ */
+export const PAGE_ROLES = {
+  dashboard: ['HR', 'Coordination'],
+  azureUsers: ['HR', 'Coordination'],
+  systemUsers: ['Coordination'],
+  userDetails: ['HR', 'Coordination'],
+  squads: ['Coordination'],
+  projectUtilization: ['HR', 'Coordination'],
+  quarterPlans: ['Business', 'Coordination', 'ProjectManager'],
+  allMetrics: [SUPER_ADMIN],
+  settings: ['Coordination'],
+} as const satisfies Record<string, readonly string[]>;
