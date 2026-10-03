@@ -16,7 +16,7 @@ interface SettingsSection {
 })
 export class SettingsComponent {
   readonly sections: SettingsSection[] = [
-    { label: 'Users & Permissions', route: '/settings/users-permissions' },
     { label: 'General', route: '/settings/general' },
+    { label: 'Users & Permissions', route: '/settings/users-permissions' },
   ];
 }
