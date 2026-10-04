@@ -16,6 +16,7 @@ export interface User {
   principalName: string;
   descriptor: string;
   avatarUrl?: string;
+  numOfRemovedHours: number;
   totalHours: number;
   expectedHours: number | null;
   projectsCount: number;

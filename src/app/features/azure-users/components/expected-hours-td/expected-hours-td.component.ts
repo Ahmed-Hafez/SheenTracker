@@ -17,7 +17,9 @@ export class ExpectedHoursTdComponent {
 
   getExpectedHoursOrDefault = computed(() => {
     var workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount(); // Ensure that the computed value is updated when weekdaysCount changes
-    return this.userService.getExpectedHoursOrDefault(this.user(), workingDays);
+    let expectedHours = this.userService.getExpectedHoursOrDefault(this.user(), workingDays);
+    expectedHours=expectedHours- this.user().numOfRemovedHours;
+    return expectedHours;
   });
   
 

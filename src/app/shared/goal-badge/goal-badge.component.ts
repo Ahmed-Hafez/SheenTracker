@@ -16,7 +16,9 @@ export class GoalStatusBadgeComponent {
   loggedHours = computed(() => this.user().totalHours);
   targetHours = computed(() => {
     const workingDays = this.dateService.weekdaysCount()-this.dateService.holidaysCount();
-    return this.userService.getExpectedHoursOrDefault(this.user(), workingDays);
+    let targetHours = this.userService.getExpectedHoursOrDefault(this.user(), workingDays);
+    targetHours = targetHours- this.user().numOfRemovedHours;
+    return targetHours;
   });
   user = input.required<User>();
 
