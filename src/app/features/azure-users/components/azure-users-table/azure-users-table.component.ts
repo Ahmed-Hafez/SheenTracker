@@ -35,18 +35,19 @@ const HIDE_BELOW_CLASSES: Record<Breakpoint, string> = {
 
 @Component({
   selector: 'app-azure-users-table',
-  imports: [TableModule, HoursBadgeComponent, PopoverModule, GoalStatusBadgeComponent, ExpectedHoursTdComponent],
+  imports: [
+    TableModule,
+    HoursBadgeComponent,
+    PopoverModule,
+    GoalStatusBadgeComponent,
+    ExpectedHoursTdComponent,
+  ],
   templateUrl: './azure-users-table.component.html',
 })
 export class AzureUsersTableComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dateService = inject(DateService);
   private readonly userService = inject(UsersService);
-
-  
-
-
-
 
   azureUsersTable = viewChild<Table<User>>('azureUsersTable');
   first = 0;
@@ -75,7 +76,12 @@ export class AzureUsersTableComponent implements OnInit {
       { field: 'email', header: 'Email', minWidth: '12rem', hideBelow: 'lg' },
       { field: 'totalHours', header: 'Total Hours' },
       { field: 'expectedHours', header: 'Expected Hours' },
-      { field: 'hoursPerDay', header: 'Hours Per Day', sortField: 'expectedHours', hideBelow: 'md' },
+      {
+        field: 'hoursPerDay',
+        header: 'Hours Per Day',
+        sortField: 'expectedHours',
+        hideBelow: 'md',
+      },
       { field: 'goal', header: 'Goal' },
       { field: 'projectsCount', header: 'Projects', hideBelow: 'md' },
       { field: 'workItemsCount', header: 'Work Items', hideBelow: 'md' },
@@ -83,7 +89,10 @@ export class AzureUsersTableComponent implements OnInit {
     ];
 
     this.visibilityClasses = Object.fromEntries(
-      this.columns.map((col) => [col.field, col.hideBelow ? HIDE_BELOW_CLASSES[col.hideBelow] : '']),
+      this.columns.map((col) => [
+        col.field,
+        col.hideBelow ? HIDE_BELOW_CLASSES[col.hideBelow] : '',
+      ]),
     );
   }
 

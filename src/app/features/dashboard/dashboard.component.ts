@@ -1,4 +1,15 @@
-import { Component, computed, effect, inject, Injector, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  Injector,
+  signal,
+  WritableSignal,
+} from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { complianceBucketQuery } from './compliance-bucket-query';
 import { DashboardService } from '../../core/http/backend_service/dashboard.service';
 import { KpiCardComponent } from '../../shared/kpi-card/kpi-card.component';
 import { EChartsOption } from 'echarts/types/dist/shared';
@@ -11,12 +22,17 @@ import { MetaDataService } from '../../core/http/backend_service/meta-data.servi
 import { UsersService } from '../../core/http/backend_service/azure-users.service';
 import { DateService } from '../../core/services/date.service';
 import * as XLSX from 'xlsx';
-import { forkJoin } from 'rxjs';
-import { finalize } from 'rxjs';
+import { catchError, finalize, forkJoin, of, OperatorFunction, tap } from 'rxjs';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [KpiCardComponent, NgxEchartsDirective, DashboardSkeletonComponent],
+  imports: [
+    KpiCardComponent,
+    NgxEchartsDirective,
+    DashboardSkeletonComponent,
+    NgTemplateOutlet,
+    RouterLink,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -27,9 +43,16 @@ export class DashboardComponent {
   private readonly usersService = inject(UsersService);
   private readonly dateService = inject(DateService);
   private readonly injector = inject(Injector);
+  private readonly router = inject(Router);
   readonly projectsHours = signal<ProjectsHours | null>(null);
   readonly topPerformers = signal<User[] | null>(null);
   readonly loading = signal(true);
+  readonly usersFailed = signal(false);
+  readonly projectsFailed = signal(false);
+  readonly performersFailed = signal(false);
+  readonly hasProjectHours = computed(() =>
+    (this.projectsHours()?.projects ?? []).some((project) => project.totalHours > 0),
+  );
 
   azureUsersKpis = this.metaDataService.usersKpis$;
   azureUsers = this.usersService.usersResponse$;
@@ -58,9 +81,46 @@ export class DashboardComponent {
       `Distribution of ${this.logComplianceTotalUsers()} employees by logged hours vs. target (${this.dateService.targetHoursCount()}h)`,
   );
 
-  private readonly logComplianceChartData = computed(() => {
-    const users = this.azureUsers()?.users ?? [];    
+  private readonly userCompliance = computed(() => {
+    const workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount();
+    return (this.azureUsers()?.users ?? []).map((user) => {
+      const expectedHoursPerDay = user.expectedHours !== null ? user.expectedHours : 6.5;
+      const expectedHours = expectedHoursPerDay * workingDays;
+      const percentage = user.totalHours <= 0 ? 0 : (user.totalHours / expectedHours) * 100;
+      return { user, expectedHours, percentage };
+    });
+  });
 
+  /** Users under 80% of expected hours, lowest first, so the people to follow up are named. */
+  readonly belowTarget = computed(() =>
+    this.userCompliance()
+      .filter(({ percentage }) => percentage < 80)
+      .sort(
+        (a, b) =>
+          a.percentage - b.percentage || a.user.displayName.localeCompare(b.user.displayName),
+      ),
+  );
+  readonly followUpRows = computed(() =>
+    this.belowTarget()
+      .slice(0, 8)
+      .map(({ user, expectedHours, percentage }) => ({
+        userKey: user.userKey,
+        name: user.displayName.replace(/@?(?:tildetech.ae|shuratech.com)/gi, '').trim(),
+        hours: user.totalHours.toFixed(1),
+        expectedHours: expectedHours.toFixed(0),
+        percentage: Math.round(percentage),
+      })),
+  );
+
+  readonly totalExpectedHours = computed(() => Math.round(this.chartData().targetHours));
+  readonly inactiveShare = computed(() => {
+    const { inActiveUsers, totalUsers } = this.azureUsersKpis();
+    return totalUsers
+      ? `${Math.round((inActiveUsers / totalUsers) * 100)}% of ${totalUsers} users`
+      : null;
+  });
+
+  private readonly logComplianceChartData = computed(() => {
     const counts = {
       zeroLog: 0,
       lowCompliance: 0,
@@ -69,16 +129,11 @@ export class DashboardComponent {
       overCompliance: 0,
     };
 
-    users.forEach((user) => {
-      const workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount();
-      const expectedHoursPerDay = user.expectedHours !== null ? user.expectedHours : 6.5;
-      const TotalExpectedHoursForUser = expectedHoursPerDay * workingDays;
+    this.userCompliance().forEach(({ user, percentage }) => {
       if (user.totalHours <= 0) {
         counts.zeroLog += 1;
         return;
       }
-
-      const percentage = (user.totalHours / TotalExpectedHoursForUser) * 100;
 
       if (percentage <= 50) {
         counts.lowCompliance += 1;
@@ -144,7 +199,8 @@ export class DashboardComponent {
           barWidth: '70%',
           itemStyle: {
             borderRadius: [6, 6, 0, 0],
-            color: ({ dataIndex }) => ['#b13a3a', '#d08a1f', '#c9a227', '#20a57a', '#1f66b3'][dataIndex],
+            color: ({ dataIndex }) =>
+              ['#b13a3a', '#d08a1f', '#c9a227', '#20a57a', '#1f66b3'][dataIndex],
           },
           label: {
             show: true,
@@ -159,6 +215,17 @@ export class DashboardComponent {
       ],
     };
   });
+
+  /** Opens Azure Users filtered to the clicked compliance bar. */
+  protected openComplianceBucket(event: { dataIndex?: number }): void {
+    const queryParams = complianceBucketQuery(
+      event.dataIndex ?? -1,
+      this.dateService.targetHoursCount(),
+    );
+    if (queryParams) {
+      this.router.navigate(['/users/azure'], { queryParams });
+    }
+  }
 
   exportLogComplianceToXlsx(): void {
     const data = this.logComplianceChartData();
@@ -217,23 +284,38 @@ export class DashboardComponent {
     );
   }
 
+  /** Resolves to null instead of erroring so one failed source only blanks its own cards. */
+  private settle<T>(failed: WritableSignal<boolean>): OperatorFunction<T, T | null> {
+    return (source) =>
+      source.pipe(
+        tap(() => failed.set(false)),
+        catchError(() => {
+          failed.set(true);
+          return of(null);
+        }),
+      );
+  }
+
+  protected reload(): void {
+    this.loadDashboardData();
+  }
+
   private loadDashboardData(): void {
     this.loading.set(true);
 
     forkJoin({
-      azureUsers: this.usersService.getAzureUsers(),
-      projectsHours: this.dashboardService.getProjectsHours(),
-      topPerformers: this.dashboardService.getTopPerformers(),
+      azureUsers: this.usersService.getAzureUsers().pipe(this.settle(this.usersFailed)),
+      projectsHours: this.dashboardService
+        .getProjectsHours()
+        .pipe(this.settle(this.projectsFailed)),
+      topPerformers: this.dashboardService
+        .getTopPerformers()
+        .pipe(this.settle(this.performersFailed)),
     })
       .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: ({ projectsHours, topPerformers }) => {
-          this.projectsHours.set(projectsHours);
-          this.topPerformers.set(topPerformers);
-        },
-        error: () => {
-          this.loading.set(false);
-        },
+      .subscribe(({ projectsHours, topPerformers }) => {
+        this.projectsHours.set(projectsHours);
+        this.topPerformers.set(topPerformers);
       });
   }
 

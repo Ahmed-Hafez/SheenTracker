@@ -24,7 +24,7 @@ Angular 21 SPA for HR / Coordination teams: dashboards, squads, quarter plans, u
 - `src/app/shared/`: reusable presentational components (badges, cards, dialogs)
 - `src/app/layout/`: app shell (sidebar and layout)
 - Routing is in `app.routes.ts`. Protect every authenticated page with `roleGuard`, and give each route a `title` of `'<Page> - SheenTrack 360°'`.
-- UI: PrimeNG 21 (theme preset in `src/primeng-preset.ts`), Tailwind 4, ECharts via `ngx-echarts`, PrimeIcons and Font Awesome
+- UI: PrimeNG 21 (theme preset in `src/app/themes/`: `semantic.ts` plus one file per component in `components/`), Tailwind 4, ECharts via `ngx-echarts`, PrimeIcons and Font Awesome
 
 ## Fixtures (fake API for new features)
 - `src/app/core/fixtures/`: one `<area>.fixtures.ts` per backend area, exporting `FixtureRoute[]`. Register each file in `fixtures/index.ts`.

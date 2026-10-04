@@ -10,7 +10,6 @@ import { User } from '../../../../core/models/reponse/azure-users.response.model
   styleUrl: './expected-hours-td.component.scss',
 })
 export class ExpectedHoursTdComponent {
-
   user = input.required<User>();
   private readonly userService = inject(UsersService);
   private readonly dateService = inject(DateService);
@@ -18,9 +17,7 @@ export class ExpectedHoursTdComponent {
   getExpectedHoursOrDefault = computed(() => {
     var workingDays = this.dateService.weekdaysCount() - this.dateService.holidaysCount(); // Ensure that the computed value is updated when weekdaysCount changes
     let expectedHours = this.userService.getExpectedHoursOrDefault(this.user(), workingDays);
-    expectedHours=expectedHours- this.user().numOfRemovedHours;
+    expectedHours = expectedHours - this.user().numOfRemovedHours;
     return expectedHours;
   });
-  
-
 }

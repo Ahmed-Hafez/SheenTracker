@@ -13,7 +13,11 @@ const DEPARTMENTS = [
 ];
 
 const people: User[] = Array.from({ length: 60 }, (_, i) =>
-  user(`Employee ${String(i + 1).padStart(2, '0')}`, DEPARTMENTS[i % DEPARTMENTS.length], 40 + (i % 9) * 11),
+  user(
+    `Employee ${String(i + 1).padStart(2, '0')}`,
+    DEPARTMENTS[i % DEPARTMENTS.length],
+    40 + (i % 9) * 11,
+  ),
 );
 const services: User[] = [
   user('Build Bot', Department.DevOps, 0),
@@ -53,6 +57,7 @@ function user(displayName: string, department: Department, totalHours: number): 
     descriptor: `aad.${slug}`,
     totalHours,
     expectedHours: totalHours ? 160 : null,
+    numOfRemovedHours: totalHours ? 0 : 0,
     projectsCount: totalHours ? 2 : 0,
     workItemsCount: totalHours ? 12 : 0,
     projectNames: totalHours ? ['Atlas', 'Beacon'] : [],

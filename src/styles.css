@@ -649,8 +649,8 @@ p {
 }
 
 /* Destructive entries in popup menus (menus are appended to <body>, so this is global). */
-.row-menu-danger .p-menu-item-label,
-.row-menu-danger .p-menu-item-icon {
+.p-menu-item.row-menu-danger .p-menu-item-content .p-menu-item-label,
+.p-menu-item.row-menu-danger .p-menu-item-content .p-menu-item-icon {
   color: var(--danger-bg);
 }
 
