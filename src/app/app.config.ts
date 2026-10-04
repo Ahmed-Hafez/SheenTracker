@@ -6,7 +6,7 @@ import { providePrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 
 import { routes } from './app.routes';
-import { PrimeNG_Preset } from '../primeng-preset';
+import { PrimeNG_Preset } from './themes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 // Custom build — only import what you need (Angular 19+)

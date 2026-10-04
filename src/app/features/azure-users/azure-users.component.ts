@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   DestroyRef,
   effect,
   inject,
@@ -15,13 +16,20 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SliderModule } from 'primeng/slider';
 import { UsersService } from '../../core/http/backend_service/azure-users.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { startWith } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AzureUsersSkeletonComponent } from './components/azure-users-skeleton/azure-users-skeleton.component';
 import { AzureUsersTableComponent } from './components/azure-users-table/azure-users-table.component';
 import { RefreshService } from '../../core/services/refresh.service';
 import { HolidayCalculatorComponent } from './components/holiday-calculator/holiday-calculator.component';
 import { TargetHoursCardComponent } from './components/target-hours-card/target-hours-card.component';
 import { DateService } from '../../core/services/date.service';
+import {
+  AzureUsersFilters,
+  filtersFromParams,
+  hoursRangeMax,
+  paramsFromFilters,
+  sameFilters,
+} from './azure-users-filters';
 
 @Component({
   selector: 'app-azure-users',
@@ -45,6 +53,8 @@ export class AzureUsersComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly injector = inject(Injector);
   private readonly dateService = inject(DateService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   holidaysCalculatorVisible = signal(false);
 
   readonly loading = signal(true);
@@ -59,12 +69,27 @@ export class AzureUsersComponent implements OnInit {
   searchTerm = '';
   usersFilterForm!: FormGroup;
 
+  private readonly requestedHoursMax = signal(0);
+  /** Slider upper bound: covers the largest logged total and any max carried by the URL. */
+  readonly hoursMax = computed(() =>
+    Math.max(
+      hoursRangeMax((this.usersService.usersResponse$()?.users ?? []).map((u) => u.totalHours)),
+      this.requestedHoursMax(),
+    ),
+  );
+
   ngOnInit(): void {
     this.initializeFilters();
 
-    this.usersFilterForm.valueChanges
-      .pipe(startWith(this.usersFilterForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.onFilterChange());
+    this.usersFilterForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.onFilterChange();
+      this.syncUrl();
+    });
+
+    // The URL is the source of truth: links, back/forward and the sidebar all land here.
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.applyUrlFilters());
 
     effect(
       () => {
@@ -76,11 +101,13 @@ export class AzureUsersComponent implements OnInit {
   }
 
   initializeFilters(): void {
+    const filters = filtersFromParams(this.route.snapshot.queryParamMap, this.hoursMax());
+    this.requestedHoursMax.set(filters.hoursRange[1]);
     this.usersFilterForm = this.fb.group({
-      searchTerm: [''],
-      projects: [''],
-      hoursRange: ['200'],
-      zeroHoursUsers: [true],
+      searchTerm: [filters.searchTerm],
+      projects: [filters.projects],
+      hoursRange: [filters.hoursRange],
+      zeroHoursUsers: [filters.zeroHoursUsers],
     });
   }
 
@@ -90,10 +117,30 @@ export class AzureUsersComponent implements OnInit {
     this.tableChild()?.resetToFirstPage();
   }
 
+  private applyUrlFilters(): void {
+    const fromUrl = filtersFromParams(this.route.snapshot.queryParamMap, this.hoursMax());
+    this.requestedHoursMax.set(Math.max(this.requestedHoursMax(), fromUrl.hoursRange[1]));
+    const current = this.usersFilterForm.getRawValue() as AzureUsersFilters;
+    if (sameFilters(fromUrl, current)) return;
+
+    this.usersFilterForm.patchValue(fromUrl, { emitEvent: false });
+    this.onFilterChange();
+  }
+
+  private syncUrl(): void {
+    const filters = this.usersFilterForm.getRawValue() as AzureUsersFilters;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: paramsFromFilters(filters, this.hoursMax()),
+      replaceUrl: true,
+    });
+  }
+
   private loadUsers(): void {
     this.loading.set(true);
     this.usersService.getAzureUsers().subscribe({
       next: () => {
+        this.applyUrlFilters();
         this.onFilterChange();
         this.loading.set(false);
       },

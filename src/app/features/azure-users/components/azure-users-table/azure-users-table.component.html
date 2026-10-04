@@ -42,7 +42,7 @@
   </ng-template>
   <ng-template #body let-user let-rowIndex="rowIndex">
     <tr class="whitespace-nowrap">
-      <td pFrozenColumn>
+      <td pFrozenColumn [frozen]="true" style="z-index: 1">
         <div class="flex items-center gap-3">
           <img
             [src]="

@@ -173,7 +173,7 @@ The shell has two parts: a dark Graphite navigation rail on the left and a light
 - One brand accent, Signal Amber, used for action, selection, and highlighted hours.
 - Plus Jakarta Sans for interface text, DM Mono for every figure.
 - Dark Graphite sidebar against a light paper workspace.
-- PrimeNG components themed through `src/primeng-preset.ts`, so third-party controls inherit the same tokens.
+- PrimeNG components themed through `src/app/themes/`, so third-party controls inherit the same tokens.
 
 ## Colors
 
@@ -315,7 +315,7 @@ A 40px circle with Amber Wash fill, Burnt Amber initials (13px/700), and a 2px A
 - **Do** reference tokens (`var(--orange-500)`, Tailwind `bg-primary`, `text-(--charcoal-600)`) rather than raw hex.
 - **Do** set every figure in DM Mono with `tabular-nums`.
 - **Do** keep fields on Warm Paper inside white cards, so inputs read as inset.
-- **Do** theme PrimeNG components through `src/primeng-preset.ts` instead of overriding their CSS.
+- **Do** theme PrimeNG components through `src/app/themes/` instead of overriding their CSS.
 - **Do** give interactive controls the amber focus treatment (3px halo or 2px outline).
 - **Do** use 12px radius for containers and 8px for controls.
 
