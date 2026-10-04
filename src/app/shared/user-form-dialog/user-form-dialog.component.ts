@@ -278,7 +278,7 @@ export class UserFormDialogComponent implements OnInit {
         squadId: formData.squadName,
         title: formData.jobTitle,
         seniority: formData.seniority,
-        expectedHours: this.getExpectedHoursOrDefault(),
+        expectedHours: formData.expectedHours,
       };
 
       console.log('systemUserData', systemUserData);
