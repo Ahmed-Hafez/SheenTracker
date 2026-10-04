@@ -71,9 +71,16 @@
   --radius-full: 9999px;
 
   /* Layout */
-  --sidebar-width: 200px;
+  --sidebar-width: 256px;
   --topbar-height: 64px;
   --content-max-w: 1200px;
+}
+
+/* Phones stack the topbar: page title on one row, time controls on the next. */
+@media (max-width: 639px) {
+  :root {
+    --topbar-height: 112px;
+  }
 }
 
 /* ============================================
@@ -184,13 +191,19 @@ p {
   transition: all 0.15s;
 }
 
+/* Deep Amber fill: white on Signal Amber is only 2.7:1, white on Deep Amber passes AA. */
 .btn-primary {
-  background: var(--orange-500);
+  background: var(--orange-700);
   color: var(--white);
 }
 
 .btn-primary:hover {
-  background: var(--orange-700);
+  background: var(--orange-900);
+}
+
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.35);
 }
 
 .btn-primary:active {
@@ -212,7 +225,8 @@ p {
   background-color: #ffefd9;
 }
 
-.btn-secondary:focus {
+.btn-secondary:focus-visible {
+  outline: none;
   box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.2);
 }
 
@@ -234,7 +248,8 @@ p {
   background: var(--orange-50);
 }
 
-.btn-ghost:focus {
+.btn-ghost:focus-visible {
+  outline: none;
   box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.2);
 }
 
@@ -633,10 +648,28 @@ p {
   padding: 0 var(--space-md);
 }
 
+/* Destructive entries in popup menus (menus are appended to <body>, so this is global). */
+.row-menu-danger .p-menu-item-label,
+.row-menu-danger .p-menu-item-icon {
+  color: var(--danger-bg);
+}
+
 @import 'tailwindcss';
 p-accordion-panel,
 .p-accordionpanel {
   border-bottom: none !important;
   border: none !important;
   margin-bottom: 0 !important;
+}
+
+/* Destructive confirm buttons use the system's danger-strong, not PrimeNG's default red (white on it fails AA). */
+.p-confirmdialog .p-button-danger {
+  background: var(--danger-bg);
+  border-color: var(--danger-bg);
+  color: var(--white);
+}
+
+.p-confirmdialog .p-button-danger:not(:disabled):hover {
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
 }

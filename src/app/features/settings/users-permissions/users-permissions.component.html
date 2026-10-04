@@ -1,0 +1,173 @@
+<div class="users-header">
+  <div class="min-w-0">
+    <h2 class="users-header__title">Users &amp; Permissions</h2>
+    <p class="users-header__text">Who can sign in to SheenTrack 360° and which role they have.</p>
+  </div>
+
+  <div class="users-header__actions" [formGroup]="usersFilterForm">
+    <div class="search-field users-search">
+      <label for="users-search" class="sr-only">Search users</label>
+      <input
+        id="users-search"
+        type="search"
+        placeholder="Search by name or email"
+        class="field"
+        formControlName="searchTerm"
+        autocomplete="off"
+      />
+    </div>
+    <button type="button" class="btn btn-primary shrink-0" (click)="showAddPopup()">
+      <i class="pi pi-plus" aria-hidden="true"></i> Add user
+    </button>
+  </div>
+</div>
+
+<div class="users-table">
+  <p-table
+    [value]="users()"
+    [paginator]="users().length > 10"
+    [rows]="10"
+    [loading]="isLoading()"
+    [tableStyle]="{ 'min-width': '48rem' }"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
+    [rowsPerPageOptions]="[10, 20, 50]"
+  >
+    <ng-template #header>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Title</th>
+        <th scope="col">Role</th>
+        <th scope="col">Status</th>
+        <th scope="col"><span class="sr-only">Actions</span></th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-user>
+      <tr>
+        <td class="font-semibold">{{ user.firstName }} {{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.title }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <p-tag
+            [value]="user.isActive ? 'Active' : 'Inactive'"
+            [severity]="user.isActive ? 'success' : 'secondary'"
+          />
+        </td>
+        <td class="text-right">
+          @if (canManageUser(user)) {
+            <div class="inline-flex items-center gap-1">
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm"
+                [attr.aria-label]="'Edit ' + getUserDisplayName(user)"
+                (click)="showEditPopup(user)"
+              >
+                <i class="pi pi-pencil" aria-hidden="true"></i> Edit
+              </button>
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm row-more"
+                aria-haspopup="menu"
+                [attr.aria-label]="'More actions for ' + getUserDisplayName(user)"
+                (click)="openRowMenu($event, user)"
+              >
+                <i class="pi pi-ellipsis-v" aria-hidden="true"></i>
+              </button>
+            </div>
+          } @else {
+            <span class="protected" title="Only a Super Admin can change a Super Admin account.">
+              <i class="pi pi-lock" aria-hidden="true"></i> Protected
+              <span class="sr-only">: only a Super Admin can change this account</span>
+            </span>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6">
+          <div class="users-empty" role="status">
+            @if (loadFailed()) {
+              <p class="users-empty__title">Couldn't load users</p>
+              <p class="users-empty__text">Check your connection and try again.</p>
+              <button type="button" class="btn btn-secondary btn-sm" (click)="loadUsers()">
+                <i class="pi pi-refresh" aria-hidden="true"></i> Try again
+              </button>
+            } @else if (searchTerm()) {
+              <p class="users-empty__title">No users match "{{ searchTerm() }}"</p>
+              <p class="users-empty__text">Search looks at first name, last name and email.</p>
+              <button type="button" class="btn btn-secondary btn-sm" (click)="clearSearch()">
+                Clear search
+              </button>
+            } @else if (!isLoading()) {
+              <p class="users-empty__title">No users yet</p>
+              <p class="users-empty__text">
+                Add a user to give a colleague access to SheenTrack 360°.
+              </p>
+            }
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-menu #rowMenu [model]="rowMenuItems()" [popup]="true" appendTo="body" />
+
+<p-dialog
+  [modal]="true"
+  [visible]="deactivateTarget() !== null"
+  (visibleChange)="!$event && cancelDeactivate()"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '28rem', backgroundColor: 'var(--page-bg)' }"
+  ariaLabelledBy="deactivate-title"
+>
+  <ng-template #header>
+    <h2 id="deactivate-title" class="m-0">
+      Deactivate {{ deactivateTarget() ? getUserDisplayName(deactivateTarget()!) : '' }}?
+    </h2>
+  </ng-template>
+  <p class="m-0 text-(--charcoal-600)">
+    They will no longer be able to sign in. Their account and role are kept, and you can activate
+    them again at any time.
+  </p>
+  <ng-template #footer>
+    <div class="flex justify-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="cancelDeactivate()">Cancel</button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        [disabled]="statusActionLoading()"
+        (click)="confirmDeactivate()"
+      >
+        @if (statusActionLoading()) {
+          <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+        }
+        Deactivate
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+@if (userDialogVisible()) {
+  <app-auth-user-form-dialog
+    (outputVisibleSignal)="onDialogVisibleChange($event)"
+    [inputVisibleSignal]="userDialogVisible()"
+    [isEditMode]="isEditMode()"
+    [userData]="selectedUser()"
+  />
+}
+
+<app-delete-popup
+  [title]="selectedUser() ? getUserDisplayName(selectedUser()!) : 'user'"
+  [description]="
+    (selectedUser() ? getUserDisplayName(selectedUser()!) : 'This user') +
+    ' will lose access to SheenTrack 360° and their account will be removed. This can\'t be undone.'
+  "
+  [action]="deleteUser(selectedUser()?.id ?? 0)"
+  [inputVisibleSignal]="deleteRequestVisible()"
+  (outputVisibleSignal)="closeDeletePopup($event)"
+/>

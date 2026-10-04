@@ -1,46 +1,38 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../../core/http/backend_service/auth.service';
+import { hasRole, PAGE_ROLES } from '../../../core/utils/roles.util';
 
-import { MenuItem } from 'primeng/api';
-import { MenuModule } from 'primeng/menu';
-import { RippleModule } from 'primeng/ripple';
-
-export interface SettingNavItem extends MenuItem {
+interface SettingsSection {
   label: string;
-  description: string;
-  icon: string;
-  route?: string;
-  disabled?: boolean;
+  route: string;
+  /** Same roles as the child route's guard, so a tab never leads to a refused page. */
+  roles: readonly string[];
 }
 
+/** Settings is one page with a tab row under the topbar title; each tab is its own route. */
 @Component({
   selector: 'app-settings',
-  imports: [MenuModule, RippleModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
-  settingsItems: SettingNavItem[] = [
-    {
-      label: 'General',
-      description: 'Coming soon',
-      icon: 'pi pi-cog',
-      route: '/settings/general',
-      disabled: false,
-    },
+  private readonly authService = inject(AuthService);
+
+  private readonly sections: SettingsSection[] = [
+    { label: 'General', route: '/settings/general', roles: PAGE_ROLES.settings },
     {
       label: 'Users & Permissions',
-      description: 'Accounts and access',
-      icon: 'pi pi-users',
-      route: '/settings/users-permisions',
-      disabled: false,
+      route: '/settings/users-permissions',
+      roles: PAGE_ROLES.settings,
     },
-    {
-      label: 'Integrations',
-      description: 'Coming soon',
-      icon: 'pi pi-link',
-      route: 'integrations',
-      disabled: true,
-    },
+    { label: 'App Settings', route: '/settings/app-settings', roles: PAGE_ROLES.appSettings },
   ];
+
+  readonly visibleSections = computed(() => {
+    const roles = this.authService.getUserData()?.roles ?? [];
+    return this.sections.filter((section) => hasRole(roles, ...section.roles));
+  });
 }

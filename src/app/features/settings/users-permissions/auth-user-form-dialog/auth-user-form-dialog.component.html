@@ -1,0 +1,178 @@
+<p-dialog
+  [modal]="true"
+  [visible]="visible()"
+  (visibleChange)="!$event && onClosePopup()"
+  [style]="{ width: '40rem', backgroundColor: 'var(--page-bg)' }"
+  [breakpoints]="{ '640px': '95vw' }"
+  [dismissableMask]="false"
+  [resizable]="false"
+  [draggable]="false"
+  ariaLabelledBy="user-dialog-title"
+  (onShow)="focusFirstField()"
+>
+  <ng-template #header>
+    <div>
+      <h2 id="user-dialog-title" class="m-0">{{ isEditMode() ? 'Edit user' : 'Add user' }}</h2>
+      <p class="m-0 mt-1 text-[13px] text-(--charcoal-600)">
+        @if (isEditMode()) {
+          Changes apply to {{ userData()?.firstName }} {{ userData()?.lastName }}'s account.
+        } @else {
+          Give a colleague access to SheenTrack 360°.
+        }
+      </p>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4" novalidate>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <label class="input-label" for="firstName">First name</label>
+        <input
+          class="field"
+          id="firstName"
+          formControlName="firstName"
+          autocomplete="given-name"
+        />
+        @if (getFieldErrorMessage('firstName') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('firstName') }}
+          </p-message>
+        }
+      </div>
+      <div>
+        <label class="input-label" for="lastName">Last name</label>
+        <input class="field" id="lastName" formControlName="lastName" autocomplete="family-name" />
+        @if (getFieldErrorMessage('lastName') !== null) {
+          <p-message severity="error" size="small" class="mt-1">
+            {{ getFieldErrorMessage('lastName') }}
+          </p-message>
+        }
+      </div>
+    </div>
+    <div>
+      <label class="input-label" for="email">Email</label>
+      <input
+        class="field"
+        id="email"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        placeholder="name@company.com"
+      />
+      @if (getFieldErrorMessage('email') !== null) {
+        <p-message severity="error" size="small" class="mt-1">
+          {{ getFieldErrorMessage('email') }}
+        </p-message>
+      }
+    </div>
+    <div>
+      <label class="input-label" for="title">Job title</label>
+      <input
+        class="field"
+        id="title"
+        formControlName="title"
+        autocomplete="organization-title"
+        placeholder="e.g. Software Engineer"
+      />
+      @if (getFieldErrorMessage('title') !== null) {
+        <p-message severity="error" size="small" class="mt-1">
+          {{ getFieldErrorMessage('title') }}
+        </p-message>
+      }
+    </div>
+    <div>
+      <label class="input-label" for="role">Role</label>
+      <p-select
+        inputId="role"
+        formControlName="role"
+        [options]="roles()"
+        [loading]="isRolesLoading()"
+        placeholder="Select a role"
+        [fluid]="true"
+      />
+      @if (roleAccess(); as access) {
+        <p class="role-access" id="role-access">Can open: {{ access }}</p>
+      }
+      @if (getFieldErrorMessage('role') !== null) {
+        <p-message severity="error" size="small" class="mt-1">
+          {{ getFieldErrorMessage('role') }}
+        </p-message>
+      }
+      @if (isRoleChanged()) {
+        <p-message severity="info" size="small" class="mt-1">
+          The new role takes effect the next time this user signs in.
+        </p-message>
+      }
+    </div>
+    @if (!isEditMode()) {
+      <div class="flex flex-col gap-1">
+        <label class="input-label" for="password">Password</label>
+        <p-password
+          inputId="password"
+          formControlName="password"
+          [toggleMask]="true"
+          [invalid]="getFieldErrorMessage('password') !== null"
+          [feedback]="false"
+          autocomplete="new-password"
+          fluid
+        />
+        <ul class="password-requirements" aria-label="Password requirements">
+          @for (req of requirements; track req.id) {
+            <li class="password-requirement-chip" [class.met]="isRequirementMet(req)">
+              <i
+                [class]="isRequirementMet(req) ? 'pi pi-check' : 'pi pi-times'"
+                aria-hidden="true"
+              ></i>
+              {{ req.label }}
+              <span class="sr-only">{{ isRequirementMet(req) ? '(met)' : '(not met)' }}</span>
+            </li>
+          }
+        </ul>
+        @if (getFieldErrorMessage('password') !== null) {
+          <p-message severity="error" size="small">{{
+            getFieldErrorMessage('password')
+          }}</p-message>
+        }
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="input-label" for="confirmPassword">Confirm password</label>
+        <p-password
+          inputId="confirmPassword"
+          formControlName="confirmPassword"
+          [invalid]="getFieldErrorMessage('confirmPassword') !== null"
+          [feedback]="false"
+          autocomplete="new-password"
+          fluid
+        />
+        @if (getFieldErrorMessage('confirmPassword') !== null) {
+          <p-message severity="error" size="small">{{
+            getFieldErrorMessage('confirmPassword')
+          }}</p-message>
+        }
+      </div>
+    }
+    <div class="account-status">
+      <div>
+        <span class="input-label m-0" id="status-label">Account status</span>
+        <p class="m-0 text-[13px] text-(--charcoal-600)" id="status-help">
+          Inactive users can't sign in.
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <p-toggleswitch formControlName="isActive" inputId="status" ariaLabelledBy="status-label" />
+        <span class="account-status__value" aria-hidden="true">{{
+          isUserActive() ? 'Active' : 'Inactive'
+        }}</span>
+      </div>
+    </div>
+    <div class="mt-2 flex justify-end gap-3">
+      <button type="button" class="btn btn-secondary" (click)="onClosePopup()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="actionLoading()">
+        @if (actionLoading()) {
+          <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+        }
+        {{ isEditMode() ? 'Save changes' : 'Add user' }}
+      </button>
+    </div>
+  </form>
+</p-dialog>

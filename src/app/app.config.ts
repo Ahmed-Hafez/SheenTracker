@@ -21,6 +21,7 @@ import {
 } from 'echarts/components';
 import { CanvasRenderer, SVGRenderer } from 'echarts/renderers';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { FIXTURE_INTERCEPTORS, provideFixtures } from './core/fixtures/provide-fixtures';
 
 echarts.use([
   BarChart,
@@ -37,7 +38,10 @@ echarts.use([
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([errorInterceptor, authInterceptor])),
+    provideHttpClient(
+      withInterceptors([errorInterceptor, authInterceptor, ...FIXTURE_INTERCEPTORS]),
+    ),
+    provideFixtures(),
     provideEchartsCore({ echarts }),
 
     MessageService,

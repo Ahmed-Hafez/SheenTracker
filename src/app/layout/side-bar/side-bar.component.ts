@@ -1,15 +1,11 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-
-import { RippleModule } from 'primeng/ripple';
-
-import { PanelMenuModule } from 'primeng/panelmenu';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { SidebarService } from '../../core/services/sidebar.service';
 import { AuthService } from '../../core/http/backend_service/auth.service';
 import { MenuItem, MenuItemComponent } from './menu-item/menu-item.component';
-import { hasRole } from '../../core/utils/roles.util';
+import { PAGE_ROLES, hasRole } from '../../core/utils/roles.util';
 
 interface UserData {
   roles: string[];
@@ -17,146 +13,83 @@ interface UserData {
   fullName: string;
 }
 
+/** The full navigation tree. Visibility comes from the same role lists the route guards use. */
+const MENU: MenuItem[] = [
+  {
+    label: 'Dashboard',
+    icon: 'pi pi-objects-column',
+    routerLink: '/dashboard',
+    roles: PAGE_ROLES.dashboard,
+  },
+  {
+    label: 'Users',
+    icon: 'pi pi-users',
+    items: [
+      { label: 'Azure Users', routerLink: '/users/azure', roles: PAGE_ROLES.azureUsers },
+      { label: 'System Users', routerLink: '/users/system', roles: PAGE_ROLES.systemUsers },
+    ],
+  },
+  { label: 'Squads', icon: 'pi pi-sitemap', routerLink: '/squads', roles: PAGE_ROLES.squads },
+  {
+    label: 'Reports',
+    icon: 'pi pi-chart-bar',
+    items: [
+      {
+        label: 'Project Utilization',
+        routerLink: '/reports/project-utilization',
+        roles: PAGE_ROLES.projectUtilization,
+      },
+    ],
+  },
+  {
+    label: 'Quarter Plans',
+    icon: 'pi pi-calendar',
+    routerLink: '/quarter-plans',
+    roles: PAGE_ROLES.quarterPlans,
+  },
+  { label: 'Settings', icon: 'pi pi-cog', routerLink: '/settings', roles: PAGE_ROLES.settings },
+];
+
+function visibleItems(items: MenuItem[], roles: string[]): MenuItem[] {
+  return items.flatMap((item) => {
+    if (item.items) {
+      const children = visibleItems(item.items, roles);
+      return children.length > 0 ? [{ ...item, items: children }] : [];
+    }
+    return !item.roles || hasRole(roles, ...item.roles) ? [item] : [];
+  });
+}
+
 @Component({
   selector: 'app-side-bar',
   templateUrl: './side-bar.component.html',
   styleUrls: ['./side-bar.component.scss'],
-  imports: [RippleModule, RouterLink, PanelMenuModule, MenuItemComponent],
+  imports: [RouterLink, NgOptimizedImage, MenuItemComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SideBarComponent implements OnInit {
+export class SideBarComponent {
   private readonly sidebarService = inject(SidebarService);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+
   readonly isCollapsed = this.sidebarService.isCollapsed;
+  readonly isOverlayOpen = this.sidebarService.isOverlayOpen;
 
-  private readonly coordinationHiddenLabels = new Set([]);
-  private readonly hrHiddenLabels = new Set(['Squads', 'System Users', 'Settings', 'Quarterly Planning']);
-  private readonly businessHiddenLabels = new Set([
-    'Dashboard',
-    'Users',
-    'Squads',
-    'Reports',
-    'Settings',
-  ]);
-  private readonly projectManagerHiddenLabels = new Set([
-    'Dashboard',
-    'Users',
-    'Squads',
-    'Reports',
-    'Settings',
-  ]);
+  readonly userData: UserData | null = this.authService.getUserData();
+  readonly homePage = this.authService.getMainPageBasedOnUserRole();
 
-  userData = signal<UserData | null>(null);
+  readonly menuItems = visibleItems(MENU, this.userData?.roles ?? []);
 
-  isSubmenuOpen = signal(false);
+  /** "Omar Sherif" -> "OS"; a single name gives its first letter. */
+  readonly initials = (this.userData?.fullName ?? '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join('');
 
-  mainMenuItems = signal<MenuItem[]>([]);
-
-  ngOnInit(): void {
-    this.getUserData(); // Fetch user data on component initialization
-  }
-
-  constructor() {
-    effect(() => {
-      this.mainMenuItems.set(this.getMenuItemsBasedOnRoles(this.userData()?.roles || null));
-    });
-  }
-
-  allMenuItems = [
-    {
-      icon: 'pi pi-objects-column',
-      label: 'Dashboard',
-      routerLink: '/dashboard',
-    },
-    {
-      label: 'Users',
-      icon: 'pi pi-users',
-      action: () => {
-        this.router.navigate(['/users/azure']);
-      },
-      items: this.isCollapsed()
-        ? []
-        : [
-            {
-              label: 'Azure Users',
-              routerLink: '/users/azure',
-            },
-            {
-              label: 'System Users',
-              routerLink: '/users/system',
-            },
-          ],
-    },
-    {
-      label: 'Squads',
-      icon: 'pi pi-sitemap',
-      routerLink: '/squads',
-    },
-    {
-      label: 'Reports',
-      icon: 'pi pi-chart-bar',
-      items: this.isCollapsed()
-        ? []
-        : [
-            {
-              label: 'Projects Utilization',
-              routerLink: '/reports/project-utilization',
-            },
-          ],
-    },
-    {
-      label: 'Quarterly Planning',
-      icon: 'pi pi-calendar',
-      routerLink: '/quarter-plans',
-    },
-    {
-      label: 'Settings',
-      icon: 'pi pi-cog',
-      routerLink: '/settings',
-    },
-  ];
-
-  getMenuItemsBasedOnRoles(roles: string[] | null): MenuItem[] {
-    if (!roles || roles.length === 0) {
-      return [];
-    }
-
-    // Coordination has access to all items
-    if (hasRole(roles, 'Coordination')) {
-      return this.allMenuItems;
-    }
-
-    // HR has access to all except Squads and System Users
-    if (hasRole(roles, 'HR')) {
-      return this.filterMenuItems(this.hrHiddenLabels);
-    }
-
-    // Project Manager has access to all items
-    if (hasRole(roles, 'ProjectManager')) {
-      return this.filterMenuItems(this.projectManagerHiddenLabels);
-    }
-
-    // Business has access to only Quarterly Planning
-    if (hasRole(roles, 'Business')) {
-      return this.filterMenuItems(this.businessHiddenLabels);
-    }
-
-    return [];
-  }
-
-  private filterMenuItems(hiddenLabels: Set<string>): MenuItem[] {
-    return this.allMenuItems
-      .filter((item) => !hiddenLabels.has(item.label))
-      .map((item) => ({
-        ...item,
-        items: item.items?.filter((child) => !hiddenLabels.has(child.label)),
-      }))
-      .filter((item) => item.items === undefined || item.items.length > 0);
-  }
-
-  getUserData() {
-    const userData = this.authService.getUserData();
-    this.userData.set(userData);
+  closeNavigation(): void {
+    this.sidebarService.closeSidebarMobile();
   }
 
   onLogout(): void {

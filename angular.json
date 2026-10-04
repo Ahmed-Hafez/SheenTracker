@@ -97,6 +97,21 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "fixtures": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fixtures.ts"
+                },
+                {
+                  "replace": "src/app/core/fixtures/provide-fixtures.ts",
+                  "with": "src/app/core/fixtures/provide-fixtures.enabled.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -118,6 +133,9 @@
             },
             "development": {
               "buildTarget": "sheenPulse:build:development"
+            },
+            "fixtures": {
+              "buildTarget": "sheenPulse:build:fixtures"
             }
           },
           "defaultConfiguration": "development"

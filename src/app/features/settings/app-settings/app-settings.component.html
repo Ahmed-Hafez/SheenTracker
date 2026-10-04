@@ -1,0 +1,50 @@
+<div class="app-settings-header">
+  <h2 class="app-settings-header__title">App Settings</h2>
+  <p class="app-settings-header__text">
+    Business values the system runs on. A change takes effect the next time the report or form that uses it loads.
+  </p>
+</div>
+
+@if (loadError(); as error) {
+  <div class="app-settings-state" role="status">
+    <p class="app-settings-state__title">Couldn't load settings</p>
+    <p class="app-settings-state__text">{{ error }}</p>
+    <button type="button" class="btn btn-secondary btn-sm" (click)="loadSettings()">
+      <i class="pi pi-refresh" aria-hidden="true"></i> Try again
+    </button>
+  </div>
+} @else if (isLoading() && settings().length === 0) {
+  <div class="app-settings-state" role="status" aria-busy="true">
+    <i class="pi pi-spin pi-spinner text-xl" aria-hidden="true"></i>
+    <p class="app-settings-state__text">Loading settings…</p>
+  </div>
+} @else if (settings().length === 0) {
+  <div class="app-settings-state" role="status">
+    <p class="app-settings-state__title">No settings yet</p>
+    <p class="app-settings-state__text">
+      Settings are added by the database maintainer. Once they exist, they appear here.
+    </p>
+  </div>
+} @else {
+  @for (group of groups(); track group.id) {
+    <section class="settings-group" [attr.aria-labelledby]="'group-' + group.id">
+      <div>
+        <h3 class="settings-group__title" [id]="'group-' + group.id">{{ group.title }}</h3>
+        <p class="settings-group__text">{{ group.description }}</p>
+      </div>
+      @for (item of group.items; track item.setting.key) {
+        <app-setting-editor
+          [setting]="item.setting"
+          [meta]="item.meta"
+          [saving]="isSaving(item.setting)"
+          [serverError]="errorFor(item.setting)"
+          [users]="matchUsers()"
+          (save)="onSave(item.setting, $event, item.meta.label)"
+          (dirtyChange)="onDirtyChange(item.setting, $event)"
+        />
+      }
+    </section>
+  }
+}
+
+<p-confirmdialog [style]="{ width: '28rem', backgroundColor: 'var(--page-bg)' }" />
