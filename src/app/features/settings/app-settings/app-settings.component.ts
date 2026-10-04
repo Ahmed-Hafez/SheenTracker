@@ -114,6 +114,7 @@ export class AppSettingsComponent implements HasUnsavedChanges {
         this.matchUsers.set(
           users.map((u) => ({
             displayName: u.displayName,
+            email: u.email,
             department: Department[u.department] ?? null,
           })),
         ),

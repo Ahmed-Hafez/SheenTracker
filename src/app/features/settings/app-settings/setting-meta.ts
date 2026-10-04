@@ -12,6 +12,7 @@ export interface MatchUser {
   displayName: string;
   /** Canonical Department enum name, e.g. `QualityAssurance`. */
   department: string | null;
+  email?: string;
 }
 
 export interface SettingMeta {
@@ -127,6 +128,25 @@ export function enumOptionsFor(type: SettingType): readonly EnumOption[] {
 export function labelForEnumName(type: SettingType, name: string): string {
   const match = enumOptionsFor(type).find((o) => o.value.toLowerCase() === name.toLowerCase());
   return match?.label ?? name;
+}
+
+/** Users whose name or email contains `term`, minus names already in the list, for the add-field dropdown. */
+export function suggestUsers(
+  users: readonly MatchUser[],
+  term: string,
+  taken: readonly string[],
+  limit = 8,
+): MatchUser[] {
+  const needle = term.trim().toLowerCase();
+  if (!needle) return [];
+  const used = new Set(taken.map((name) => name.trim().toLowerCase()));
+  return users
+    .filter(
+      (u) =>
+        !used.has(u.displayName.trim().toLowerCase()) &&
+        (u.displayName.toLowerCase().includes(needle) || !!u.email?.toLowerCase().includes(needle)),
+    )
+    .slice(0, limit);
 }
 
 /** How many users an entry matches under a rule, compared case-insensitively like the backend. */

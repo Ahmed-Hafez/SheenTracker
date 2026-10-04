@@ -1,5 +1,6 @@
 import {
   countMatches,
+  suggestUsers,
   DEPARTMENT_OPTIONS,
   humanizeKey,
   labelForEnumName,
@@ -60,5 +61,27 @@ describe('setting-meta', () => {
     expect(countMatches('exactName', 'Build', users)).toBe(0);
     expect(countMatches('nameContains', 'build', users)).toBe(2);
     expect(countMatches('department', 'devops', users)).toBe(2);
+  });
+});
+
+describe('suggestUsers', () => {
+  const users = [
+    { displayName: 'Ana Ray', email: 'ana.ray@x.test', department: 'Backend' },
+    { displayName: 'Build Bot', email: 'bot@x.test', department: 'DevOps' },
+    { displayName: 'Cy Lane', email: 'build.fan@x.test', department: null },
+  ];
+
+  it('matches name or email, case-insensitively', () => {
+    expect(suggestUsers(users, 'BUILD', []).map((u) => u.displayName)).toEqual([
+      'Build Bot',
+      'Cy Lane',
+    ]);
+  });
+
+  it('skips names already in the list and empty terms', () => {
+    expect(suggestUsers(users, 'build', ['build bot']).map((u) => u.displayName)).toEqual([
+      'Cy Lane',
+    ]);
+    expect(suggestUsers(users, '  ', [])).toEqual([]);
   });
 });

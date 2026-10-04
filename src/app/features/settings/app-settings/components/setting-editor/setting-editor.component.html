@@ -73,18 +73,52 @@
           <div class="list-editor__add">
             <label class="input-label" [for]="controlId()">Filter or add a name</label>
             <div class="flex gap-2">
-              <input
-                #entryInput
-                class="field"
-                [id]="controlId()"
-                autocomplete="off"
-                placeholder="Type to filter, Enter to add. Paste a list to add many."
-                [value]="newEntry()"
-                (input)="newEntry.set($any($event.target).value)"
-                (keydown)="onEntryKeydown($event)"
-                (paste)="onPaste($event)"
-                [attr.aria-describedby]="controlId() + '-notice'"
-              />
+              <div class="suggest">
+                <input
+                  #entryInput
+                  class="field"
+                  [id]="controlId()"
+                  autocomplete="off"
+                  placeholder="Type to filter, Enter to add. Paste a list to add many."
+                  role="combobox"
+                  aria-autocomplete="list"
+                  [attr.aria-expanded]="showSuggestions()"
+                  [attr.aria-controls]="controlId() + '-suggestions'"
+                  [attr.aria-activedescendant]="activeId()"
+                  [value]="newEntry()"
+                  (input)="onEntryInput($any($event.target).value)"
+                  (keydown)="onEntryKeydown($event)"
+                  (blur)="suggestionsOpen.set(false)"
+                  (paste)="onPaste($event)"
+                  [attr.aria-describedby]="controlId() + '-notice'"
+                />
+                @if (showSuggestions()) {
+                  <ul
+                    class="suggest__list"
+                    role="listbox"
+                    [id]="controlId() + '-suggestions'"
+                    [attr.aria-label]="'Matching users for ' + meta().label"
+                  >
+                    @for (user of suggestions(); track user.displayName; let i = $index) {
+                      <!-- mousedown is prevented so the input keeps focus and the click still lands. -->
+                      <li
+                        role="option"
+                        class="suggest__option"
+                        [id]="controlId() + '-option-' + i"
+                        [class.suggest__option--active]="i === activeIndex()"
+                        [attr.aria-selected]="i === activeIndex()"
+                        (mousedown)="$event.preventDefault()"
+                        (click)="pickSuggestion(user)"
+                      >
+                        <span class="suggest__name">{{ user.displayName }}</span>
+                        @if (user.email) {
+                          <span class="suggest__email">{{ user.email }}</span>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
               <button
                 type="button"
                 class="btn btn-secondary shrink-0"
@@ -133,10 +167,8 @@
               <li class="chip chip--new">
                 <span class="chip__tag">New</span>
                 <span class="chip__text">{{ entry.label }}</span>
-                @if (entry.matches !== null) {
-                  <span class="chip__count" [class.chip__count--none]="entry.matches === 0">{{
-                    entry.matches === 0 ? 'no match' : entry.matches
-                  }}</span>
+                @if (entry.matches) {
+                  <span class="chip__count">{{ entry.matches }}</span>
                 }
                 @if (isBroad(entry)) {
                   <span class="chip__flag">Matches many people</span>
@@ -175,12 +207,7 @@
 
     <ng-template #savedList>
       <div class="list-editor__meta">
-        <span>
-          {{ keptCount() }} saved {{ keptCount() === 1 ? 'entry' : 'entries' }}
-          @if (unmatchedKept() > 0) {
-            · {{ unmatchedKept() }} match nobody
-          }
-        </span>
+        <span> {{ keptCount() }} saved {{ keptCount() === 1 ? 'entry' : 'entries' }} </span>
       </div>
       @if (keptCount() === 0) {
         <p class="excludes-nobody">Excludes nobody</p>
@@ -189,12 +216,10 @@
       } @else {
         <ul class="chip-list" [attr.aria-label]="'Saved ' + meta().label">
           @for (entry of visibleKept(); track entry.value) {
-            <li class="chip" [class.chip--warn]="entry.matches === 0 || isBroad(entry)">
+            <li class="chip" [class.chip--warn]="isBroad(entry)">
               <span class="chip__text">{{ entry.label }}</span>
-              @if (entry.matches !== null) {
-                <span class="chip__count" [class.chip__count--none]="entry.matches === 0">{{
-                  entry.matches === 0 ? 'no match' : entry.matches
-                }}</span>
+              @if (entry.matches) {
+                <span class="chip__count">{{ entry.matches }}</span>
               }
               @if (isBroad(entry)) {
                 <span class="chip__flag">Matches many people</span>

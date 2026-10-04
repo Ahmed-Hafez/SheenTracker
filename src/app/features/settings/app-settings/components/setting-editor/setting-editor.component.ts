@@ -13,7 +13,8 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime } from 'rxjs';
 import {
   AbstractControl,
   FormControl,
@@ -36,12 +37,15 @@ import {
   labelForEnumName,
   MatchUser,
   SettingMeta,
+  suggestUsers,
 } from '../../setting-meta';
 
 /** Saved entries shown before "Show all"; long enough to scan, short enough not to bury the page. */
 const COLLAPSED_COUNT = 24;
 /** A fragment matching this share of all users is almost certainly too broad. */
 const BROAD_SHARE = 0.2;
+/** Pause after the last keystroke before the user dropdown searches. */
+const SUGGEST_DEBOUNCE_MS = 250;
 
 export interface ListEntry {
   value: string;
@@ -136,9 +140,6 @@ export class SettingEditorComponent {
   readonly hiddenCount = computed(() => this.matchingKept().length - this.visibleKept().length);
 
   readonly canCheckMatches = computed(() => !!this.meta().match && this.users() !== null);
-  readonly unmatchedKept = computed(() =>
-    this.canCheckMatches() ? this.keptEntries().filter((e) => e.matches === 0).length : 0,
-  );
   /** "Added entries hide 3 people · removed entries free 1": the effect of saving, per this rule. */
   readonly effectSummary = computed(() => {
     if (!this.canCheckMatches()) return null;
@@ -148,6 +149,28 @@ export class SettingEditorComponent {
     if (this.removed().length) parts.push(`removed entries match ${people(sum(this.removed()))}`);
     return parts.length ? capitalize(parts.join(' · ')) : null;
   });
+
+  // ── User suggestions (name lists only) ───────────────────────────────
+
+  private readonly debouncedTerm = toSignal(
+    toObservable(this.filterTerm).pipe(debounceTime(SUGGEST_DEBOUNCE_MS)),
+    { initialValue: '' },
+  );
+  readonly suggestionsOpen = signal(false);
+  readonly activeIndex = signal(-1);
+  readonly suggestions = computed<MatchUser[]>(() => {
+    const users = this.users();
+    const rule = this.meta().match;
+    // Clearing the field must hide the dropdown now, not after the debounce.
+    if (!users || !this.filterTerm() || (rule !== 'exactName' && rule !== 'nameContains')) return [];
+    return suggestUsers(users, this.debouncedTerm(), this.currentItems());
+  });
+  readonly showSuggestions = computed(() => this.suggestionsOpen() && this.suggestions().length > 0);
+  readonly activeId = computed(() =>
+    this.showSuggestions() && this.activeIndex() >= 0
+      ? `${this.controlId()}-option-${this.activeIndex()}`
+      : null,
+  );
 
   readonly isDuplicate = computed(() => {
     const term = this.filterTerm();
@@ -228,6 +251,11 @@ export class SettingEditorComponent {
     });
 
     effect(() => this.dirtyChange.emit(this.isDirty()));
+
+    effect(() => {
+      this.suggestions();
+      untracked(() => this.activeIndex.set(-1));
+    });
   }
 
   /** p-inputnumber only commits its value on blur; mirror each keystroke so Save appears while typing. */
@@ -248,10 +276,31 @@ export class SettingEditorComponent {
     this.addEntries(text.split(/[\n,;]+/));
   }
 
+  onEntryInput(value: string): void {
+    this.newEntry.set(value);
+    this.suggestionsOpen.set(true);
+  }
+
+  pickSuggestion(user: MatchUser): void {
+    this.addEntries([user.displayName]);
+    this.suggestionsOpen.set(false);
+  }
+
   onEntryKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
+    const count = this.suggestions().length;
+    if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && count) {
       event.preventDefault();
-      this.addEntry();
+      this.suggestionsOpen.set(true);
+      const down = event.key === 'ArrowDown';
+      this.activeIndex.update((i) => (i < 0 ? (down ? 0 : count - 1) : (i + (down ? 1 : -1) + count) % count));
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      const active = this.showSuggestions() ? this.suggestions()[this.activeIndex()] : undefined;
+      if (active) this.pickSuggestion(active);
+      else this.addEntry();
+    } else if (event.key === 'Escape' && this.showSuggestions()) {
+      event.preventDefault();
+      this.suggestionsOpen.set(false);
     } else if (event.key === 'Escape' && this.newEntry()) {
       event.preventDefault();
       this.newEntry.set('');
