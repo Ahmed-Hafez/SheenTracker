@@ -30,29 +30,32 @@
   <div class="flex items-center gap-2 max-sm:w-full">
     @switch (dateScope()) {
       @case ('quarter') {
-        <p-select
-          [options]="availableQuarters"
-          [(ngModel)]="selectedQuarter"
-          (onChange)="onQuarterChange($event.value)"
-          placeholder="Select quarter"
-          ariaLabel="Quarter"
-          optionLabel="quarter"
-          optionValue="quarter"
-          class="max-sm:flex-1"
-          [style]="{ minWidth: '12rem' }"
-        >
-          <ng-template #item let-quarter>
-            <div class="flex flex-col items-start justify-between">
-              <span
-                class="font-semibold"
-                [class.text-white]="isQuarterSelected(quarter.quarter)"
-                [class.text-black]="!isQuarterSelected(quarter.quarter)"
-                >{{ quarter.quarter }}</span
-              >
-              <span class="text-caption font-light">{{ formatDate(quarter.dateRange) }}</span>
-            </div>
-          </ng-template>
-        </p-select>
+        <!-- Hidden when Azure DevOps has no quarters; the pages then load unfiltered. -->
+        @if (quarterOptions().length) {
+          <p-select
+            [options]="quarterOptions()"
+            [ngModel]="selectedQuarter()"
+            (ngModelChange)="onQuarterChange($event)"
+            placeholder="Select quarter"
+            ariaLabel="Quarter"
+            optionLabel="label"
+            optionValue="name"
+            class="max-sm:flex-1"
+            [style]="{ minWidth: '12rem' }"
+          >
+            <ng-template #item let-quarter>
+              <div class="flex flex-col items-start justify-between">
+                <span
+                  class="font-semibold"
+                  [class.text-white]="isQuarterSelected(quarter.name)"
+                  [class.text-black]="!isQuarterSelected(quarter.name)"
+                  >{{ quarter.label }}</span
+                >
+                <span class="text-caption font-light">{{ quarter.dates }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        }
       }
       @case ('range') {
         <label for="shell-date-range" class="sr-only">Date range</label>

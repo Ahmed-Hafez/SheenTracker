@@ -1,4 +1,6 @@
-﻿import { Component, OnInit, signal, computed, inject } from '@angular/core';
+﻿import { Component, signal, computed, inject, Injector } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY, map, startWith, Subject, switchMap, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 // PrimeNG
@@ -11,7 +13,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { MenuItem, TreeNode } from 'primeng/api';
-import { TreeTableModule } from 'primeng/treetable';
+import { TreeTableModule, TreeTablePaginatorState } from 'primeng/treetable';
 import { BacklogItemUIModel } from './backlog-tree-node.model';
 // Shared
 import { StatCardComponent } from '../../../shared/stat-card/stat-card.component';
@@ -22,15 +24,16 @@ import {
   AllEpicsResponse,
 } from '../../../core/models/reponse/backlog-response.model';
 import { MultiSelect } from 'primeng/multiselect';
-import { QuarterPlansService } from '../../../core/http/backend_service/quarter-plans.service';
+import {
+  EPICS_PAGE_SIZE,
+  isUnknownQuarter,
+  QuarterPlansService,
+  selectedQuarterChanges,
+} from '../../../core/http/backend_service/quarter-plans.service';
+import { PlanQuarterService } from '../../../core/services/plan-quarter.service';
 
 type FilterKey =
-  | 'On Track'
-  | 'At Risk'
-  | 'Off Track'
-  | 'Has Remaining'
-  | 'Not Started'
-  | 'Completed';
+  'On Track' | 'At Risk' | 'Off Track' | 'Has Remaining' | 'Not Started' | 'Completed';
 
 @Component({
   selector: 'app-quarter-plans-all-epics',
@@ -52,12 +55,13 @@ type FilterKey =
   templateUrl: './quarter-plans-all-epics.component.html',
   styleUrl: './quarter-plans-all-epics.component.scss',
 })
-export class QuarterPlansAllEpicsComponent implements OnInit {
+export class QuarterPlansAllEpicsComponent {
   private readonly epicsService = inject(QuarterPlansService);
+  private readonly planQuarterService = inject(PlanQuarterService);
   // ── Breadcrumb ─────────────────────────────────────────────────────────────
   readonly breadcrumbHome: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
   readonly breadcrumbItems: MenuItem[] = [
-    { label: 'Quarter Plans', routerLink: '/quarter-plans' },
+    { label: 'Quarter Plans', routerLink: '/quarter-plans', queryParamsHandling: 'preserve' },
     { label: 'All Epics' },
   ];
 
@@ -65,42 +69,71 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
   isLoading = signal(true);
 
   // ── Data ──────────────────────────────────────────────────────────────────
-  backlogResponse: AllEpicsResponse | null = null;
+  backlogResponse = signal<AllEpicsResponse | null>(null);
   BacklogTreeNodes = signal<TreeNode<BacklogItemUIModel>[]>([]);
 
   // Placeholder until the API returns totals; the stat cards show zeros meanwhile.
   readonly summary = { totalEffort: 0, totalCompleted: 0, totalRemaining: 0 };
 
+  readonly pageSize = EPICS_PAGE_SIZE;
   first = signal(0);
+  isError = signal(false);
+
+  private readonly pageRequests = new Subject<number>();
 
   searchQuery = signal('');
 
-  ngOnInit(): void {
-    this.fetchEpics(1);
-  }
-
-  private fetchEpics(pageNumber: number): void {
-    this.isLoading.set(true);
-    this.epicsService.getAllEpics(pageNumber).subscribe({
-      next: (response) => {
-        this.backlogResponse = response;
+  constructor() {
+    this.planQuarterService.load();
+    selectedQuarterChanges(this.planQuarterService, inject(Injector))
+      .pipe(
+        // A new quarter starts again from page 1 and drops the old quarter's tree.
+        switchMap((quarter) => {
+          this.first.set(0);
+          this.backlogResponse.set(null);
+          this.BacklogTreeNodes.set([]);
+          return this.pageRequests.pipe(
+            startWith(1),
+            map((pageNumber) => ({ quarter, pageNumber })),
+          );
+        }),
+        tap(() => {
+          this.isLoading.set(true);
+          this.isError.set(false);
+        }),
+        // Switching unsubscribes from the previous request, so a late response is never shown.
+        switchMap(({ quarter, pageNumber }) =>
+          this.epicsService.getAllEpics(pageNumber, quarter?.name ?? null).pipe(
+            catchError((error: unknown) => {
+              if (!(isUnknownQuarter(error, quarter) && this.planQuarterService.resetToDefault())) {
+                this.isLoading.set(false);
+                this.isError.set(true);
+              }
+              return EMPTY;
+            }),
+          ),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe((response) => {
+        this.backlogResponse.set(response);
         this.initializeTreeNodes();
         this.isLoading.set(false);
-      },
-    });
+      });
   }
 
-  onPage(event: any): void {
-    this.first.set(event.first!);
-    const calculatedPageNumber = event.first / event.rows + 1;
-    this.fetchEpics(calculatedPageNumber);
+  onPage(event: TreeTablePaginatorState): void {
+    const first = event.first ?? 0;
+    this.first.set(first);
+    this.pageRequests.next(first / (event.rows ?? this.pageSize) + 1);
   }
 
   initializeTreeNodes(): void {
     const firstLevelInTree = 0;
-    if (this.backlogResponse) {
+    const response = this.backlogResponse();
+    if (response) {
       this.BacklogTreeNodes.set(
-        this.backlogResponse.items.map((backlogApiItem) =>
+        response.items.map((backlogApiItem) =>
           this.createTreeNode(backlogApiItem, firstLevelInTree),
         ),
       );

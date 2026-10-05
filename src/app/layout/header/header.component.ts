@@ -12,10 +12,10 @@ import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { DateService } from '../../core/services/date.service';
-import { QuarterYearService } from '../../core/services/quarter-year.service';
+import { PlanQuarterService } from '../../core/services/plan-quarter.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { SidebarService } from '../../core/services/sidebar.service';
-import { DateHelpers, DateRange } from '../../core/utils/date-helpers';
+import { formatQuarterDates, formatQuarterLabel } from '../../core/utils/plan-quarter';
 import { DateScope } from '../shell-route-data';
 
 @Component({
@@ -57,7 +57,7 @@ import { DateScope } from '../shell-route-data';
 })
 export class HeaderComponent implements OnInit {
   private readonly dateService = inject(DateService);
-  private readonly quarterDateService = inject(QuarterYearService);
+  private readonly planQuarterService = inject(PlanQuarterService);
   private readonly refreshService = inject(RefreshService);
   private readonly sidebarService = inject(SidebarService);
 
@@ -78,8 +78,18 @@ export class HeaderComponent implements OnInit {
   readonly lastRefreshedAt = this.refreshService.lastRefreshedAt;
   readonly rangeDates = signal<Date[] | null>(null);
 
-  readonly availableQuarters = this.quarterDateService.getAvailableQuarters();
-  selectedQuarter = signal(this.quarterDateService.getCurrentQuarter().quarter);
+  /** Quarters from Azure DevOps, newest first so the current one sits near the top. */
+  readonly quarterOptions = computed(() =>
+    this.planQuarterService
+      .quarters()
+      .map((q) => ({
+        name: q.name,
+        label: formatQuarterLabel(q.name),
+        dates: formatQuarterDates(q),
+      }))
+      .reverse(),
+  );
+  readonly selectedQuarter = computed(() => this.planQuarterService.selected()?.name ?? null);
 
   minDate: Date | undefined;
 
@@ -112,17 +122,14 @@ export class HeaderComponent implements OnInit {
     this.sidebarService.toggleSidebar();
   }
 
-  onQuarterChange(quarter: string): void {
-    console.log('Selected Quarter:', quarter);
-    //TODO: Implement the logic to handle quarter change and update the date range accordingly
+  onQuarterChange(name: string | null): void {
+    if (name && name !== this.selectedQuarter()) {
+      this.planQuarterService.select(name);
+    }
   }
 
-  isQuarterSelected(quarter: string): boolean {
-    return this.selectedQuarter() == quarter;
-  }
-
-  formatDate(dateRange: DateRange): string {
-    return DateHelpers.formatRange(dateRange);
+  isQuarterSelected(name: string): boolean {
+    return this.selectedQuarter() === name;
   }
 
   onRangeChange(rangeDates: Date[] | null): void {

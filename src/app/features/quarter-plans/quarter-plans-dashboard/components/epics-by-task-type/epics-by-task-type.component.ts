@@ -14,7 +14,7 @@ export class EpicsByTaskTypeComponent {
   constructor(private router: Router) {}
 
   navigateToAllEpics() {
-    this.router.navigate(['/quarter-plans/all-epics']);
+    this.router.navigate(['/quarter-plans/all-epics'], { queryParamsHandling: 'preserve' });
   }
 
   private readonly qPlansService = inject(QuarterPlansService);

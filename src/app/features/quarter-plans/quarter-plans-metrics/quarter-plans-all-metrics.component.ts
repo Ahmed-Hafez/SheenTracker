@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, Injector } from '@angular/core';
 import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -27,12 +27,12 @@ interface MetricGroup {
   templateUrl: './quarter-plans-all-metrics.component.html',
   styleUrl: './quarter-plans-all-metrics.component.scss',
 })
-export class QuarterPlansAllMetricsComponent implements OnInit {
+export class QuarterPlansAllMetricsComponent {
   private readonly quarterPlansService = inject(QuarterPlansService);
 
   readonly breadcrumbHome: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
   readonly breadcrumbItems: MenuItem[] = [
-    { label: 'Quarter Plans', routerLink: '/quarter-plans' },
+    { label: 'Quarter Plans', routerLink: '/quarter-plans', queryParamsHandling: 'preserve' },
     { label: 'All Metrics' },
   ];
 
@@ -98,27 +98,13 @@ export class QuarterPlansAllMetricsComponent implements OnInit {
     },
   ];
 
-  ngOnInit(): void {
-    this.fetchDashboardData();
+  constructor() {
+    // Refetches whenever the quarter picked in the topbar changes.
+    this.quarterPlansService.trackSelectedQuarter(inject(DestroyRef), inject(Injector));
   }
 
   valueOf(field: keyof QuarterPlansDashboardResponse): number | null {
     const value = this.data()?.[field];
     return typeof value === 'number' ? value : null;
-  }
-
-  private fetchDashboardData(): void {
-    this.quarterPlansService.isLoading.set(true);
-    this.quarterPlansService.isError.set(false);
-    this.quarterPlansService.getQuarterPlansDashboardData().subscribe({
-      next: (data) => {
-        this.quarterPlansService.qplansDashboardData.set(data);
-        this.quarterPlansService.isLoading.set(false);
-      },
-      error: () => {
-        this.quarterPlansService.isLoading.set(false);
-        this.quarterPlansService.isError.set(true);
-      },
-    });
   }
 }
