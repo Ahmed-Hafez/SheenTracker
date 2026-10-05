@@ -4,7 +4,7 @@
 
 .group-title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--text-title-sm);
   font-weight: 600;
   color: #111827;
 }
@@ -32,13 +32,13 @@
 }
 
 .metric-label {
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   font-weight: 500;
   color: #6b7280;
 }
 
 .metric-value {
-  font-size: 1.5rem;
+  font-size: var(--text-headline);
   font-weight: 700;
   color: #111827;
   font-variant-numeric: tabular-nums;
@@ -49,8 +49,8 @@
 }
 
 .metric-field {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
   color: #9ca3af;
 }
 

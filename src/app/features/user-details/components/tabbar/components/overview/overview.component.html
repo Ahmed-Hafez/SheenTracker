@@ -18,15 +18,15 @@
   } @else {
     <!-- Employee Details Card -->
     <div class="bg-white rounded-lg shadow-sm border border-[#E3E1DE] p-5 w-full">
-      <h3 class="text-xs uppercase text-gray-500 font-semibold mb-4">Employee Details</h3>
+      <h3 class="text-caption uppercase text-gray-500 font-semibold mb-4">Employee Details</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
           <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
             <i class="pi pi-phone"></i>
           </div>
           <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Phone Number</span>
-            <span class="text-sm font-medium text-gray-800">{{
+            <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Phone Number</span>
+            <span class="text-caption font-medium text-gray-800">{{
               systemUser()?.phoneNumber || 'N/A'
             }}</span>
           </div>
@@ -37,8 +37,8 @@
             <i class="pi pi-folder"></i>
           </div>
           <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Title</span>
-            <span class="text-sm font-medium text-gray-800">{{
+            <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Title</span>
+            <span class="text-caption font-medium text-gray-800">{{
               systemUser()?.title || 'N/A'
             }}</span>
           </div>
@@ -50,8 +50,8 @@
             <i class="pi pi-users"></i>
           </div>
           <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Squad Name</span>
-            <span class="text-sm font-medium text-gray-800">{{
+            <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Squad Name</span>
+            <span class="text-caption font-medium text-gray-800">{{
               getSqaudNames(systemUser()!) || 'N/A'
             }}</span>
           </div>
@@ -62,8 +62,8 @@
             <i class="pi pi-briefcase"></i>
           </div>
           <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Department</span>
-            <span class="text-sm font-medium text-gray-800">{{
+            <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Department</span>
+            <span class="text-caption font-medium text-gray-800">{{
               (systemUser()?.department ?? 0 | enumLabel: departments) || 'N/A'
             }}</span>
           </div>
@@ -79,7 +79,7 @@
             class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
           >
             <div
-              class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold"
+              class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-caption font-bold"
             >
               {{
                 systemUser()?.userSquads![0]?.scrumMaster
@@ -88,8 +88,8 @@
               }}
             </div>
             <div class="flex flex-col">
-              <span class="text-[10px] uppercase text-gray-500 font-semibold">Scrum Master</span>
-              <span class="text-sm font-medium text-gray-800">{{
+              <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Scrum Master</span>
+              <span class="text-caption font-medium text-gray-800">{{
                 systemUser()?.userSquads![0]?.scrumMaster?.fullName || 'N/A'
               }}</span>
             </div>
@@ -100,7 +100,7 @@
             class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
           >
             <div
-              class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold"
+              class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-caption font-bold"
             >
               {{
                 systemUser()?.userSquads![0]?.productOwner
@@ -109,8 +109,8 @@
               }}
             </div>
             <div class="flex flex-col">
-              <span class="text-[10px] uppercase text-gray-500 font-semibold">Product Owner</span>
-              <span class="text-sm font-medium text-gray-800">{{
+              <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Product Owner</span>
+              <span class="text-caption font-medium text-gray-800">{{
                 systemUser()?.userSquads![0]?.productOwner?.fullName || 'N/A'
               }}</span>
             </div>
@@ -122,13 +122,13 @@
           class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE] cursor-pointer hover:bg-[#F0EDEA] hover:border-[#C9C6C2] transition-colors"
         >
           <div
-            class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold"
+            class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-caption font-bold"
           >
             {{ systemUser()?.teamLeadName ? systemUser()?.teamLeadName?.charAt(0) : 'N/A' }}
           </div>
           <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Team Lead</span>
-            <span class="text-sm font-medium text-gray-800">{{
+            <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Team Lead</span>
+            <span class="text-caption font-medium text-gray-800">{{
               systemUser()?.teamLeadName || 'N/A'
             }}</span>
           </div>
@@ -136,11 +136,11 @@
 
         <div class="bg-[#FBFAF9] rounded-lg p-3 flex items-center gap-3 border border-[#E3E1DE]">
           <div class="text-[#E8821A] bg-orange-50 p-2 rounded flex items-center justify-center">
-            <i class="pi pi-user text-sm"></i>
+            <i class="pi pi-user text-caption"></i>
           </div>
           <div class="flex flex-col">
-            <span class="text-[10px] uppercase text-gray-500 font-semibold">Seniority</span>
-            <span class="text-sm font-medium text-gray-800">{{
+            <span class="text-label uppercase tracking-wider text-gray-500 font-semibold">Seniority</span>
+            <span class="text-caption font-medium text-gray-800">{{
               (systemUser()?.seniority ?? 0 | enumLabel: seniorities) || 'N/A'
             }}</span>
           </div>

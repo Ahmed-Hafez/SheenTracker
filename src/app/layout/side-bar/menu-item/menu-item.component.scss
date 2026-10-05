@@ -6,7 +6,7 @@
   padding: 8px 16px;
   margin: 4px 8px;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-field);
   text-align: left;
   color: rgba(255, 255, 255, 0.7);
   background: transparent;
@@ -42,7 +42,7 @@
   align-items: center;
   padding: 6px 10px;
   margin: 2px 8px;
-  font-size: 13px;
+  font-size: var(--text-field);
   color: rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-md);
   text-decoration: none;

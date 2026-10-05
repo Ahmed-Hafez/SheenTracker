@@ -211,8 +211,8 @@ The palette is warm paper and graphite with a single amber signal, plus a small,
 
 ## Typography
 
-**Body Font:** Plus Jakarta Sans (with sans-serif)
-**Mono Font:** DM Mono (with monospace)
+**Body Font:** Plus Jakarta Sans (with system-ui fallbacks), self-hosted through `@fontsource` at weights 400, 500, 600 and 700
+**Mono Font:** DM Mono (with monospace fallbacks), self-hosted at weights 400 and 500
 
 **Character:** A friendly geometric sans for everything a person reads, and a ledger-like mono for everything a person counts. The two never swap roles.
 
@@ -221,13 +221,16 @@ The palette is warm paper and graphite with a single amber signal, plus a small,
 - **Headline** (700, 24px, 1.2, -0.02em): `h1`, page titles.
 - **Title** (600, 18px, 1.3, -0.01em): `h2`, section heads.
 - **Title Small** (600, 15px, 1.4): `h3`, card titles, and the topbar page title.
-- **Body** (400, 14px, 1.6): Default text. The app's base size is 14px.
-- **Body Small** (400, 12px, 1.5): Hints, captions, and sublines. Use the `.small` class.
+- **Body** (400, 14px, 1.6): Default text, set on `body`. The root stays at the browser's 16px, so rem and zoom behave normally.
+- **Caption** (400, 12px, 1.5): Hints, captions, and sublines. Use the `.small` class or `text-caption`. 12px is the floor for running text.
+- **Field** (13px, 1.5): Input text, chips, and compact table text. Use `text-field`.
 - **Label** (700, 11px, 0.06em, uppercase): Field and KPI labels, and the sidebar section label. Use the `.label` class.
-- **Metric** (DM Mono 700, 24px, -0.03em, tabular): KPI values. The `.mono-metric` class sets the same figure at 20px.
+- **Metric** (DM Mono 700, 24px, -0.03em, tabular): KPI values. The `.mono-metric` class sets the same figure at 18px (the Title role).
 - **Mono Small** (DM Mono 500, 13px, 0.02em): Hours in badges and tables.
 
 ### Named Rules
+**The Role Token Rule.** Every size is a role token defined once in `@theme` in `src/styles.css`: `text-label`, `text-caption`, `text-field`, `text-body`, `text-title-sm`, `text-title`, `text-headline`, `text-display`. Tailwind's default `text-xs`, `text-sm`, `text-lg` and the like are removed, so a screen cannot use a size the system does not name. Element defaults (`h1` to `h3`, `.small`, `.label`) read the same tokens. Do not write `text-[Npx]` or raw `font-size` pixels. Tailwind spacing is scaled by 14/16 so the 16px root does not enlarge layouts.
+
 **The Ledger Rule.** Every count, hour total, or percentage is set in DM Mono with `tabular-nums` so columns line up. Text that describes a number stays in Jakarta Sans.
 
 ## Layout

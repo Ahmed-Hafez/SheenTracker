@@ -39,7 +39,7 @@
 }
 
 .login-title {
-  font-size: 26px;
+  font-size: var(--text-headline);
   font-weight: 500;
   color: var(--charcoal-900);
   letter-spacing: -0.02em;
@@ -47,7 +47,7 @@
 }
 
 .login-subtitle {
-  font-size: 14px;
+  font-size: var(--text-body);
   font-weight: 400;
   color: var(--charcoal-600);
   line-height: 1.5;
@@ -81,7 +81,7 @@
 }
 
 .form-label {
-  font-size: 13px;
+  font-size: var(--text-field);
   font-weight: 600;
   color: var(--charcoal-900);
 }
@@ -100,7 +100,7 @@
   border-radius: var(--radius-md);
   background: var(--page-bg);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: var(--text-body);
   color: var(--charcoal-900);
   outline: none;
   transition:
@@ -163,6 +163,6 @@
   }
 
   .login-title {
-    font-size: 22px;
+    font-size: var(--text-title);
   }
 }

@@ -2,19 +2,19 @@
   <app-kpi-card
     label="Projects"
     [value]="summary().projects"
-    icon="pi pi-folder text-xl"
+    icon="pi pi-folder text-title"
   ></app-kpi-card>
 
   <app-kpi-card
     label="Work Items"
     [value]="summary().workItems"
-    icon="pi pi-check-square text-xl"
+    icon="pi pi-check-square text-title"
   ></app-kpi-card>
 
   <app-kpi-card
     label="Date Range"
     [value]="dateService.getSelectedDaysCount() + ' days'"
     [hint]="(dateService.selectedDateRange()?.start | date:'yyyy-MM-dd') + ' → ' + (dateService.selectedDateRange()?.end | date:'yyyy-MM-dd')"
-    icon="pi pi-calendar text-xl"
+    icon="pi pi-calendar text-title"
   ></app-kpi-card>
 </div>

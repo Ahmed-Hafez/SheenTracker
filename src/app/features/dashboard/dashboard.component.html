@@ -3,8 +3,8 @@
     class="flex h-full min-h-48 flex-col justify-center gap-2 p-4"
     [attr.role]="retryable ? 'alert' : 'status'"
   >
-    <h3 class="m-0 text-xl font-bold">{{ title }}</h3>
-    <p class="m-0 text-sm text-(--charcoal-600)">{{ message }}</p>
+    <h3 class="m-0 text-title font-bold">{{ title }}</h3>
+    <p class="m-0 text-caption text-(--charcoal-600)">{{ message }}</p>
     @if (retryable) {
       <button type="button" class="btn btn-secondary self-start" (click)="reload()">Retry</button>
     }
@@ -148,7 +148,7 @@
       } @else {
         <div class="m-2 mb-3 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div class="min-w-0">
-            <h3 class="m-0 text-xl font-bold">Target Achievement</h3>
+            <h3 class="m-0 text-title font-bold">Target Achievement</h3>
             <p class="m-0 small text-(--charcoal-600)">
               Logged vs expected hours for the selected range
             </p>
@@ -172,11 +172,11 @@
         <div class="flex items-stretch gap-3 px-4 py-3">
           <div class="min-w-0 flex-1">
             <div
-              class="flex w-full items-center justify-between gap-6 text-sm text-(--charcoal-600)"
+              class="flex w-full items-center justify-between gap-6 text-caption text-(--charcoal-600)"
             >
               <span class="whitespace-nowrap">Working days</span>
               <span
-                class="shrink-0 whitespace-nowrap text-base font-semibold text-(--charcoal-900)"
+                class="shrink-0 whitespace-nowrap text-body font-semibold text-(--charcoal-900)"
               >
                 {{ weekdays }}
               </span>
@@ -187,11 +187,11 @@
 
           <div class="min-w-0 flex-1">
             <div
-              class="flex w-full items-center justify-between gap-6 text-sm text-(--charcoal-600)"
+              class="flex w-full items-center justify-between gap-6 text-caption text-(--charcoal-600)"
             >
               <span class="whitespace-nowrap">Active users</span>
               <span
-                class="shrink-0 whitespace-nowrap text-base font-semibold text-(--charcoal-900)"
+                class="shrink-0 whitespace-nowrap text-body font-semibold text-(--charcoal-900)"
               >
                 {{ azureUsersKpis().usersWithHours }}
               </span>
@@ -217,7 +217,7 @@
       } @else {
         <div class="m-2 mb-3 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div class="min-w-0">
-            <h3 class="m-0 text-xl font-bold">Log compliance</h3>
+            <h3 class="m-0 text-title font-bold">Log compliance</h3>
             <p class="m-0 small text-(--charcoal-600)">
               {{ logComplianceSubtitle() }}. Click a bar to see those users.
             </p>
@@ -256,7 +256,7 @@
         />
       } @else {
         <div class="m-2 mb-3">
-          <h3 class="m-0 text-xl font-bold">Needs follow-up</h3>
+          <h3 class="m-0 text-title font-bold">Needs follow-up</h3>
           <p class="m-0 small text-(--charcoal-600)">
             {{ belowTarget().length }} of {{ logComplianceTotalUsers() }} users are under 80% of
             expected hours
@@ -288,7 +288,7 @@
             </p>
           }
         } @else {
-          <p class="m-2 text-sm text-(--charcoal-600)" role="status">
+          <p class="m-2 text-caption text-(--charcoal-600)" role="status">
             Everyone is at or above 80% of expected hours.
           </p>
         }

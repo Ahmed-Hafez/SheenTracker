@@ -11,6 +11,7 @@ import { textarea } from './components/textarea';
 import { breadcrumb } from './components/breadcrumb';
 import { listbox } from './components/listbox';
 import { menu } from './components/menu';
+import { toast } from './components/toast';
 import { semantic } from './semantic';
 
 export const PrimeNG_Preset = definePreset(Aura, {
@@ -27,5 +28,6 @@ export const PrimeNG_Preset = definePreset(Aura, {
     breadcrumb,
     listbox,
     menu,
+    toast,
   },
 });

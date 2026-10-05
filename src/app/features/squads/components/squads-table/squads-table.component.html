@@ -81,19 +81,19 @@
   <div class="flex flex-col gap-4">
     <ul class="list-none p-0 m-0 flex flex-col">
       <li
-        class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
+        class="px-4 py-2 text-caption text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
         (click)="selectedSquad() ? callActions(0) : ''"
       >
         <i class="fa-solid fa-info-circle mr-2"></i> View Details
       </li>
       <li
-        class="px-4 py-2 text-sm text-amber-600 hover:bg-gray-100 rounded cursor-pointer"
+        class="px-4 py-2 text-caption text-amber-600 hover:bg-gray-100 rounded cursor-pointer"
         (click)="selectedSquad() ? callActions(1) : ''"
       >
         <i class="fa-solid fa-edit mr-2"></i> Edit Squad
       </li>
       <li
-        class="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
+        class="px-4 py-2 text-caption text-red-600 hover:bg-gray-100 rounded cursor-pointer"
         (click)="selectedSquad() ? callActions(2) : ''"
       >
         <i class="fa-solid fa-trash mr-2" style="color: red"></i> Delete Squad

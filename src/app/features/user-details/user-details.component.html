@@ -3,14 +3,14 @@
     <app-azure-users-skeleton></app-azure-users-skeleton>
   } @else if (isError() === false) {
     <div class="flex flex-col gap-6 w-full mx-auto">
-      <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
+      <div class="flex items-center gap-2 text-caption text-gray-500 font-medium">
         <a
           [routerLink]="['/users', breadcrumbText() === 'Azure Users' ? 'azure' : 'system']"
           class="cursor-pointer hover:text-gray-800 hover:underline"
         >
           {{ breadcrumbText() }}
         </a>
-        <i class="pi pi-angle-right text-xs"></i>
+        <i class="pi pi-angle-right text-caption"></i>
         <span class="text-gray-800">{{ user()?.name }}</span>
       </div>
 
@@ -34,7 +34,7 @@
     </div>
   } @else {
     <div class="flex justify-center items-center py-20 min-h-75">
-      <span class="text-gray-500 text-lg">There seems to be an error. Try again later.</span>
+      <span class="text-gray-500 text-title-sm">There seems to be an error. Try again later.</span>
     </div>
   }
 </div>

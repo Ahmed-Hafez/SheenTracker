@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal, untracked } from '@angular/core';
+import { Component, computed, effect, inject, untracked } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MetaDataService } from './core/http/backend_service/meta-data.service';
 import { AuthService } from './core/http/backend_service/auth.service';
@@ -15,6 +15,14 @@ export class App {
   private readonly metaDataService = inject(MetaDataService);
   private readonly authService = inject(AuthService);
   messageService = inject(MessageService);
+
+  /**
+   * Toasts sit at the top right of the workspace, under the topbar so they never cover the page
+   * title or the date and refresh controls. Signed-out pages have no topbar.
+   */
+  readonly toastTop = computed(() =>
+    this.authService.isAuthenticated() ? 'calc(var(--topbar-height) + 12px)' : '16px',
+  );
 
   constructor() {
     effect(() => {

@@ -25,7 +25,7 @@ import { DateScope } from '../shell-route-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .page-title {
-      font-size: 15px;
+      font-size: var(--text-title-sm);
       font-weight: 600;
       line-height: 1.4;
       letter-spacing: 0;
@@ -35,7 +35,7 @@ import { DateScope } from '../shell-route-data';
       white-space: nowrap;
     }
     .page-subtitle {
-      font-size: 12px;
+      font-size: var(--text-caption);
       line-height: 1.5;
       color: var(--charcoal-600);
       overflow: hidden;
@@ -43,7 +43,7 @@ import { DateScope } from '../shell-route-data';
       white-space: nowrap;
     }
     .refreshed-at {
-      font-size: 12px;
+      font-size: var(--text-caption);
       color: var(--charcoal-600);
       font-variant-numeric: tabular-nums;
       white-space: nowrap;

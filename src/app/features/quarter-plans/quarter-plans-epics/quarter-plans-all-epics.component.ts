@@ -16,8 +16,7 @@ import { BacklogItemUIModel } from './backlog-tree-node.model';
 // Shared
 import { StatCardComponent } from '../../../shared/stat-card/stat-card.component';
 
-// Models & Mock
-import { ALL_EPICS_SUMMARY } from '../../../core/mock/all-epics.mock';
+// Models
 import {
   BacklogItemApiModel,
   AllEpicsResponse,
@@ -69,7 +68,8 @@ export class QuarterPlansAllEpicsComponent implements OnInit {
   backlogResponse: AllEpicsResponse | null = null;
   BacklogTreeNodes = signal<TreeNode<BacklogItemUIModel>[]>([]);
 
-  readonly summary = ALL_EPICS_SUMMARY;
+  // Placeholder until the API returns totals; the stat cards show zeros meanwhile.
+  readonly summary = { totalEffort: 0, totalCompleted: 0, totalRemaining: 0 };
 
   first = signal(0);
 

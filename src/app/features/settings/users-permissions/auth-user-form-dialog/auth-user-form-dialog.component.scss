@@ -1,6 +1,6 @@
 .role-access {
   margin: 6px 0 0;
-  font-size: 12px;
+  font-size: var(--text-caption);
   color: var(--charcoal-600);
 }
 
@@ -19,7 +19,7 @@
   gap: 6px;
   padding: 4px 10px;
   border-radius: var(--radius-full);
-  font-size: 12px;
+  font-size: var(--text-caption);
   background-color: var(--charcoal-100);
   color: var(--charcoal-600);
 
@@ -30,7 +30,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    font-size: 11px;
+    font-size: var(--text-label);
     background-color: var(--charcoal-600);
     color: var(--white);
   }
@@ -59,7 +59,7 @@
 
 .account-status__value {
   min-width: 4.5rem;
-  font-size: 13px;
+  font-size: var(--text-field);
   font-weight: 600;
   color: var(--charcoal-900);
 }

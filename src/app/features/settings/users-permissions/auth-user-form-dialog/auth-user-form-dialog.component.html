@@ -13,7 +13,7 @@
   <ng-template #header>
     <div>
       <h2 id="user-dialog-title" class="m-0">{{ isEditMode() ? 'Edit user' : 'Add user' }}</h2>
-      <p class="m-0 mt-1 text-[13px] text-(--charcoal-600)">
+      <p class="m-0 mt-1 text-field text-(--charcoal-600)">
         @if (isEditMode()) {
           Changes apply to {{ userData()?.firstName }} {{ userData()?.lastName }}'s account.
         } @else {
@@ -154,7 +154,7 @@
     <div class="account-status">
       <div>
         <span class="input-label m-0" id="status-label">Account status</span>
-        <p class="m-0 text-[13px] text-(--charcoal-600)" id="status-help">
+        <p class="m-0 text-field text-(--charcoal-600)" id="status-help">
           Inactive users can't sign in.
         </p>
       </div>

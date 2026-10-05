@@ -11,8 +11,8 @@
 >
   <ng-template #header>
     <div class="flex flex-col gap-1">
-      <h4 class="text-xl font-semibold m-0 text-(--charcoal-900)">Manage members</h4>
-      <p class="text-sm text-(--charcoal-600) m-0">
+      <h4 class="text-title font-semibold m-0 text-(--charcoal-900)">Manage members</h4>
+      <p class="text-caption text-(--charcoal-600) m-0">
         Add or remove members of <strong>{{ squadDetails().name }}</strong
         >.
       </p>
@@ -56,14 +56,14 @@
 
             <div class="flex flex-col flex-1 min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-semibold text-sm text-(--charcoal-900) truncate">
+                <span class="font-semibold text-caption text-(--charcoal-900) truncate">
                   {{ user.fullName }}
                 </span>
                 @if (getUserRoleBadge(user); as badge) {
                   <span class="role-badge">{{ badge }}</span>
                 }
               </div>
-              <span class="text-xs text-(--charcoal-600) truncate">
+              <span class="text-caption text-(--charcoal-600) truncate">
                 {{ user.title || '—' }}
               </span>
             </div>
@@ -75,7 +75,7 @@
               aria-hidden="true"
             >
               @if (selected) {
-                <i class="pi pi-check text-white text-[10px]"></i>
+                <i class="pi pi-check text-white text-label"></i>
               }
             </div>
           </div>
@@ -86,7 +86,7 @@
 
   <ng-template #footer>
     <div class="flex items-center justify-between w-full gap-4">
-      <div class="flex items-center gap-2 text-sm text-(--charcoal-600)">
+      <div class="flex items-center gap-2 text-caption text-(--charcoal-600)">
         <i class="pi pi-users"></i>
         <span>{{ selectedCount() }} members selected</span>
       </div>
@@ -105,7 +105,7 @@
           [pt]="{
             root: {
               class:
-                'inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#E8821A] border-0 enabled:hover:bg-[var(--orange-700)] disabled:opacity-45 disabled:cursor-not-allowed',
+                'inline-flex items-center gap-2 px-4 py-2 rounded-md text-caption font-semibold text-white bg-[#E8821A] border-0 enabled:hover:bg-[var(--orange-700)] disabled:opacity-45 disabled:cursor-not-allowed',
             },
           }"
         >
