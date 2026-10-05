@@ -6,6 +6,7 @@ import {
   OnInit,
   afterRenderEffect,
   computed,
+  effect,
   inject,
   signal,
   viewChild,
@@ -18,8 +19,9 @@ import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { SidebarService } from '../core/services/sidebar.service';
 import { DateService } from '../core/services/date.service';
-import { QuarterYearService } from '../core/services/quarter-year.service';
+import { PlanQuarterService } from '../core/services/plan-quarter.service';
 import { DateHelpers } from '../core/utils/date-helpers';
+import { formatQuarterLabel, quarterDateRange } from '../core/utils/plan-quarter';
 import { ShellRouteData } from './shell-route-data';
 
 @Component({
@@ -36,7 +38,7 @@ export class LayoutComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly sidebarService = inject(SidebarService);
   private readonly dateService = inject(DateService);
-  private readonly quarterDateService = inject(QuarterYearService);
+  private readonly planQuarterService = inject(PlanQuarterService);
   private readonly router = inject(Router);
 
   private readonly aside = viewChild<ElementRef<HTMLElement>>('aside');
@@ -66,8 +68,10 @@ export class LayoutComponent implements OnInit {
         return range ? `${DateHelpers.formatRange(range)} · ${suffix}` : suffix;
       }
       case 'quarter': {
-        const quarter = this.quarterDateService.getCurrentQuarter();
-        return `${quarter.quarter} · ${DateHelpers.formatRange(quarter.dateRange)}`;
+        const quarter = this.planQuarterService.selected();
+        return quarter
+          ? `${formatQuarterLabel(quarter.name)} · ${DateHelpers.formatRange(quarterDateRange(quarter))}`
+          : '';
       }
       default:
         return '';
@@ -75,6 +79,13 @@ export class LayoutComponent implements OnInit {
   });
 
   constructor() {
+    // Pages with the quarter picker load the quarter list and keep the choice in the URL.
+    effect(() => {
+      if (this.dateScope() !== 'quarter') return;
+      this.planQuarterService.load();
+      this.planQuarterService.syncUrl();
+    });
+
     // Move focus into the drawer when it opens and back to the toggle when it closes.
     let wasOpen = false;
     afterRenderEffect(() => {

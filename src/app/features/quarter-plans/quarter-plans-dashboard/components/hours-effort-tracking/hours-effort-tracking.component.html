@@ -2,7 +2,12 @@
   <div class="section-title-row">
     <h2 class="section-title">Hours / Effort Tracking</h2>
     @if (canViewAllMetrics) {
-      <a class="btn btn-secondary" style="font-size: 12px" routerLink="/quarter-plans/all-metrics">
+      <a
+        class="btn btn-secondary"
+        style="font-size: 12px"
+        routerLink="/quarter-plans/all-metrics"
+        queryParamsHandling="preserve"
+      >
         View All Metrics <i class="pi pi-arrow-right" style="font-size: 10px"></i>
       </a>
     }

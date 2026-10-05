@@ -1,4 +1,9 @@
+import { PlanQuarter } from './plan-quarter.response';
+
 export interface QuarterPlansDashboardResponse {
+  /** The quarter these numbers belong to, or `null` when no quarter filter applied. */
+  quarter?: PlanQuarter | null;
+
   epicsCount: number;
   featuresCount: number;
   /** `User Story` type only. Use totalStoriesCount for "Stories". */
