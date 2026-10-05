@@ -51,7 +51,7 @@
                   [class.text-black]="!isQuarterSelected(quarter.name)"
                   >{{ quarter.label }}</span
                 >
-                <span class="text-sm font-light">{{ quarter.dates }}</span>
+                <span class="text-caption font-light">{{ quarter.dates }}</span>
               </div>
             </ng-template>
           </p-select>
@@ -60,7 +60,7 @@
       @case ('range') {
         <label for="shell-date-range" class="sr-only">Date range</label>
         <p-datepicker
-          class="min-w-0 max-sm:flex-1"
+          class="min-w-0 max-sm:flex-1 [&_input]:min-w-[15rem] max-sm:[&_input]:min-w-0"
           [ngModel]="rangeDates()"
           (ngModelChange)="onRangeChange($event)"
           selectionMode="range"

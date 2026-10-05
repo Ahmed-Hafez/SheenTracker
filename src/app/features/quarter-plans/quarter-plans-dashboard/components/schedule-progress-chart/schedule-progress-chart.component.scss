@@ -20,7 +20,7 @@
 
 .schedule-progress-title {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--text-title);
   font-weight: 700;
   line-height: 1.2;
   color: #111827;
@@ -33,7 +33,7 @@
   border-radius: 999px;
   padding: 8px 16px;
   border: 1px solid transparent;
-  font-size: 16px;
+  font-size: var(--text-title-sm);
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;

@@ -10,7 +10,7 @@
 >
   <ng-template #header>
     <div class="flex flex-col">
-      <h4 class="text-start text-2xl font-semibold m-0">Holidays in range</h4>
+      <h4 class="text-start text-title font-semibold m-0">Holidays in range</h4>
       <p class="text-start m-0 text-(--charcoal-600)">
         Enter the number of holiday days within the selected range
       </p>
@@ -30,7 +30,7 @@
         Number of holiday days cannot exceed the number of weekdays in the current range.
       </p-message>
     }
-    <span class="text-sm text-(--charcoal-600) my-1 mx-2"
+    <span class="text-caption text-(--charcoal-600) my-1 mx-2"
       >Max {{ weekdaysCount }} weekdays in current range.</span
     >
   </div>

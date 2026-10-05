@@ -7,7 +7,7 @@
 
     <p-iconfield class="flex-2 min-w-48">
       <p-inputicon styleClass="pi pi-search" />
-      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-3 text-base"
+      <input pInputText type="text" placeholder="Search epics by title" class="w-full !py-3 text-body"
         [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
 
 
@@ -41,8 +41,8 @@
     <!-- Section header -->
     <div class="px-6 py-5 flex items-center justify-between">
       <div>
-        <h2 class="text-base font-semibold text-charcoal-900">Epic effort roll-up</h2>
-        <p class="text-sm text-charcoal-400 mt-0.5">
+        <h2 class="text-body font-semibold text-charcoal-900">Epic effort roll-up</h2>
+        <p class="text-caption text-charcoal-400 mt-0.5">
           All epics in the quarter plan with logged and remaining effort
         </p>
       </div>
@@ -68,7 +68,7 @@
 
     <!-- ── Loading skeleton ──────────────────────────────────────────────── -->
     @if (isError()) {
-      <p class="px-6 pb-6 text-sm text-charcoal-600" role="alert">
+      <p class="px-6 pb-6 text-caption text-charcoal-600" role="alert">
         Could not load the epics for this quarter. Try again later.
       </p>
     } @else if (isLoading() && !backlogResponse()) {
@@ -77,27 +77,27 @@
           <tr>
             <th class="w-[4rem] min-w-[4rem]"></th>
             <th
-              class="w-full text-left text-xs font-semibold uppercase tracking-wide text-charcoal-400"
+              class="w-full text-left text-caption font-semibold uppercase tracking-wide text-charcoal-400"
             >
               Epic
             </th>
             <th
-              class="w-[100px] min-w-[100px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400"
+              class="w-[100px] min-w-[100px] text-right text-caption font-semibold uppercase tracking-wide text-charcoal-400"
             >
               Effort
             </th>
             <th
-              class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400"
+              class="w-[120px] min-w-[120px] text-right text-caption font-semibold uppercase tracking-wide text-charcoal-400"
             >
               Completed
             </th>
             <th
-              class="w-[120px] min-w-[120px] text-right text-xs font-semibold uppercase tracking-wide text-charcoal-400"
+              class="w-[120px] min-w-[120px] text-right text-caption font-semibold uppercase tracking-wide text-charcoal-400"
             >
               Remaining
             </th>
             <th
-              class="w-[140px] min-w-[140px] text-center text-xs font-semibold uppercase tracking-wide text-charcoal-400"
+              class="w-[140px] min-w-[140px] text-center text-caption font-semibold uppercase tracking-wide text-charcoal-400"
             >
               Status
             </th>
@@ -165,7 +165,7 @@
                 <i [class]="rowData.icon" class="ml-2 shrink-0" [style.color]="rowData.color"> </i>
 
                 <span
-                  class="ml-2 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                  class="ml-2 shrink-0 rounded-full px-2 py-0.5 text-caption font-medium text-white"
                   [style.background-color]="rowData.color"
                 >
                   {{ rowData.data.type }}

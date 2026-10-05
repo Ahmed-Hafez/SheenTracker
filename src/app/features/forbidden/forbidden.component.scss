@@ -24,21 +24,21 @@
 }
 
 h1 {
-  font-size: 32px;
+  font-size: var(--text-display);
   font-weight: 600;
   color: #333;
   margin: 0 0 12px 0;
 }
 
 .error-message {
-  font-size: 16px;
+  font-size: var(--text-title-sm);
   color: #666;
   margin: 0 0 8px 0;
   line-height: 1.6;
 }
 
 .error-details {
-  font-size: 14px;
+  font-size: var(--text-body);
   color: #999;
   margin: 0 0 32px 0;
   line-height: 1.5;

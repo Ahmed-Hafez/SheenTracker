@@ -52,13 +52,13 @@
 }
 
 .banner-title {
-  font-size: 13px;
+  font-size: var(--text-field);
   font-weight: 600;
   margin: 0 0 2px;
 }
 
 .banner-sub {
-  font-size: 12px;
+  font-size: var(--text-caption);
   color: var(--charcoal-600);
   margin: 0;
 }

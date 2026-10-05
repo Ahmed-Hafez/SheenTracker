@@ -4,20 +4,20 @@
 <div class="flex flex-col">
   <div class="flex flex-row justify-between items-end">
     <div class="space-y-1">
-      <p class="text-xl font-semibold text-foreground">{{ sqaudDetails().name }}</p>
+      <p class="text-title font-semibold text-foreground">{{ sqaudDetails().name }}</p>
       <p-breadcrumb [model]="items" />
     </div>
   
     <div class="flex items-center gap-2">
       <button
-        class="inline-flex items-center gap-2 px-4 py-2 shadow-sm rounded-md border border-[#e8e6e3] bg-(--page-bg) text-sm font-medium text-gray-700 hover:bg-[#f5efe0] transition-colors cursor-pointer"
+        class="inline-flex items-center gap-2 px-4 py-2 shadow-sm rounded-md border border-[#e8e6e3] bg-(--page-bg) text-caption font-medium text-gray-700 hover:bg-[#f5efe0] transition-colors cursor-pointer"
         (click)="showEditSquadPopup()"
       >
       <i class="pi pi-pencil mr-1"></i>Edit
       </button>
   
       <button
-        class="inline-flex items-center gap-2 px-4 py-2 shadow-sm rounded-md border border-[#e8e6e3] bg-(--page-bg) text-sm font-medium text-red-600 hover:bg-[#f5efe0] transition-colors cursor-pointer"
+        class="inline-flex items-center gap-2 px-4 py-2 shadow-sm rounded-md border border-[#e8e6e3] bg-(--page-bg) text-caption font-medium text-red-600 hover:bg-[#f5efe0] transition-colors cursor-pointer"
         (click)="showDeletePopup()"      
       >
       <i class="pi pi-trash mr-1" style="color: red"></i>Delete

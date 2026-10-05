@@ -97,7 +97,7 @@ export class ManageMembersDialogComponent {
         'border-0 rounded-md px-2 py-1 transition-colors cursor-pointer hover:bg-[#F5F4F0] [&.p-disabled]:opacity-50 [&.p-disabled]:cursor-not-allowed [&.p-disabled]:hover:bg-transparent',
     },
     emptyMessage: {
-      class: 'text-sm text-[var(--charcoal-600)] py-4 text-center',
+      class: 'text-caption text-[var(--charcoal-600)] py-4 text-center',
     },
   };
 
