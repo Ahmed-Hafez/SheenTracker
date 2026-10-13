@@ -202,7 +202,7 @@
     </div>
 
     <!-- Log Compliance -->
-    <div class="card">
+    <div class="card lg:col-span-2">
       @if (usersFailed()) {
         <ng-container
           *ngTemplateOutlet="
@@ -241,7 +241,7 @@
       }
     </div>
 
-    <!-- Needs follow-up -->
+    <!-- Needs follow-up: hidden for now
     <div class="card">
       @if (usersFailed()) {
         <ng-container
@@ -294,5 +294,6 @@
         }
       }
     </div>
+    -->
   </div>
 }
