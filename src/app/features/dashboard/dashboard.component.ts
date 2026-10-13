@@ -31,7 +31,7 @@ import { catchError, finalize, forkJoin, of, OperatorFunction, tap } from 'rxjs'
     NgxEchartsDirective,
     DashboardSkeletonComponent,
     NgTemplateOutlet,
-    RouterLink,
+    // RouterLink, // used only by the hidden "Needs follow-up" list
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
